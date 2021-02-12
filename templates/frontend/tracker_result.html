@@ -1,0 +1,229 @@
+{% extends 'frontend/base.html' %}
+{% load static multiply %}
+
+
+{% block content %}
+    <!-- Main Container  -->
+<div class="main-container container">
+        
+	<div class="row justify-content-center mt-100">
+
+		{% comment %}
+		<div class="col-sm-12 col-md-9">
+			{% if object %}
+				<div class="cms-block">
+					<h1 class="page-heading bottom-indent">{{ object.order.user }}</h1>
+					Estimated Date: <span class="badge badge-default">{{ object.estimated_date }}</span>
+					<hr>
+					<div class="row" style="margin-bottom: 30px;">
+						<div class="col-xs-12 col-sm-6">
+							<div class="cms-block">
+								<h3 class="page-subheading">List of Products</h3>
+								<ul class="list-1" style="font-size:12;color: #339966;font-weight: bold">
+									{% for product in object.order.products.all %}
+										<li>{{ product }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6">
+							<div class="cms-box">
+								<h3 class="page-subheading">Status</h3>
+								<ul class="list-1" style="font-size:12;color: #339966;font-weight: bold">
+									{% for status in object.status.all %}
+										<li>{{ status }}</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6">
+							<div class="cms-box">
+								{% if object.remarks %}
+								<h3 class="page-subheading">Remarks</h3>
+								<p>{{ object.remarks }}</p>
+								{% else %}
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<div class="cms-block">
+					<h1 class="page-heading bottom-indent">No Record Found</h1>
+					<hr>
+				</div>
+			{% endif %}
+		</div>  
+		{% endcomment %} 
+
+		<!-- Multi step form --> 
+		<div class="col-11">
+			<section class="multi_step_form">
+				<h3 class="font-1r">My Orders</h3>
+				{% for product in object.order.products.all %}
+				  <div id="accordion">
+					  <form id="msform"> 
+					    <!-- Tittle -->
+					    <div class="tittle px-4">
+					      <div class="row">
+					      	<div class="col-6 text-left">
+					      		<h5 class="font-weight-bold">{{forloop.counter}}. {{product}} | Tracking ID: #{{object.order.code}}</h5>
+					      		<h6>Quantity: {{product.quantity}}</h6>
+					      		<h6>Total: Rs. {{ product.products.grand_total|multiply_qty_price:product.quantity|floatformat:'2' }}</h6>
+					      	</div>
+					      	<div class="col-6 text-right">
+					      		<h5 class="font-weight-bold">Expected Completion</h5>
+					      		<h6>Ordered Date: {{object.order.created_at|date}}</h6>
+					      		<h6>Delivery time: 15 days</h6>
+					      	</div>
+					      </div>
+					    </div>
+					    <!-- progressbar -->
+					    <div class="" id="headingOne">
+		        			<h5 class="mb-0">
+								<button class="btn btn-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Expand&nbsp;<i class="fa" aria-hidden="true"></i></button>
+				          	</h5>
+				      	</div>
+
+				         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+				         	<div class="pt-4">
+							    <ul id="progressbar">
+							      <li {% if object.order.condition_status.name  == 'Order Placed' or object.order.condition_status.name  == 'Ready to Ship' or object.order.condition_status.name  == 'Out for Delivery' or object.order.condition_status.name  == 'Delivered' %}class="active" {% endif %}>Order Confirmed</li>  
+							      <li {% if object.order.condition_status.name  == 'Ready to Ship' or object.order.condition_status.name  == 'Out for Delivery' or object.order.condition_status.name  == 'Delivered' %}class="active" {% endif %} >Order Processed</li> 
+							      <li {% if object.order.condition_status.name  == 'Delivered' %}class="active" {% endif %}>Delivered</li>
+							    </ul>
+							</div>
+						</div>
+
+					    <!-- <fieldset> 
+					      <button type="button" class="action-button previous_button">Back</button>
+					      <button type="button" class="next action-button">Continue</button>  
+					    </fieldset>
+
+					    <fieldset>
+					      <button type="button" class="action-button previous previous_button">Back</button>
+					      <button type="button" class="next action-button">Continue</button>  
+					    </fieldset>  
+
+					    <fieldset>			      
+					      <button type="button" class="action-button previous previous_button">Back</button> 
+					      <a href="#" class="action-button">Finish</a> 
+					    </fieldset>   -->
+					  </form> 
+					  </div> 
+					  {% endfor %}
+					</section> 
+				</div>
+				<!-- End Multi step form -->   
+	 </div>
+</div>
+
+<script type="text/javascript">
+	(function($) {
+    "use strict";  
+    
+    //* Form js
+    function verificationForm(){
+        //jQuery time
+        var current_fs, next_fs, previous_fs; //fieldsets
+        var left, opacity, scale; //fieldset properties which we will animate
+        var animating; //flag to prevent quick multi-click glitches
+
+        $(".next").click(function () {
+            if (animating) return false;
+            animating = true;
+
+            current_fs = $(this).parent();
+            next_fs = $(this).parent().next();
+
+            //activate next step on progressbar using the index of next_fs
+            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+            //show the next fieldset
+            next_fs.show();
+            //hide the current fieldset with style
+            current_fs.animate({
+                opacity: 0
+            }, {
+                step: function (now, mx) {
+                    //as the opacity of current_fs reduces to 0 - stored in "now"
+                    //1. scale current_fs down to 80%
+                    scale = 1 - (1 - now) * 0.2;
+                    //2. bring next_fs from the right(50%)
+                    left = (now * 50) + "%";
+                    //3. increase opacity of next_fs to 1 as it moves in
+                    opacity = 1 - now;
+                    current_fs.css({
+                        'transform': 'scale(' + scale + ')',
+                        'position': 'absolute'
+                    });
+                    next_fs.css({
+                        'left': left,
+                        'opacity': opacity
+                    });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                //this comes from the custom easing plugin
+                easing: 'easeInOutBack'
+            });
+        });
+
+        $(".previous").click(function () {
+            if (animating) return false;
+            animating = true;
+
+            current_fs = $(this).parent();
+            previous_fs = $(this).parent().prev();
+
+            //de-activate current step on progressbar
+            $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+            //show the previous fieldset
+            previous_fs.show();
+            //hide the current fieldset with style
+            current_fs.animate({
+                opacity: 0
+            }, {
+                step: function (now, mx) {
+                    //as the opacity of current_fs reduces to 0 - stored in "now"
+                    //1. scale previous_fs from 80% to 100%
+                    scale = 0.8 + (1 - now) * 0.2;
+                    //2. take current_fs to the right(50%) - from 0%
+                    left = ((1 - now) * 50) + "%";
+                    //3. increase opacity of previous_fs to 1 as it moves in
+                    opacity = 1 - now;
+                    current_fs.css({
+                        'left': left
+                    });
+                    previous_fs.css({
+                        'transform': 'scale(' + scale + ')',
+                        'opacity': opacity
+                    });
+                },
+                duration: 800,
+                complete: function () {
+                    current_fs.hide();
+                    animating = false;
+                },
+                //this comes from the custom easing plugin
+                easing: 'easeInOutBack'
+            });
+        });
+
+        $(".submit").click(function () {
+            return false;
+        })
+    }; 
+    
+ 
+    /*Function Calls*/  
+    verificationForm ();
+})(jQuery);
+
+</script>
+
+{% endblock %}

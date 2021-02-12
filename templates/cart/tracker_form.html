@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}{{ block.super }} | Tracker Form {% endblock %}
+
+
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/summernote/summernote.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/select2/select2.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/multi-select/multi-select.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/bootstrap-tagsinput/bootstrap-tagsinput.css' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Update Orders &emsp;| &emsp;</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <form class="form" role="form" action="{% url 'cart:tracker_update' object.id %}" method="POST">{% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <label for="{{ form.title.id_for_label }}">Remark</label>
+                                    {{ form.remarks }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.status.id_for_label }}">Status *</label>
+                                    {{ form.status }}
+                            </div>
+                            <div class="col-md-12">
+                                <label for="{{ form.estimated_date.id_for_label }}">Estimated Date *</label>
+                                    {{ form.estimated_date }}
+                            </div>
+                            <div class="col-xs-12 text-right">
+                                <button class="btn ink-reaction btn-primary btn-raised" type="submit">Save</button>
+                            </div><!--end .col -->
+                        </div><!--end .card-body -->
+                    </div><!--end .card -->
+
+                </div><!--end .col -->
+            </div><!--end .row -->
+            </form>
+        </div>
+    </div><!--end .section-body -->
+</div>
+
+{% endblock %}
+{% block js %}
+    <script src="{% static 'dashboard/js/summernote/summernote.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="{% static 'dashboard/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#select-status').select2({
+            tags: true,
+            createTag: function (params) {
+                return {
+                    id: params.term,
+                    text: params.term,
+                    newOption: true,
+                    isNew: true
+                }
+            }
+        }).on("select2:select", function(e) {
+            if(e.params.data.isNew){
+                var post_url = "{% url 'cart:create_status' %}";
+                $.post(post_url, { 'name': e.params.data.text, 'csrfmiddlewaretoken': '{{ csrf_token }}', }, function(data){
+                })
+            }
+        });
+        $(document).ready(function(){
+            $('#summernote').summernote({
+                height:200,
+                toolbar: [
+                    ['style', ['style']],
+                    ['fontstyle', ['bold', 'italic', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']]
+                ]
+            });
+        });
+        $(function(){
+            $('#id_estimated_date').datetimepicker({
+                locale: 'en',
+                sideBySide: true,
+                format:'YYYY-MM-DD HH:mm',
+            });
+        });
+    </script>
+{% endblock %}

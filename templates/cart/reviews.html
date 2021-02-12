@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="app-main__inner">
+        <div class="app-page-title pt-18">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="card-body p-0">
+                        <div class="mr-2 btn-group">
+                            <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Review List</h5>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+        
+                <div class="main-card mb-3 card">
+                    <div class="card-body">
+                        <form method="GET" action="{% url 'cart:reviews_delete_multiple' %}">
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label>Options:&nbsp;&nbsp;&nbsp;</label>{{ quick_form.as_table }}
+                                    <button type="submit" class="ml-30 d-block-inline btn btn-success">Proceed</button>            
+                                </div>
+                            </div>
+
+                            <table id="datatable1" class="table table-striped table-hover" style="margin-bottom:20px">
+                                <thead>
+                                    <tr>
+                                        <th class="bt-0" scope="col" width="5%">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" name="select_all" class="select_all"/>
+                                                <!-- <label class="custom-control-label" for="customCheck1"></label> -->
+                                            </div>
+                                        </th>                           
+                                        <th class="bt-0" scope="col">S.N</th>
+                                        <th class="bt-0" scope="col">User</th> 
+                                        <th class="bt-0" scope="col">Product</th>
+                                        <th class="bt-0" scope="col">Review</th>
+                                        <th class="bt-0" scope="col">Rate</th>
+                                        <th class="bt-0" scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for review in object_list %}
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="selecting" name="selecting" value={{review.id}}>
+                                                <!-- <label class="custom-control-label" for="customCheck1"></label> -->
+                                            </div>                     
+                                        </td>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ review.user }}</td>
+                                        <td>{{ review.product }}</td>
+                                        <td><a href="#" data-id="{{review.id}}" class="img-prod">{{ review.review|safe|truncatechars:100 }}</a></td>
+                                        <td>{{ review.rate }}</td>
+                                        <td>
+                                            <a href="{% url 'cart:approve_review' review.id %}" class="btn js-toggle-cart {% if review.is_approved == True %} btn-danger {% else %} btn-success {% endif %}">{% if review.is_approved == True %} Unapprove {% else %} Approve{% endif %}</a>
+                                        </td>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-theme-settings">
+        <div class="theme-settings__inner">
+            <div class="scrollbar-container" id="product_detail">
+                {% comment %}
+                {% include 'cart/product_details.html' %}
+                {% endcomment %}
+            </div>
+        </div>
+    </div> 
+
+    <aside class="cart js-cart">
+        <div class="cart__header">
+            <h1 class="cart__title font-18 fw-700">Approve/Dissapprove Review</h1>
+            <p class="cart__text">
+                <a class="button button--light js-toggle-cart" href="#" title="Close cart">
+                    <i class="fas fa-times" style="font-size: 22px;"></i>
+                </a>
+            </p>
+        </div>
+        <div class="modal-content pt-80">
+            <div class="modal-body">
+                <form class="form" id="deleteForm" action="" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        Are you sure you want to delete this coupon?
+                    </div>
+                    <div class="text-right">
+                        <input type="submit" id="submit" class="btn btn-success" value="Proceed">
+                        <a href="" class="btn btn-primary">Cancel</a>
+    
+                        <!-- <a href="{% url 'cart:categories' %}" class="btn btn-primary">Cancel</a> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </aside>
+    
+    <div class="lightbox js-lightbox js-toggle-cart"></div>
+    {% endblock %}
+    
+    {% block js %}
+    <script type="text/javascript">
+        $('#coupon').addClass('active')
+    </script>
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#coupon-list').DataTable();
+        });
+    </script>
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.select_all').click(function() {
+                if ($(this).is(':checked')) {
+                    $('.selecting').attr('checked', true);
+                } else {
+                    $('.selecting').attr('checked', false);
+                }
+            });
+        });
+    </script>
+    
+    <script type="text/javascript">
+        var cartOpen = false;
+    
+        $('body').on('click', '.js-toggle-cart', toggleCart);
+    
+        function toggleCart(e) {
+            var id = $(this).attr('data-id');
+          e.preventDefault();
+            $('#deleteForm').attr('action', "/shop/coupon/"+id+"/delete/");
+          if(cartOpen) {
+            closeCart();
+            return;
+          }
+          openCart();
+        }
+    
+        function openCart() {
+          cartOpen = true;
+          $('body').addClass('open');
+        }
+    
+        function closeCart() {
+          cartOpen = false;
+          $('body').removeClass('open');
+        }
+    </script>
+
+<script>
+    $(".img-prod").click( function(e) {
+        e.preventDefault();
+        var prod_id =  $(this).attr('id');
+        console.log(prod_id);
+        getproductdetails(prod_id, $('#product_detail'));
+    });
+
+    function getproductdetails(data, result_div){
+        $.ajax({
+        method: "GET",
+        url: "{% url 'cart:get_product_details' %}",
+        data: {'data':JSON.stringify(data)},
+        success: function(response){
+            console.log(result_div);
+        result_div.html(response);
+        }
+        });
+    }
+</script>
+    
+    {% endblock %}
+    

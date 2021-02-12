@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+{{block.super}} | Ship Orders
+{% endblock %}
+
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css' %}" />
+<style type="text/css">
+	.required .control-labels:after{
+		content: '* ';
+		color: #F00;
+		font-weight: bold;
+	}
+	 div .control-label:after{
+		content: '* ';
+		color: #F00;
+		font-weight: bold;
+	}
+	.refund-form{
+		margin-bottom: 20px;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Ship Orders &emsp;| &emsp;</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+		<!-- BEGIN BASIC ELEMENTS -->
+
+		<form class="form" id="changeStatusForm" role="form" action="" method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				<div class="main-card mb-3 card">
+					<div class="card-body">
+					<p>
+						<div id="error_quantity" style="margin: auto; color:red;"></div>
+						<div class="form-group">                     
+							<div>
+								<div class="form-group required">
+                                    <label><span class="control-labels">Condition</span></label>
+									{{ form.condition_status }}
+								</div>
+							</div>
+							<div>
+								<div class="form-group">
+                                    <label><span class="control-labels">Date and Time:</span></label>
+									{{ form.shipped_date }}
+								</div>
+							</div>
+							<div>
+								<div class="row">
+									<div class="col-md-10 col-sm-10">
+                                        <div class="form-group floating-label" style="display: block;">
+											<label><span class="control-labels">Code:</span></label>
+											{{ form.code }}
+										</div>
+									</div>
+										<div class="col-md-2 col-sm-2"  style="padding-top:20px;padding-left:75px;">
+											<input type="button" class="btn ink-reaction btn-primary btn-raised" value="Generate" onClick="generate();">
+										</div>
+
+									</div>
+								</div>
+							
+							<div class="refund-with-stock">
+								<div>
+									{% for refund in object.refund.all %}
+									<div class="refund-form">
+										<input type="hidden" class="refund-id" value="{{ refund.pk }}">
+										<div class="form-group product-e required">
+											<div style="padding-bottom: 5px;">
+												<label><span class="control-labels">Products</span></label>
+											</div>
+											<select name="products" class="form-control product-select2 refund-product" disabled="true">
+												 <option value="">------------</option>
+												{% for product in object.products.all  %} 
+												<option value="{{ product.id }}" {% if product.pk == refund.products.pk %}selected{% endif %}>{{ product.products.name }} (Quantity: {{ product.quantity }})</option>
+												{% endfor %}
+											</select>       
+										</div>
+										<div>
+											<div class="form-group floating-label required">
+												<input type="number" name="quantity" class="form-control product-quantity refund-quantity" value="{{ refund.quantity }}" />
+												<label><span class="control-labels">Quantity</span></label>
+											</div>
+										</div>
+									</div>
+
+									{% endfor %}
+										<span class="errors"></span>
+								</div>
+								{% if object.refund.count < object.products.count %}
+								<div class="refund-product" id="refund-product">
+									<div class="refund-form">
+										<input type="hidden" class="refund-id" value="">
+										<div class="form-group product-e">
+											<div style="padding-bottom: 5px;">
+												<label class="required" ><span class="control-label">Products</span></label>
+											</div>
+											<select name="products" class="form-control product-select2 ">
+												 <option value="">------------</option>
+												{% for product in object.products.all  %} 
+												<option value="{{ product.id }}">{{ product.products.name }} (Quantity: {{ product.quantity }})</option>
+												{% endfor %}
+											</select>       
+										</div>
+										<div>
+											<div class="form-group floating-label required">
+												<input type="number" name="quantity" class="form-control product-quantity refund-quantity" />
+												<label><span class="control-labels">Quantity</span></label>
+											</div>
+										</div>
+									</div>
+									<span class="errors"></span>
+								</div>
+								<a style="margin-top: 10px; float: left!important;" id="addrefundproduct" class="btn ink-reaction btn-floating-action btn-primary"><i class="fa fa-plus"></i></a>
+								{% endif %}
+							</div>
+						</div>                            
+					</p>
+						<div class="col-xs-12 text-right">
+							<button class="btn ink-reaction btn-primary btn-raised btn-submit" type="submit">{% if object %}Update{% else %}Save{% endif %}</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		</form>
+	</div>
+
+</section>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'dashboard/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+
+
+<script type="text/javascript">
+	$('#siteConfig').addClass('active')
+</script>
+<script type="text/javascript">
+
+	var $mainRefundForm = $('.refund-product').find('.refund-form').clone();
+	var productCount = '{{ object.products.count }}';
+	var formCount = $('.refund-form').length;
+
+	if(productCount == formCount){
+		$('#addrefundproduct').hide();
+	}
+
+	$('#addrefundproduct').click(function(e){
+		e.preventDefault();
+
+		if(formCount >= productCount){
+			alert('Cannot add new  product');
+			return;
+		}
+		var $element = $mainRefundForm.clone();
+		$('.refund-product').append($element);
+
+		formCount++;
+		if(formCount == productCount)
+			$(this).hide();		
+		
+		$('.product-select2').select2();
+		
+
+
+	})
+
+	$(document).ready(function(){
+		$('#select-list').select2();
+		$('.product-select2').select2();
+		$(function () {
+			$('.datetimepicker').datetimepicker({
+				locale: 'en',
+				sideBySide: true,
+				format:'YYYY-MM-DD HH:mm',
+			});
+		});
+	});
+
+</script>
+<script type="text/javascript">
+    $('#statusForm').addClass('active')
+    function randomPassword(length) {
+        var chars = "ABCDEFGHIJKLMNOP1234567890";
+        var pass = "";
+        for (var x = 0; x < length; x++) {
+            var i = Math.floor(Math.random() * chars.length);
+            pass += chars.charAt(i);
+        }
+        return pass;
+    }
+
+    function generate() {
+        changeStatusForm.code.value = randomPassword(6);
+        console.log( randomPassword(6));
+    }
+</script>
+<script>  
+
+	$(document).ready(function(){
+
+		$('body').on('change', '.product-select2', function(){
+			var that = this;
+			var parent = $(this).parents('.refund-form').get(0);
+			$('.refund-form').each(function(index, element){
+				if( element == parent){
+					return;
+				}
+				else {
+					var element_value = $(element).find('.product-select2 :selected').val();
+					var parent_value = $(parent).find('.product-select2 :selected').val();
+					if(element_value === parent_value){
+						$(parent).find('.product-e').find('.errors').empty();
+						$(parent).find('.product-e').append("<span class='errors' style='color:red;'>Product has been already selected</span>");
+						$(that).val("");
+						$(that).select2();
+					}
+					else $('.errors').hide();
+				}
+			})
+		});
+
+		$('.btn-submit').click(function(event){
+			if( $('#id_condition_status').val() == 34 ){
+				event.preventDefault();
+
+				console.log('Update Click');
+				var products_refund = []
+				var refundwithstock = $('.refund-with-stock');
+				
+				refundwithstock.find('.refund-form').each(function(index, element){
+					var id = $(element).find('.refund-id').val();
+					var product_id = $(element).find('.product-select2 :selected').val()
+					var quantity = $(element).find('.refund-quantity').val()
+					
+					products_refund.push({
+						'id':id, 
+						'product_id':product_id, 
+						'quantity':quantity})
+				});
+				console.log(products_refund)
+				$(this).text('Updating...');
+
+				$.ajax({
+					url: `{% url 'cart:order_refund' object.pk %}`,
+					method:'POST',
+					headers: {
+						'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+					},
+					data:{
+						'values':JSON.stringify(products_refund) ,
+					},
+					success:function(data){
+						if (data.message){
+							$('#error_quantity').html(data.message)
+						}
+						else{
+							window.location = '/orders'
+							}		
+					},
+				});
+			}
+		
+		});
+	})
+
+	// });
+</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+	 $('input[class^="refund-id"]').on('click', function() {  
+    alert(this.value);
+ });
+	 })
+</script>
+<script>  
+	function check_condition_status(){
+		var condition_status = $("#id_condition_status option:selected").text();
+		if( condition_status == 'Refunded with Stock' ){
+			$('.refund-with-stock').show();
+		}
+		else {
+			$('.refund-with-stock').hide();
+		}
+	}
+
+
+	$(document).ready(function(){
+		check_condition_status();
+
+		$('select').change(function(){
+			check_condition_status();
+		});
+
+	});
+</script>
+{% endblock %}

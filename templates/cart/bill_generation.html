@@ -1,0 +1,80 @@
+{% load multiply staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>receipt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+    <link rel="stylesheet" href="{% static 'dashboard/css/paper.css' %}">
+    <style>
+        
+        /* @page { size: 58mm 100mm }  */
+        /* output size */
+        /* body.receipt .sheet { width: 58mm; height: 100mm } */
+         /* sheet size */
+        /* @media print { body.receipt { width: 58mm } } fix for Chrome */
+
+
+        table, tbody, tr, td, th, thead {
+        page-break-inside: avoid !important;
+    }
+    </style>
+</head>
+
+<body class="receipt">
+    <section class="sheet padding-25mm">
+        <center>GAAVA</center>
+        <center>LAMJUNG</center>
+        <center>ESTIMATE</center>
+        Bill No. #{{ bill }}&nbsp;&nbsp;&nbsp; Date: {{ today }}
+        <table>
+            <thead>
+                <th>Particulars</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Amt</th> 
+            </thead>
+            <tbody>
+                {% for prod in object.products.all %}
+                    <tr>
+                        <td></center>{{ prod.products.name }}</center></td> 
+                        <td></center>{{ prod.quantity }}</center></td>
+                        <td></center>{{ prod.products.price|floatformat:'2' }}</center></td>
+                        <td></center>{{ prod.products.price|multiply_qty_price:prod.quantity|floatformat:'2' }}</center></td>
+                    </tr>
+                    {% endfor%}
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>Total</td>
+                        <td><center>{{ total|floatformat:'2' }}</center></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>Discount</td>
+                        <td><center>{{ discount|floatformat:'2' }}</center></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>VAT</td>
+                        <td><center>{{ vat|floatformat:'2' }}</center></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>Grand Total</td>
+                        <td><center>{{ grand_total|floatformat:'2' }}</center></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>Tender</td>
+                        <td><center>{{ tender|floatformat:'2' }}</center></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>Change</td>
+                        <td><center>{{ return_amt|floatformat:'2' }}</center></td>
+                    </tr>
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>

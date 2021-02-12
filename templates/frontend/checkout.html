@@ -1,0 +1,170 @@
+{% load staticfiles multiply %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Ayata Incorporation" />
+    <title>Gaava</title>
+    <link rel="icon" href="{% static 'frontend/img/icons/icon-32x32.png' %}" />
+    <link href="{% static 'frontend/vendor/bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
+    <link href="{% static 'frontend/vendor/icons/WebFont/font-css/LineIcons.css' %}" rel="stylesheet" />
+    <link href="{% static 'frontend/vendor/aos-master/dist/aos.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/vendor/slick/slick/slick.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/vendor/slick/slick/slick-theme.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/css/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/css/main.css' %}" />
+    <script src="{% static 'frontend/vendor/jQuery/jquery.min.js' %}"></script>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+    	<div class="col-md-7" style="background-color: #EBF5FB;">
+    		<div class="dpad-60">
+                <a href="/" class="underlineHover"><i class="lni lni-arrow-left"></i>&nbsp;Back to Homepage</a>
+
+    			<div class="mb-30 ml--10">
+    				<img src="{% static 'frontend/img/logo.png' %}" style="max-width: 200px;">
+    			</div>
+                <form class="form" action="{% url 'cart:checkout' %}" method="POST" id="user-form">{% csrf_token %} 
+                    <div>
+                        <h6>Contact Information</h6>
+	    				<div class="row">
+	    					<div class="col-md-6">
+		    					<div class="form-group">
+                                    <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                                    {{form.first_name}}
+							  	</div>
+		    				</div>
+		    				<div class="col-md-6">
+		    					<div class="form-group">
+                                    <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                                    {{form.last_name}}
+							  	</div>
+                            </div>
+                            {% if not request.user.is_authenticated %}
+		    				<div class="col-md-6">
+		    					<div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}">Email</label>
+                                    {{form.email}}
+							  	</div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6">
+		    					<div class="form-group">
+								    <label for="{{ form.mobile_number.id_for_label }}">Contact</label>
+                                    <input class="form-control" placeholder="Enter Contact Number" type="number" name="mobile_number" min="-9223372036854775808" max="9223372036854775807" id="id_contact_no1">
+							  	</div>
+		    				</div>
+	    				</div>
+                      </div>
+                      {% if not request.user.is_authenticated %}
+				  	<div class="mt-30">
+				  		<h6>Shipping Information</h6>
+		    			<div class="row">
+		    				<div class="col-md-8">
+		    					<div class="form-group">
+                                    <label for="{{ form.street_name.id_for_label }}">Street Name <span class="control-label"></span></label>
+                                    {{form.street_name}}
+							  	</div>
+		    				</div>
+		    				<div class="col-md-4">
+		    					<div class="form-group">
+                                    <label for="{{ form.city.id_for_label }}">City <span class="control-label"></span></label>
+                                    {{form.city}}
+							  	</div>
+		    				</div>
+		    				<div class="col-md-4">
+		    					<div class="form-group">
+                                    <label for="{{ form.country.id_for_label }}">Country <span class="control-label"></span></label>
+                                    {{form.country}}
+							  	</div>
+		    				</div>
+		    				<div class="col-md-4">
+		    					<div class="form-group">
+                                    <label for="{{ form.postal_code.id_for_label }}">Postal Code <span class="control-label"></span></label>
+                                    {{form.postal_code}}
+							  	</div>
+		    				</div>
+		    			</div>
+                      </div>
+                      {% endif %}
+
+                    <div class="form-footer mt-90">
+                        <input class="btn btn-next" type="submit" class="mt-3" value="Proceed"> 
+                    </div>
+
+				</form>
+			</div>
+    	</div>
+    	<div class="col-md-5">
+            <div class="plr-7 s-plr-0 mt-60">
+                <div class="text-center mb-30">
+                    <h3 class="text-green d-inline mx-auto font-weight-bold text-uppercase cart-title"><i class="lni lni-cart-full"></i>&nbsp;Your Cart</h3>
+				</div>
+				<div id="cart-items-page">
+                        {% include 'frontend/cart-items.html' %}                
+                </div>
+            </div>
+    	</div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'dashboard/scripts/main.js' %}"></script>  
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.count').prop('disabled', true);
+        $('#checkout').hide(); 
+        $(document).on('click','.plus',function(){
+            var qty = $(this).parent().find('.count');
+            var prod_id = $(this).attr('id');
+            // var result_div = $(this).parent().parent().next().find('p').attr('id');;
+            qty.val(parseInt(qty.val()) + 1 );
+            var quantity = qty.val();
+            update_quantity(prod_id, quantity);
+        });
+
+        $(document).on('click','.minus',function(){
+            var qty = $(this).next('.count');
+            qty.val(parseInt(qty.val()) - 1 );
+                if (qty.val() == 0) {
+                    qty.val(1);
+                }
+            var prod_id = $(this).attr('id');
+            // var result_div = $(this).parent().parent().next().find('p').attr('id');
+            var quantity = qty.val();
+            update_quantity(prod_id, quantity);
+            });
+
+        $(document).on('focusout','.count',function(){
+            var qty = $(this).parent().find('.count');
+            var prod_id = $(this).attr('id');
+            // var result_div = $(this).parent().parent().next().find('p').attr('id');;
+            var quantity = qty.val();
+            update_quantity(prod_id, quantity);
+        });
+
+
+        function update_quantity(prod_id, quantity){
+            $.ajax({
+                url: "/update/quantity/"+prod_id+"/",
+                method: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{csrf_token}}',
+                    'quantity': quantity,
+                },
+                success: function(response){
+                // $('#cart-items').html(response);
+                $('#cart-items-page').html(response);
+                }
+            });
+
+        }
+    });
+</script>
+</body>
+</html>
+

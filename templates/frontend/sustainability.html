@@ -1,0 +1,147 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<style type="text/css">
+    html{
+        scroll-behavior: smooth;
+    }
+</style>
+
+<div class="story-landing d-flex justify-content-center align-items-center">
+    <div class="story-landing-text text-green text-center col-8">
+        <h1 class="text-anders ">Natural Taste, Pure Production</h1>
+        <h3 class="text-capitalize font-1r">We bring you organic & reliable products</h3>
+        <div class="d-flex justify-content-center">
+            <div class="col-sm-8 col-12">
+                <p class="font-redish">Gaavaa is our initiative to help Nepalese farmers by allowing them to sell their harvested agricultural products into the niche market. This philosophy is intended to provide pure and sustainable goods to the primary consumers in both national and international markets.
+                </p>
+            </div>
+        </div>
+
+        <div class="navigation-slides" data-aos="fade-up" data-aos-duration="3000">
+          <div class="navigation-slides-main text-white"><a href="#harvest">Natually harvested products
+                </a>|<a href="#better"><span></span>Building Better lives
+                </a>|<a href="#impact"><span></span>Gaavaa's Impact
+                </a></div>
+        </div>
+    </div>
+</div>
+
+<div class="about-section mt-sm-5 mt-2" data-aos="fade-up" data-aos-duration="3000" id="harvest">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6" data-aos="fade-right" data-aos-duration="3000">
+                <div class="arrow-shape text-center"><img class="img-fluid autozise" src="{% static 'frontend/img/sustainability/harvest.jpeg' %}" alt="Harvested foods" style="width: 400px; height: 400px; object-fit: cover;"></div>
+            </div>
+            <div class="col-sm-6 d-flex mt-30">
+                <div class="align-self-center mx-auto text-center">
+                    <div class="text-box text-left">
+                        <h3 style="font-size: 2.5rem;">Natually Harvested Products</h3>
+                    </div>
+                    <p class="text-left font-redish pl-2">One of the main objectives of Gaavaa is to tend easiness to the Consumer Cooperative Community Market as well as farmer oriented digital marketplace. Gaavaa shall be a medium to connect these two groups to create an ecosystem where the quality of the goods being sold is ensured to have been pure and naturally harvested products.</p>
+                    <p class="text-left font-redish pl-2">We provide a full line of natural and organically grown foods and products in bulk or as minimally packaged as possible. We offer the highest quality products based on freshness, flavor, nutritional value and respect for the environment. We support local and regionally produced products. We emphasize organic as much as possible in our product selection. We cooperate with like-minded growers, producers, warehouses and distributors to bring these products to you.</p>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+<div class="container d-small-none  my-sm-5 my-2">
+    <div class="awareness-banner" data-aos="fade-down-right" data-aos-duration="3000" style="display: block;">
+                <a href="/shop/" class="awareness-banner__link bui-banner">
+                    <div class="awareness-banner__background-detail" aria-hidden="true"></div>
+                    <div class="awareness-banner__content">
+                        <div class="awareness-banner__header bui-f-font-display_two bui-u-text-left" aria-label="Find homes for your next trip">
+                            <div>
+                                <span>Buy Rare Products</span>
+                            </div>
+                            <span>
+                               from your couch.
+                           </span>
+                   </div>
+                   <button class="index-banner-cta bui-button bui-button--secondary" type="button" aria-label="Discover homes">
+                    <span class="bui-button__text bui-u-text-center bui-u-full-width">Discover products&nbsp;<i class="lni lni-arrow-right"></i></span>
+                </button>
+            </div>
+            <div class="magic-banner_image-container" aria-hidden="true">
+                <img data-src="https://cf.bstatic.com/static/img/bh/awareness/campaign/bh_aw_cpg_main_image/b0f5755d0651acbe9d3f3785a874258150b4393b.png" class="magic-banner_image js-lazy-image" data-lazy="1" src="https://cf.bstatic.com/static/img/bh/awareness/campaign/bh_aw_cpg_main_image/b0f5755d0651acbe9d3f3785a874258150b4393b.png">
+            </div>
+        </a>
+    </div>
+</div>
+
+
+<div class="blog-section" style="margin-bottom: 80px;">
+
+    <div class="blog-section" data-aos="fade-up" data-aos-duration="2000" id="better">
+        <div class="container">
+            <div class="text-box mx-auto">
+                <div class="text-box">
+                    <h3>Building Better Lives</h3>
+                </div>
+
+                <div class="align-self-center mx-auto text-center w-50">
+                    <p class="text-left font-redish pl-2">Gaavaa is a modern approach to help create a better place to connect nepali farmsers to the consumer. Our mission is to provide wellness inside and out to everyone. We are super passionate about creating the most effective, most innovative, and most FUN wellness products while cultivating a community that believes in diversity, equality, and acceptance.</p>
+                </div>
+            </div>
+
+            <div class="makin-section" id="banner">
+                <section class="gaava" data-aos="fade-up" data-aos-duration="1000" data-aos-offset="400">
+                    <div class="gaava__Wrapper p-5" style="background-color: #ecf4ec;border-radius: 20px;">
+                        <h3 class="gaava__Heading">Our Vision</h3>
+                        <div class="gaava__Description">
+                            <p>Agricultural development can be done successfully, at scale, and in a sustainable, productive, equitable and resilient way. Food can be equitably produced and distributed, agricultural systems can become resilient to stresses and shocks, and markets and value chains can provide incomes and reduce risks for smallholders.</p>
+
+                            <p>The challenges of food insecurity, malnutrition, climate change, population growth and unemployment, however, require that sustainable agriculture is achieved through Sustainable Intensification. Creating more durable benefits and using inputs on a more targeted and sustainable basis without damaging the environmental resources on which it depends is the core of Sustainable Intensification. The goals embrace the conservation and enhancement of natural landscapes and ecosystem services, reduction in greenhouse gas emissions, the strengthening social and human capital, as well as providing sustainable livelihoods for rural communities, including women and youth.</p>
+
+                            <p>While ambitious, Sustainable Intensification can reduce poverty and malnutrition, help communities adapt to climate change and create vibrant rural economies.</p>
+                        </div>
+
+                        <a href="/shop/" type="button" class="custom-btn effect01 text-center"><span>Shop Now</span></a>
+
+                        <div class="gaava-leaf"><img alt="" class="" data-src="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1x1.png?v=1601553040" data-srcset="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_360x.png?v=1601553040 360w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_540x.png?v=1601553040 540w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_720x.png?v=1601553040 720w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_900x.png?v=1601553040 900w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1080x.png?v=1601553040 1080w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1296x.png?v=1601553040 1296w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1512x.png?v=1601553040 1512w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1728x.png?v=1601553040 1728w" sizes="12.292887029288702px" src="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1x1.png?v=1601553040" srcset="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_360x.png?v=1601553040 360w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_540x.png?v=1601553040 540w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_720x.png?v=1601553040 720w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_900x.png?v=1601553040 900w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1080x.png?v=1601553040 1080w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1296x.png?v=1601553040 1296w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1512x.png?v=1601553040 1512w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1728x.png?v=1601553040 1728w"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div class="blog-section mb-5"  id="impact">
+        <div class="container">
+            <div class="text-box mx-auto">
+                <div class="text-box">
+                    <h3>Gaavaa's Impact</h3>
+                </div>
+            </div>
+
+            <div class="align-self-center mx-auto text-center w-75">
+                <p class="font-redish pl-2">We believe that sustainable agriculture must nurture healthy ecosystems and support the sustainable management of land, water and natural resources, while ensuring the food security. This ensures to motivate nepali farmers to keeping doing what they have been doing for generations and generations while at the same not having to worry about monetizing the products. Hence achieving a sense of security to grow more organic and chemical free foods and its derivatives.</p>
+            </div>
+
+            <div class="new-blocks">
+                <div class="new-blocks-item"  data-aos="fade-up" data-aos-duration="3000" >
+                    <img class="autozise" src="{% static 'frontend/img/sustainability/farmer_market.jpg' %}" alt="Farmer's Marketplace">
+                    <h3 class="new-blocks-title" style="color: ">Farmer's Marketplace</h3>
+                </div>
+
+                <div class="new-blocks-item" data-aos="fade-up" data-aos-duration="2500" >
+                    <img class="autozise" src="{% static 'frontend/img/sustainability/organic_foods.png' %}" alt="Pure & Organic Foods">
+                    <h3 class="new-blocks-title" style="color: ">Pure & Organic Foods</h3>
+                </div>
+
+                <div class="new-blocks-item" data-aos="fade-up" data-aos-duration="2000" >
+                    <img class="autozise" src="{% static 'frontend/img/sustainability/consumer.jpg' %}" alt="Consumer's Satisfication">
+                    <h3 class="new-blocks-title" style="color: ">Consumer's Satisfication</h3>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+{% endblock %}

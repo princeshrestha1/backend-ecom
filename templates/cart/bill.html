@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load staticfiles multiply %}
+
+{% block <title></title> %}
+    {{ block.super }} 
+{% endblock %}
+
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Bill</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="page-title-actions">
+                <div class="d-inline-block">
+                    <a class="mb-2 mr-2 btn btn-light js-toggle-cart" href="#">
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                        </span>
+                        Label Generate
+                    </a>
+                </div>
+            </div>  
+        </div>
+    </div>
+    
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <h2>Orders by: {{ object.user.username }} </h2>
+                        
+                        <p class="text-right sort-alpha">Ordered at : {{ object.created_at }} </p>
+                        
+                            
+                        <table class="table table-striped table-hover" style="margin-bottom:20px">
+                            <div>
+                                <thead>
+                                    <tr>
+                                        <th class="bt-0" scope="col">S.N</th>
+                                        <th class="bt-0" scope="col">Products</th>                                  
+                                        <th class="bt-0" scope="col">Quantity</th>
+                                        <th class="bt-0" scope="col">Price(In Rupees)</th>
+                                        <th class="bt-0" scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in object.products.all %}                                
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td> {{ product.products.name }} </td>
+                                        <td>{{ product.quantity }}</td>
+                                        <td>{{ product.products.price|floatformat:'2' }}</td>
+                                        <td>{{ product.products.price|multiply_qty_price:product.quantity|floatformat:'2' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td class="text-left" colspan="1" style="font-weight:bolder;">Total Amount</td>
+                                        <td class="text-left"> Rs. {{ total|floatformat:'2' }} </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td class="text-left" colspan="1" style="font-weight:bolder;">Discount Amount</td>
+                                        <td class="text-left"> Rs. {{ discount|floatformat:'2' }} </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td class="text-left" colspan="1" style="font-weight:bolder;">VAT Amount</td>
+                                        <td class="text-left"> Rs. {{ vat|floatformat:'2' }} </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td class="text-left" colspan="1" style="font-weight:bolder;">Grand Total</td>
+                                        <td class="text-left"> Rs. {{ grand_total|floatformat:'2' }} </td>
+                                    </tr>
+                                </tfoot>
+                            </div>
+                        </table>
+                        <form action="{% url 'cart:bill_generation' object.id %}" method="GET">
+                            Paid Amount: <input type="number" value="0" id="tender" onkeyup="inputKeyEnter(event)" required="false" name="tender"><br>
+                            <!-- Return: <div id="return" style="font-size: 30px;"></div> -->
+                            <div class="pull-right">
+                                <button type="submit" class="btn ink-reaction btn-primary btn-raised">
+                                    Generate Bill
+                                </button>         
+                            </div>                                
+                        </form>
+                    </div><!--end .table-responsive -->
+                </div><!--end .col -->
+            </div><!--end .row -->
+        </div>
+    </div>
+</div>
+
+<aside class="cart js-cart">
+    <div class="cart__header">
+        <h1 class="cart__title font-18 fw-700">Delete Product</h1>
+        <p class="cart__text">
+            <a class="button button--light js-toggle-cart" href="#" title="Close cart">
+                <i class="fas fa-times" style="font-size: 22px;"></i>
+            </a>
+        </p>
+    </div>
+    <div class="modal-content pt-80">
+        <div class="modal-body">
+            <form class="form" action="{% url 'cart:bill-generate' object.id %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Package Weight</label>
+                        <input type="text" name="package_weight" class="form-control"
+                            placeholder="Package Weight" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" id="submit" class="btn btn-success" value="Proceed">
+                    <a href="" class="cancel btn btn-primary" data-dismiss="modal">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</aside>
+
+<div class="lightbox js-lightbox js-toggle-cart"></div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var cartOpen = false;
+
+    $('body').on('click', '.js-toggle-cart', toggleCart);
+
+    function toggleCart(e) {
+        var id = $(this).attr('data-id');
+      e.preventDefault();
+        $('#deleteForm').attr('action', "/shop/product/"+id+"/delete/");
+      if(cartOpen) {
+        closeCart();
+        return;
+      }
+      openCart();
+    }
+
+    function openCart() {
+      cartOpen = true;
+      $('body').addClass('open');
+    }
+
+    function closeCart() {
+      cartOpen = false;
+      $('body').removeClass('open');
+    }
+</script>
+{% endblock js %}

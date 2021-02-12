@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3 class="modal-title">Approve Review</h3>
+</div>
+<form class="form" action="{% url 'cart:approve_review' object.id %}" method="POST">
+{% csrf_token %}
+    <div class="modal-body">
+    	{% if object.is_approved == True %}
+        Are you sure you want to unapprove this comment?
+        {% else %}
+        Are you sure you want to approve this comment?
+        {% endif %}
+        
+        {{ form.as_p }}
+    </div>
+    <div class="modal-footer">
+        <input type="submit" id="submit" class="btn btn-success" value="Save">
+        <a href="{% url 'cart:reviews' %}" class="btn btn-primary">Cancel</a>
+    </div>
+</form>

@@ -1,0 +1,324 @@
+{% load staticfiles multiply %}
+{% include 'frontend/header.html' %}
+
+<body>
+
+    <div id="shop-model" class="modal fade " tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" id="shop-dialog" role="document">
+            <div class="modal-content" id="shop-nav">
+                <button type="button" class="close mr-auto mt-5 ml-5 " data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        <i class="lni lni-32 lni-close text-danger text-uppercase font-22"></i>
+                        <p class="d-inline"> CLOSE</p>
+                    </span>
+                </button>
+                <div class="modal-body">
+                    <div class="navbar-nav ml-10 p-5 modal-menu font-1r">
+                        <small class="text-muted">Please select a product category to view the list of product details.</small>
+                        <br>
+                        <div class="row align-items-center">
+                            {% for cat in categories %}
+                            <div class="col-sm-3 col-6">
+                                <span class="mb-3 text-uppercase text-dark d-block">
+                                    <a class="nav-link" id="link1" href="{% url 'cart:clientcategorizedproductlist' cat.id %}">{{cat.title}}&nbsp;<i class="lni lni-arrow-right"></i></a>
+                                </span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- cart modal -->
+    <div id="cart-modal" class="modal fixed-right fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-aside" role="document">
+            <div class="modal-content">
+                <div class="text-left">
+                    <button type="button" class="close mb-20 p-30 small-pb-0" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="lni lni-32 lni-close text-danger font-22"> </i></span>
+                    </button>
+                </div>
+                <div class="modal-body plr-7">
+                    <div class="text-center mb-30">
+                        <h3 class="text-green d-inline mx-auto font-weight-bold text-uppercase cart-title"><i class="lni lni-cart-full"></i>&nbsp;Your Cart</h3>
+                    </div>
+                    <div id="cart-items">
+                        {% include 'frontend/cart-items.html' %}
+                    </div>
+                    
+
+                    <!-- if there's no item in the cart -->
+                    {% comment %}
+                    <div class="information text-center">
+                        <div class="alert alert-info" role="alert">
+                            <i class="lni lni-bullhorn"></i>&nbsp;You haven't added any items in your cart yet.
+                        </div>
+                        <a href="/shop/" type="button" class="custom-btn effect01 text-center"><span>Add Now !</span></a>
+                    </div>
+                    {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- tracker modal -->
+    <div id="tracker-modal" class="modal fixed-right fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-aside" role="document">
+            <div class="modal-content">
+                <div class="text-left">
+                    <button type="button" class="close mb-20 p-30" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="lni lni-32 lni-close text-danger font-22"> </i></span>
+                    </button>
+                </div>
+                <div class="modal-body plr-7">
+                    <div class="text-center mb-30">
+                        <h3 class="text-brown d-inline mx-auto font-weight-bold text-uppercase cart-title mb-5">Track Your order</h3>
+                    </div>
+                    <form action="{% url 'cart:tracking_result_processing' %}" method="GET">
+                        <div class="order-form mt-5">
+                            <div class="form-group">
+                                <label for="trackingID" class="font-weight-bold">Tracking ID:</label>
+                                <input type="text" name="code" class="form-control mx-0" id="trackingID" aria-describedby="trackHelp" placeholder="Enter Your Tracking ID ...">
+                                <small id="trackHelp" class="form-text text-muted">Tracking ID is available in your product purchage invoice/history.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center pt-60">
+                            <button type="submit" class="custom-btn effect01 text-center">
+                                <span>Proceed</span>
+                            </button>
+                            <button type="button" class="custom-btn effect01 text-center">
+                                <span>Cancel</span>
+                            </button>
+                        </div>
+                    </form>
+                   
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="changepw-modal" class="modal fixed-right fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-aside" role="document">
+            <div class="modal-content">
+                <div class="text-left">
+                    <button type="button" class="close mb-20 p-30" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="lni lni-32 lni-close text-danger font-22"> </i></span>
+                    </button>
+                </div>
+                {% include 'account/change_password.html' %}
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-nav text-uppercase fixed-top pt-2">
+
+    	<div class="d-1221-none plr-0" style="width:100%;">
+    		<div class="row">
+    			<div class="col-6 text-left plr-0 pl-10">
+        				<img src="{% static 'frontend/img/logo.png' %}" width="120" alt="gaavaa">
+	            </div>
+    			<div class="col-6 text-right plr-0 pr-10">
+	            	<ul class="navbar-nav ml-auto d-sm-flex d-block">
+	            		<li class="nav-item float-sm-left float-none">
+	            			<button class="navbar-toggler text-white border-no" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		                        <i class="lni lni-menu lni-border color-black"></i>
+		                    </button>
+	            		</li>
+	            		<li class="nav-item float-sm-left float-none">
+	                        <a class="nav-link border-transparent mr-3" id="view-cart" data-toggle="modal" type="button" data-target="#cart-modal">
+	                            <i class="lni lni-shopping-basket lni-border color-black lni-18"></i>
+	                        </a>
+	                    </li>
+	                    {% if request.user.is_authenticated %}
+	                    <li class="nav-item float-sm-left float-none">
+	                        <div class="dropdown show">
+	                          	<a class="dropdown-toggle nav-link border-transparent mr-3" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="lni lni-user lni-border color-black lni-18"></i>
+	                          	</a>
+
+	                          	<div class="dropdown-menu mt-15" aria-labelledby="dropdownMenuLink">
+		                            <a class="dropdown-item" href="{% url 'cart:my_orders' %}"><i class="lni lni-cart"></i>&nbsp;Your Orders</a>
+		                            <a class="dropdown-item" href="{% url 'account:profile-detail' request.user.pk %}"><i class="lni lni-clipboard"></i>&nbsp;My Profile</a>
+		                            <a class="dropdown-item" href="{% url 'cart:track' %}" data-toggle="modal" data-target="#tracker-modal"><i class="lni lni-map-marker"></i>&nbsp;Order Tracker</a>
+		                            <a class="dropdown-item" href="{% url 'account:profile-detail' request.user.pk %}"><i class="lni lni-key"></i>&nbsp;Change Passowrd</a>
+		                            <a class="dropdown-item" href="{% url 'account:logout' %}"><i class="lni lni-exit"></i>&nbsp;Logout</a>
+	                          	</div>
+	                        </div>
+	                    </li>
+	                    {% else %}
+	                    <li class="nav-item float-sm-left float-none">
+	                        <a class="nav-link border-transparent mr-3" href="{% url 'account:client_login' %}">
+	                            <i class="lni lni-user lni-border color-black lni-18"></i>
+	                        </a>
+	                    </li>
+	                    {% endif %}
+	                    
+	                </ul>
+	            </div>
+    		</div>
+        </div>
+        <div class="container-fluid plr-7 s-plr-0">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-0 mr-auto">
+                    <li class="nav-item mr-2">
+                        <a class="nav-link" data-toggle="modal" type="button" data-target="#shop-model">shop</a>
+                    </li>
+                    <li class="nav-item mr-2">
+                        <a class="nav-link" href="{% url 'cart:our_story' %}">our story</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cart:sustainability' %}">sustainability</a>
+                    </li>
+                </ul>
+
+                <a class="navbar-brand mr-auto d-small-none d-800-none" href="/"><img src="{% static 'frontend/img/logo.png' %}" width="152" alt="gaavaa"></a>
+
+                <ul class="navbar-nav ml-auto d-small-none">
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item float-sm-left float-none">
+                        <div class="dropdown show">
+                          <a class="dropdown-toggle nav-link border-transparent mr-3" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="lni lni-user lni-24"></i>
+                          </a>
+
+                          <div class="dropdown-menu mt-15" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'cart:my_orders' %}"><i class="lni lni-cart"></i>&nbsp;Your Orders</a>
+                            <a class="dropdown-item" href="{% url 'account:profile-detail' request.user.pk %}"><i class="lni lni-clipboard"></i>&nbsp;My Profile</a>
+                            <a class="dropdown-item" href="{% url 'cart:track' %}" data-toggle="modal" data-target="#tracker-modal"><i class="lni lni-map-marker"></i>&nbsp;Order Tracker</a>
+                            <a class="dropdown-item" href="{% url 'account:profile-detail' request.user.pk %}"><i class="lni lni-key"></i>&nbsp;Change Passowrd</a>
+                            <a class="dropdown-item" href="{% url 'account:logout' %}"><i class="lni lni-exit"></i>&nbsp;Logout</a>
+                          </div>
+                        </div>
+                    </li>
+
+
+                    {% else %}
+                    <li class="nav-item d-sm-inline-block d-none">
+                        <a class="nav-link border-transparent mr-3" href="{% url 'account:client_login' %}">
+                            <i class="lni lni-user lni-24"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item d-sm-inline-block d-none">
+                        <a class="nav-link border-transparent" id="view-cart" data-toggle="modal" type="button" data-target="#cart-modal">
+                            <i class="lni lni-shopping-basket lni-24"></i>&nbsp;
+                            <span id="items-count" class="badge badge-success badge-circle">0</span>
+                            <!-- <span id="items-count" class="badge badge-success badge-circle">{% if cart_items %}{{cart_items|length}}{% elif my_cart %}{{my_cart|length}}{% else %}0{% endif %}</span> -->
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+	
+	{% include 'frontend/footer.html' %}
+
+	<script>
+	    $(document).on('click', '.addToCart',function(){
+	        var prod_id = $(this).attr('data-id');
+	        add_to_cart(prod_id, $('#cart-items'));
+	        
+
+	        function add_to_cart(prod_id, result_div){
+	            $.ajax({
+	            method: "POST",
+	            url: "/addto/cart/"+prod_id+"/",
+	            data: {
+	                csrfmiddlewaretoken: '{{ csrf_token }}',
+	                prod_id: prod_id,
+	            },
+	            success: function(response){
+                result_div.html(response);
+                console.log($('#items-count').html());
+                $('#items-count').html(parseInt($('#items-count').html()) + 1 );
+	            }
+	            });
+	        }
+	    });
+	</script>
+
+	<script>
+	    $(document).on('click', '#view-cart',function(){
+	        get_cart_products($('#cart-items'));
+	        function get_cart_products(result_div){
+	            $.ajax({
+	            method: "GET",
+	            url: "/get/products-in-cart/",
+	            
+	            success: function(response){
+	            result_div.html(response);
+	            }
+	            });
+	        }
+	    });
+	</script>
+
+	<script type="text/javascript">
+	    $(document).ready(function(){
+	        $('.count').prop('disabled', true);
+	        $(document).on('click','.plus',function(){
+	            var qty = $(this).parent().find('.count');
+	            var prod_id = $(this).attr('id');
+	            // var result_div = $(this).parent().parent().next().find('p').attr('id');;
+	            qty.val(parseInt(qty.val()) + 1 );
+	            var quantity = qty.val();
+	            update_quantity(prod_id, quantity);
+	        });
+
+	        $(document).on('click','.minus',function(){
+	            var qty = $(this).next('.count');
+	            qty.val(parseInt(qty.val()) - 1 );
+	                if (qty.val() == 0) {
+	                    qty.val(1);
+	                }
+	            var prod_id = $(this).attr('id');
+	            // var result_div = $(this).parent().parent().next().find('p').attr('id');
+	            var quantity = qty.val();
+	            update_quantity(prod_id, quantity);
+	            });
+
+	        $(document).on('focusout','.count',function(){
+	            var qty = $(this).parent().find('.count');
+	            var prod_id = $(this).attr('id');
+	            // var result_div = $(this).parent().parent().next().find('p').attr('id');;
+	            var quantity = qty.val();
+	            update_quantity(prod_id, quantity);
+	        });
+
+
+	        function update_quantity(prod_id, quantity){
+	            $.ajax({
+	                url: "/update/quantity/"+prod_id+"/",
+	                method: 'POST',
+	                data: {
+	                    csrfmiddlewaretoken: '{{csrf_token}}',
+	                    'quantity': quantity,
+	                },
+	                success: function(response){
+	                $('#cart-items').html(response);
+	                }
+	            });
+
+	        }
+	    });
+	</script>
+
+    <script type="text/javascript">
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+
+
+	{% block js %}
+	{% endblock js %}
+
+</body>
+</html>

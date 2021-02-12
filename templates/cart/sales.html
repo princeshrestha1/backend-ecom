@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} | Sales List
+{% endblock %}
+
+{% block styles %}
+<link type="text/css" rel="stylesheet" src="{% static 'dashboard/css/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css' %}"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Sales List</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="page-title-actions">
+
+                <div class="d-inline-block">
+                    <a class="mb-2 mr-2 btn btn-light btn-floating-action btn-default js-toggle-cart">
+                        <span class="btn-icon-wrapper pr-2 opacity-7">
+                            <i class="fa fa-download"></i>
+                        </span>
+                        Export
+                    </a>
+                </div>
+>
+            </div>  
+        </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <form class="needs-validation" novalidate="" action="{% url 'cart:sales_filter' %}" method="GET">
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="validationCustom01">What are you looking for?</label>
+                        <input type="text" class="form-control" name="product" id="validationCustom01" placeholder="Search product name" required="">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="validationCustom02">Category</label>
+                        <select id="category-select" name="category" class="mb-2 form-control">
+                            <option>Default Select</option>
+                            {% for cat in categories %}
+                            <option>{{cat.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="validationCustomUsername">Showing orders for</label>
+                        <br/>
+                        <input class="form-control" id="daterange" type="daterange" name="daterange" value="01/01/2020 - 01/15/2021" />
+                    </div>
+                    <div class="col-md-2 mb-3" style="text-align: center;vertical-align:middle;margin-top: 30px;">
+                        <button class="btn btn-primary" id="orderSearch" type="submit" style="padding-left: 30px;padding-right: 30px;">SEARCH</button>
+                    </div>
+                </div>
+            </form>
+
+            
+        </div>
+    </div>
+    
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table id="datatable1" class="table table-striped table-hover" style="margin-bottom:20px">
+                            <thead>
+                                <tr>    
+                                    <th class="sort-numeric">S.N</th>                              
+                                    <th>User</th>
+                                    <th>Products</th>
+                                    <th>Shipped Date</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sale in object_list %}                                
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'cart:order_details' sale.order.id %}">{{ sale.order.user.username}}</a>
+                                    </td>
+                                    <td>
+                                        {% for prods in sale.order.products.all %}
+                                            <span class="badge">{{ prods.products.name }}</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{ sale.order.shipped_date }}</td>
+                                    <td>{{ sale.order.grand_total }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<aside class="cart js-cart">
+    <div class="cart__header">
+        <h1 class="cart__title font-18 fw-700">Export Data</h1>
+        <p class="cart__text">
+            <a class="button button--light js-toggle-cart" href="#" title="Close cart">
+                <i class="fas fa-times" style="font-size: 22px;"></i>
+            </a>
+        </p>
+    </div>
+    <div class="modal-content pt-80">
+        <div class="modal-body">
+            <form class="form" action="{% url 'cart:export_view' %}" method="GET">
+                <div class="modal-body">
+                    {{ form.as_p }}
+                </div>
+                
+                <div class="text-right">
+                    <input type="submit" class="btn btn-success" value="Proceed">
+                    <a href="" class="btn btn-primary">Cancel</a>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</aside>
+
+<div class="lightbox js-lightbox js-toggle-cart"></div>
+
+{% endblock %}
+
+{% block js %}
+
+    <script src="{% static 'dashboard/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript">
+        var cartOpen = false;
+        var numberOfProducts = 0;
+
+        $('body').on('click', '.js-toggle-cart', toggleCart);
+        // $('body').on('click', '.js-add-product', addProduct);
+        // $('body').on('click', '.js-remove-product', removeProduct);
+
+        function toggleCart(e) {
+          e.preventDefault();
+          if(cartOpen) {
+            closeCart();
+            return;
+          }
+          openCart();
+        }
+
+        function openCart() {
+          cartOpen = true;
+          $('body').addClass('open');
+        }
+
+        function closeCart() {
+          cartOpen = false;
+          $('body').removeClass('open');
+        }
+
+        // function addProduct(e) {
+        //   e.preventDefault();
+        //   openCart();
+        //   $('.js-cart-empty').addClass('hide');
+        //   var product = $('.js-cart-product-template').html();
+        //   $('.js-cart-products').prepend(product);
+        //   numberOfProducts++;
+        // }
+
+        // function removeProduct(e) {
+        //   e.preventDefault();
+        //   numberOfProducts--;
+        //   $(this).closest('.js-cart-product').hide(250);
+        //   if(numberOfProducts == 0) {
+        //     $('.js-cart-empty').removeClass('hide');
+        //   }
+        // }
+    </script>
+    <script type='text/javascript'>
+        $('#datatable1').dataTable();
+        </script>
+
+<script>
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+</script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $(function () {
+            $('.datetimepicker').datetimepicker({
+                locale: 'en',
+                sideBySide: true,
+                format:'YYYY-MM-DD ',
+            });
+        });
+    });
+    </script>
+{% endblock %}

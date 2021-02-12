@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+{{block.super}} | Category {% if object %}Update{% else %}Create{% endif %}
+{% endblock %}
+
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/plugin/databasic/summernote-ext-databasic.min.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css" rel="stylesheet" />
+<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.css" rel="stylesheet"></script>
+
+
+{% endblock %}
+
+{% block content %}
+{{form.media}}
+	<div class="app-main__inner">
+        <div class="app-page-title pt-18">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="card-body p-0">
+                        <div class="mr-2 btn-group">
+                            <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Add New Category</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-title-actions">
+                    <div class="d-inline-block">
+                        <a class="mb-2 mr-2 btn btn-light" href="{% url 'cart:categories' %}">
+                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                            Back to categories
+                        </a>
+                    </div>
+                </div>  
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="main-card mb-3 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Category Details</h5>
+                        <form class="form" role="form" action="{% if object %}{% url 'cart:category_update' object.id %}{% else %}{% url 'cart:category_create' %}{% endif %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.title.id_for_label }}">Category Title</label>
+                                    {{ form.title }}
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.description.id_for_label }}">Description</label>
+                                    <br>
+                                    {{ form.description }}
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.image.id_for_label }}">Image</label>
+                                    <br>
+                                    {{ form.image }}
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-right mt--10">
+                                <button class="mt-1 btn btn-primary pl-pr-40" type="submit">SAVE AND NEXT</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="main-card mb-3 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Category List</h5>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tabs-eg-77">
+                                <ul class="rm-list-borders rm-list-borders-scroll list-group list-group-flush">
+                                    {% for category in categories %}
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left mr-3">
+                                                    <img class="border-half" width="30" src="{% if category.image %}{{category.image.url}}{% else %}{% static 'dashboard/docimg/1.png' %}{% endif %}" alt="">
+                                                </div>
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">{{category.title}}</div>
+                                                </div>
+                                                <div class="widget-content-right">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+    </div>
+{% endblock content %}
+
+{% block js%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+
+
+    <script type="text/javascript">
+        $('#category').addClass('active')
+    </script>
+
+
+
+    <script>  
+        $(document).ready(function(){
+            $('.SEO').hide();
+            $('#showseo').text('Show SEO Information');
+        });
+        $('#showseo').click(function(){
+           $('.SEO').toggle();
+           $('#showseo').text() == 'Hide SEO Information' ? $('#showseo').text('Show SEO Information') : $('#showseo').text('Hide SEO Information');
+        });
+    </script>
+{% endblock %}
+
+
+

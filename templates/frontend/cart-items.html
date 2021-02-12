@@ -1,0 +1,59 @@
+{% load staticfiles multiply %}
+<table class="table" style="min-height: 40%;">
+    {% for cart in cart_list  %}
+    <tr>
+        <td scope="col" width="20%" style="text-align: center;">
+            <img src="{{cart.products.products.photos.all.0.photo.url}}" width="100" alt="cart" class="img-product-icon">
+        </td>
+        <td scope="col" width="60%">
+            <h6 class="text-dark text-uppercase fw-500 mb-0">
+                {{ cart.products.products.name }}
+            </h6>
+            <p class="mb-10 text-muted small">
+                Unflavored/Unsweetened | 23.8 oz
+            </p>
+            <div class="qty mt-5 d-inline">
+                <span class="minus bg-brown" id="{{cart.products.id}}" data-toggle="tooltip" data-placement="bottom" title="-1"><i class="lni lni-circle-minus"></i></span>
+                <input type="number" class="count" name="qty" value="{{cart.products.quantity}}" id="{{cart.products.id}}">
+                <span class="plus bg-brown" id="{{cart.products.id}}" data-toggle="tooltip" data-placement="bottom" title="+1"><i class="lni lni-circle-plus"></i></span>
+            </div>
+        </td>
+        <td scope="col" class="text-brown font-22 text-center" width="20%">
+            <a href="{% url 'cart:remove_from_cart' cart.id %}" data-toggle="tooltip" data-placement="bottom" title="remove this item"><i class="lni lni-32 lni-trash text-danger font-22"></i></a>
+            <p class="font-22 pt-32 fw-700 mb-0" id="total">Rs.&nbsp;{{cart.products.quantity|multiply_qty_price:cart.products.products.grand_total}}</p>
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
+<hr>
+{% if cart_list %}
+<div class="pl-2">
+    <table class="table">
+        <tr>
+            <td class="cart-menu text-left">Subtotal</td>
+            <td class="text-right color-text-blue">Rs.&nbsp;{{ sub_total|floatformat:'2' }}</td>
+        </tr>
+        <tr>
+            <td class="cart-menu text-left">Shipping</td>
+            <td class="text-right color-text-blue">Calculated at checkout</td>
+        </tr>
+        
+        <tr>
+            <td class="cart-menu text-left">VAT Amount</td>
+            <td class="text-right color-text-blue">Calculated at checkout</td>
+        </tr>
+        <tr>
+            <td class="cart-total text-left text-uppercase">Total</td>
+            <td class="text-right color-text-blue" id="grand-total">Rs.&nbsp;{{ sub_total|floatformat:'2' }}</td>
+        </tr>
+    </table>
+</div>
+{% endif %}
+{% if cart_list or my_cart %}
+<div class="text-center pt-60">
+    <a href="{% url 'cart:checkout' %}" type="button" id="checkout" class="custom-btn effect01 text-center">
+        <span>CHECKOUT&nbsp;<i class="lni lni-arrow-right"></i></span>
+    </a>
+</div>
+{% endif %}

@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+{% load staticfiles %}   
+
+{% block content %}
+    <div class="app-main__inner">
+        <div class="row">
+            <div class="col-md-8 col-xl-8">
+                <h5 class="dashboard-title">Sales and Profit Goals</h5> 
+                <div class="row">
+                    <div class="col-md-6 col-xl-6">
+                        <div class="card mb-3 widget-content">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left" style="margin-top: -45px;">
+                                    <img width="42" src="{% static 'dashboard/img/2.png' %}" alt="">
+                                </div>
+                                <div class="widget-content-right">
+                                    <div class="widget-heading">Sales</div>
+                                    <div class="widget-numbers"><span>{{sales}}</span></div>
+                                    <div class="widget-subheading">Compared to Rs.0 last year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-6">
+                        <div class="card mb-3 widget-content">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left" style="margin-top: -45px;">
+                                    <img width="42" src="{% static 'dashboard/img/1.png' %}" alt="">
+                                </div>
+                                <div class="widget-content-right">
+                                    <div class="widget-heading">Profit</div>
+                                    <div class="widget-numbers"><span>{{sales}}</span></div>
+                                    <div class="widget-subheading">Compared to 0 last year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-6">
+                        <div class="card mb-3 widget-content">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left" style="margin-top: -45px;">
+                                    <img width="42" src="{% static 'dashboard/img/3.png' %}" alt="">
+                                </div>
+                                <div class="widget-content-right">
+                                    <div class="widget-heading">Order</div>
+                                    <div class="widget-numbers"><span>{{orders_count}}</span></div>
+                                    <div class="widget-subheading">Compared to 0 last year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-6">
+                        <div class="card mb-3 widget-content">
+                            <div class="widget-content-wrapper">
+                                <div class="widget-content-left" style="margin-top: -45px;">
+                                    <img width="42" src="{% static 'dashboard/img/4.png' %}" alt="">
+                                </div>
+                                <div class="widget-content-right">
+                                    <div class="widget-heading">Revenue</div>
+                                    <div class="widget-numbers"><span>{{sales}}</span></div>
+                                    <div class="widget-subheading">Compared to 10% last year</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xl-4">
+                <h5 class="dashboard-title">My Categories</h5> 
+
+                <div class="main-card mb-3 card">
+                    <div class="card-body mt--10">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tabs-eg-77">
+                                <ul class="rm-list-borders rm-list-borders-scroll list-group list-group-flush">
+                                    {% for cat in categories %}
+                                    <li class="list-group-item">
+                                        <div class="widget-content p-0">
+                                            <div class="widget-content-wrapper">
+                                                <div class="widget-content-left mr-3">
+                                                    {% if cat.image %}
+                                                    <img class="border-half" width="30" src="{{cat.image.url}}" alt="">
+                                                    {% else %}
+                                                    <img class="border-half" width="30" src="{% static 'dashboard/docimg/1.png' %}" alt="">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="widget-content-left">
+                                                    <div class="widget-heading">{{cat.title}}</div>
+                                                    <div class="widget-subheading">32%</div>
+                                                </div>
+                                                <div class="widget-content-right">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <h5 class="dashboard-title pt-10">This Year and Last Years Overview</h5> 
+            	<div class="card mb-3">
+            		<figure class="highcharts-figure pt-10 pl-10">
+	                    <div id="highcharts-container"></div>
+	                </figure>
+            	</div>
+            </div>
+            <div class="col-md-4 col-xl-4">
+                <h5 class="dashboard-title pt-10">Today's Statistics</h5> 
+                <div class="main-card mb-3 card">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Total Orders</div>
+                                            <div class="widget-subheading">Last year expenses</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-success">{{orders_count}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="widget-progress-wrapper">
+                                        <div class="progress-bar-xs progress">
+                                            <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="width: 65%;"></div>
+                                        </div>
+                                        <div class="progress-sub-label">
+                                            <div class="sub-label-left">YoY Growth</div>
+                                            <div class="sub-label-right">100%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Clients</div>
+                                            <div class="widget-subheading">Total Clients Profit</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-primary">$12.6k</div>
+                                        </div>
+                                    </div>
+                                    <div class="widget-progress-wrapper">
+                                        <div class="progress-bar-lg progress-bar-animated progress">
+                                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="47" aria-valuemin="0" aria-valuemax="100" style="width: 47%;"></div>
+                                        </div>
+                                        <div class="progress-sub-label">
+                                            <div class="sub-label-left">Retention</div>
+                                            <div class="sub-label-right">100%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-outer">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Followers</div>
+                                            <div class="widget-subheading">People Interested</div>
+                                        </div>
+                                        <div class="widget-content-right">
+                                            <div class="widget-numbers text-danger">45,9%</div>
+                                        </div>
+                                    </div>
+                                    <div class="widget-progress-wrapper">
+                                        <div class="progress-bar-sm progress-bar-animated-alt progress">
+                                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="width: 65%;"></div>
+                                        </div>
+                                        <div class="progress-sub-label">
+                                            <div class="sub-label-left">Twitter Progress</div>
+                                            <div class="sub-label-right">100%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            
+            <!-- <div class="col-md-4">
+                <h5 class="dashboard-title pt-10">Delivery List</h5>
+                <div class="main-card mb-3 card">
+                    <div class="card-header-tab card-header-tab-animation card-header">
+                        <div class="card-header-title">
+                            <i class="header-icon lnr-apartment icon-gradient bg-love-kiss"> </i>
+                            Today's Delivery List
+                        </div>
+                    </div>
+                    <div class="card-body mt--20 pl-30">
+                        <ul class="rm-list-borders rm-list-borders-scroll list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left mr-3">
+                                            <img width="42" class="rounded-circle" src="{% static 'dashboard/images/avata' %}rs/9.jpg" alt="">
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Ella-Rose Henry</div>
+                                            <div class="widget-subheading">Scaling</div>
+                                        </div>
+                                        <div class="widget-content-right" style="margin-left:auto;">
+                                            <div class="font-size-lg text-muted">
+                                                <small class="opacity-5 pr-1">On-Going</small>
+                                                <small class="text-danger pl-2">
+                                                    -
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left mr-3">
+                                            <img width="42" class="rounded-circle" src="{% static 'dashboard/images/avata' %}rs/5.jpg" alt="">
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Ruben Tillman</div>
+                                            <div class="widget-subheading">Medical Check-up</div>
+                                        </div>
+                                        <div class="widget-content-right" style="margin-left:auto;">
+                                            <div class="font-size-lg text-muted">
+                                                <span>12:00 PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left mr-3">
+                                            <img width="42" class="rounded-circle" src="{% static 'dashboard/images/avata' %}rs/4.jpg" alt="">
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Vinnie Wagstaff</div>
+                                            <div class="widget-subheading">Surgery</div>
+                                        </div>
+                                        <div class="widget-content-right" style="margin-left:auto;">
+                                            <div class="font-size-lg text-muted">
+                                                <span>12:15 PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left mr-3">
+                                            <img width="42" class="rounded-circle" src="{% static 'dashboard/images/avata' %}rs/3.jpg" alt="">
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Ella-Rose Henry</div>
+                                            <div class="widget-subheading">Surgery</div>
+                                        </div>
+                                        <div class="widget-content-right" style="margin-left:auto;">
+                                            <div class="font-size-lg text-muted">
+                                                <span>13:15 PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left mr-3">
+                                            <img width="42" class="rounded-circle" src="{% static 'dashboard/images/avata' %}rs/2.jpg" alt="">
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Ruben Tillman</div>
+                                            <div class="widget-subheading">Surgery</div>
+                                        </div>
+                                        <div class="widget-content-right" style="margin-left:auto;">
+                                            <div class="font-size-lg text-muted">
+                                                <span>13:45 PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="widget-content p-0">
+                                    <div class="widget-content-wrapper">
+                                        <div class="widget-content-left mr-3">
+                                            <img width="42" class="rounded-circle" src="{% static 'dashboard/images/avata' %}rs/5.jpg" alt="">
+                                        </div>
+                                        <div class="widget-content-left">
+                                            <div class="widget-heading">Ruben Tillman</div>
+                                            <div class="widget-subheading">Medical Check-up</div>
+                                        </div>
+                                        <div class="widget-content-right" style="margin-left:auto;">
+                                            <div class="font-size-lg text-muted">
+                                                <span>12:00 PM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>  
+            </div>  -->     
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script type="text/javascript">
+        Highcharts.chart('highcharts-container', {
+            chart: {
+                type: 'areaspline'
+            },
+            title: {
+                text: 'Sales Overview'
+            },
+            xAxis: {
+                categories: [
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday',
+                    'Sunday'
+                ],
+                plotBands: [{ 
+                    from: 4.5,
+                    to: 6.5,
+                    color: 'rgba(68, 170, 213, .2)'
+                }]
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' units'
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                areaspline: {
+                    fillOpacity: 0.5
+                }
+            },
+            series: [{
+                name: 'Sales 2020',
+                data: [3, 4, 3, 5, 4, 10, 12]
+            }, {
+                name: 'Sales 2019',
+                data: [1, 3, 4, 3, 3, 5, 4]
+            }]
+        });
+    </script>
+{% endblock js %}
+

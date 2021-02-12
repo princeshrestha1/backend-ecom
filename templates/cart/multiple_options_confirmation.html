@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head_title %}
+{{ block.super }} | Delete {{ model }}
+{% endblock %}
+
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+{% if option == '1' %}
+    <section>
+        <div class="section-header">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'cart:dashboard' %}">Dashboard</a></li>
+                <li class="active">Delete {{ model }}s</li>
+            </ol>
+        </div>
+
+
+        <div class="section-body contain-lg">
+            <!-- BEGIN BASIC ELEMENTS -->
+            <form class="form" action="{% url 'cart:multiple_option_confirmation' model option %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div style="display: none;">
+                                    {% for id in ids  %}
+                                        <input type="hidden" class="id_list" name="id_list" value="{{ id }}">
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    Are you sure you want to delete objects of {{ model }}?
+                                </div>
+                                <div class="col-md-12 text-left">
+                                    <button type="submit" id="submit" class="btn btn-success" value="{{ urls }}", name="urls", class="urls">Delete</button>
+                                    <a href="{{ urls }}" class="cancel btn btn-danger">Cancel</a>
+                                </div><!--end .col -->
+                            </div><!--end .card-body -->
+                    </div><!--end .card -->
+
+                </div><!--end .col -->
+            </div><!--end .row -->
+            </form>
+        </div><!--end .section-body -->
+    </section>
+{% elif option == '2' %}
+    <section>
+        <div class="section-header">
+            <ol class="breadcrumb">
+                <li>Dashboard</li>
+                <li class="active"> Make {{ model }}s Visible </li>
+            </ol>
+        </div>
+
+        <div class="section-body contain-lg">
+            <!-- BEGIN BASIC ELEMENTS -->
+            <form class="form" action="{% url 'cart:multiple_option_confirmation' model option %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div style="display: none;">
+                                    {% for id in ids  %}
+                                        <input type="hidden" class="id_list" name="id_list" value="{{ id }}">
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    Are you sure you want to make the selected {{ model }}s visible?
+                                </div>
+                                <div class="col-md-12 text-left">
+                                    <button type="submit" id="submit" class="btn btn-success" value="{{ urls }}", name="urls", class="urls"> Make Visible</button>
+                                    <a href="{% url 'cart:products' %}" class="btn btn-danger">Cancel</a>
+                                </div><!--end .col -->
+                            </div><!--end .card-body -->
+                    </div><!--end .card -->
+
+                </div><!--end .col -->
+            </div><!--end .row -->
+            </form>
+        </div><!--end .section-body -->
+    </section>
+{% elif option == '3' %}
+    <section>
+        <div class="section-header">
+            <ol class="breadcrumb">
+                <li>Dashboard</li>
+                <li class="active">Make {{ model }}s as New {{ model }}s</li>
+            </ol>
+        </div>
+        <div class="section-body contain-lg">
+            <!-- BEGIN BASIC ELEMENTS -->
+            <form class="form" action="{% url 'cart:multiple_option_confirmation' model option %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div style="display: none;">
+                                    {% for id in ids  %}
+                                        <input type="hidden" class="id_list" name="id_list" value="{{ id }}">
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    Are you sure you want to make the selected {{ model }}s as new?
+                                </div>
+                                <div class="col-md-12 text-left">
+                                    <button type="submit" id="submit" class="btn btn-success" value="{{ urls }}", name="urls", class="urls"> Mark as New</button>
+                                    <a href="{% url 'cart:products' %}" class="btn btn-danger">Cancel</a>
+                                </div><!--end .col -->
+                            </div><!--end .card-body -->
+                    </div><!--end .card -->
+
+                </div><!--end .col -->
+            </div><!--end .row -->
+            </form>
+        </div><!--end .section-body -->
+    </section>
+{% elif option == '4' %}
+    <section>
+        <div class="section-header">
+            <ol class="breadcrumb">
+                <li>Dashboard</li>
+                <li class="active"> Make {{ model }}s as {{ model }}s on Sale</li>
+            </ol>
+        </div>
+        <div class="section-body contain-lg">
+            <!-- BEGIN BASIC ELEMENTS -->
+            <form class="form" action="{% url 'cart:multiple_option_confirmation' model option %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div style="display: none;">
+                                    {% for id in ids  %}
+                                        <input type="hidden" class="id_list" name="id_list" value="{{ id }}">
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    Are you sure you want to make the selected {{ model }}s on sale?
+                                </div>
+                                <div class="col-md-12 text-left">
+                                    <button type="submit" id="submit" class="btn btn-success" value="{{ urls }}", name="urls", class="urls">{% if model.is_new == False %} Mark {{ model }} New {% else %}Remove {{ model }} from Sale{% endif %} </button>
+                                    <a href="{% url 'cart:products' %}" class="btn btn-danger">Cancel</a>
+                                </div><!--end .col -->
+                            </div><!--end .card-body -->
+                    </div><!--end .card -->
+
+                </div><!--end .col -->
+            </div><!--end .row -->
+            </form>
+        </div><!--end .section-body -->
+    </section>
+{% elif option == '5' %}
+    <section>
+        <div class="section-header">
+            <ol class="breadcrumb">
+                <li>Dashboard</li>
+                <li class="active"> Make {{ model }}s as Coming Soon </li>
+            </ol>
+        </div>
+        <div class="section-body contain-lg">
+            <!-- BEGIN BASIC ELEMENTS -->
+            <form class="form" action="{% url 'cart:multiple_option_confirmation' model option %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div style="display: none;">
+                                    {% for id in ids  %}
+                                        <input type="hidden" class="id_list" name="id_list" value="{{ id }}">
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    Are you sure you want to make the selected {{ model }}s as coming soon?
+                                </div>
+                                <div class="col-md-12 text-left">
+                                    <button type="submit" id="submit" class="btn btn-success" value="{{ urls }}", name="urls", class="urls"> Mark as Coming Soon</button>
+                                    <a href="{% url 'cart:products' %}" class="btn btn-danger">Cancel</a>
+                                </div><!--end .col -->
+                            </div><!--end .card-body -->
+                    </div><!--end .card -->
+
+                </div><!--end .col -->
+            </div><!--end .row -->
+            </form>
+        </div><!--end .section-body -->
+    </section>
+
+{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="container-fluid mt-100 mb-60">
+    <div class="row mt-5">
+        <div class="col-md-7 mt-5 plr-2">
+            <div class="product-details d-flex justify-content-center mx-auto" id="image-sticky"> 
+                <img src="{{product.photos.all.0.photo.url}}" alt="product" style="max-width: 100%;max-height: 600px;"> 
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-5 sm-w-25 mt-5 ml-5 ml-s-0 text-brown">
+                        <h5 class="text-anders mb-10 font-header text-brown" data-aos="fade-right" data-aos-duration="1000">01</h4>
+                        <p class="mb-5" data-aos="fade-right" data-aos-duration="1500"> 25g of protein per serving
+                        </p>
+                    </div>
+                    <div class="text-right sm-w-25 mr-5 mb-5 mr-s-0 color-green" data-aos="fade-left" data-aos-duration="1000"
+                        data-aos-delay="300">
+                        <h5 class="text-anders mb-10 font-header color-green">02</h4>
+                        <p> 25g of protein per serving</p>
+                    </div>
+                    <div class="sm-w-25 ml-5 mb-5 ml-s-0 color-red" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="600">
+                        <h5 class="text-anders mb-10 font-header color-red">03</h4>
+                        <p> 25g of protein per serving</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-200 d-flex justify-content-center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-right p-5 p-s-0">
+                            <h3 class="text-anders font-header text-uppercase">Profile</h3>
+                            <p>
+                                This protein powder is vegan, gluten free & non-gmo. We don’t use artificial sweeteners, artificial flavours
+                                or colours.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-60">
+                        <table class="table" style="min-width: 100px !important;font-size: 12px;padding: 1px;text-align: left;">
+                            <tbody>
+                                <tr>
+                                  <td class="table-head">Harvest</td>
+                                  <td>May - June and November - December</td>
+                                </tr>
+                                <tr>
+                                  <td class="table-head">Altitude</td>
+                                  <td>Himalayan region above 2000 meters</td>
+                                </tr>
+                                <tr>
+                                  <td class="table-head">Season</td>
+                                  <td>Low pre-monsoon rain and drought</td>
+                                </tr>
+                                <tr>
+                                  <td class="table-head">Usage</td>
+                                  <td>Aphrodisiac and boosting immune systems</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="d-small-none">
+                <div class="col-12 d-flex px-5 justify-content-center">
+                    <div class="round-icons" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-duration="110"
+                        data-aos-delay="110" data-aos-offset="200">
+                        <div class="circle-icon" style="background-color: #8acbaf; color: #ffffff;"><span>4</span>
+                        </div>
+                        <span class="icon-title">Aroma</span>
+                    </div>
+                    <div class="round-icons mt-5" data-aos="fade-zoom-in" data-aos-easing="ease-in-back"
+                        data-aos-duration="110" data-aos-delay="150" data-aos-offset="260">
+                        <div class="circle-icon" style="background-color: #1d6aba; color: #ffffff"><span>5</span>
+                        </div>
+                        <span class="icon-title">Texture</span>
+                    </div>
+                    <div class="round-icons mt-5" data-aos="fade-zoom-in" data-aos-easing="ease-in-back"
+                        data-aos-duration="110" data-aos-delay="200" data-aos-offset="260">
+                        <div class="circle-icon" style="background-color: #f6bf3a; color: #fff"><span>1</span>
+                        </div>
+                        <span class="icon-title">Doses</span>
+                    </div>
+                    <div class="round-icons" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-duration="110"
+                        data-aos-delay="250" data-aos-offset="200">
+                        <div class="circle-icon" style="background-color: #6cb8c7; color: #ffffff"><span>5</span>
+                        </div>
+                        <span class="icon-title">Color</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 d-flex justify-content-center">
+                <div style="width: 100%;">
+                    <img src="{% static 'frontend/img/gorkha.svg' %}">
+                </div>
+            </div>
+            <!-- <div class="col-12 mt-200 d-flex justify-content-center">
+                <div class="contents">
+                    <div class="shape-1 d-flex justify-content-center"><img width="400" src="{% static 'frontend/img/honey.pn' %}g" alt="honey">
+                    </div>
+                    <h2 class="text-anders text-green ">Mad Honey</h2>
+                    <p>Suggested Usage</p>
+                    <p>
+                        Mix one scoop of powder into cold water or other beverage of your choice or add to your favorite
+                        smoothie.
+                    </p>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="col-md-5 mt-5 d-flex justify-content-center align-items-start pr-5">
+            <div class="text-left p-4" id="detail">
+                <h2 class="text-anders text-green ">{{product.name}}</h2>
+                {% for cat in product.categories.all %}
+                <h6>{{cat.title}}</h6>
+                {% endfor %}
+                <div class="product-description">
+                    {{product.description|safe}}
+                </div>
+                {% comment %}
+                <div class="row checkbox-form mb-3">
+                    <div class="col-md-6 col-sm-6">
+                        <input class="d-inline" type='radio' name="optradio" id="OneTime" onclick="javascript:checkSubscribe();" checked>
+                            One-time purchase
+                        </input>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <input class="d-inline" type='radio' name="optradio" id="subscribe" onclick="javascript:checkSubscribe();"> Subscribe
+                        & Save 10%
+                        </input>
+                    </div>                    
+                </div>
+                {% endcomment %}
+
+                <div class="row">
+                    
+                    <div class="col-7">
+                        <a data-id="{{product.id}}" data-toggle="modal" type="button" data-target="#cart-modal" class="custom-btn effect01 text-center addToCart">
+                            <span>Add To Cart</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-3 ">
+                    <a class="font-redish" type="button" onclick="javascript:detailsAlert();"> <i
+                            class="lni lni-stamp"></i> Full Ingredients List</a>
+                    &nbsp;&nbsp;<a type="button" onclick="javascript:contentsAlert();" class="font-redish"><i
+                            class="lni lni-book"></i> Nutritient
+                        Facts</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+{% endblock %}

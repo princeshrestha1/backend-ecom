@@ -1,0 +1,78 @@
+{% extends 'frontend/base.html' %}
+{% load mathfilters get_title_photo multiply rating_count %}
+{% load staticfiles thumbnail %}
+
+{% block content %}
+<div class="container mt-100">
+    <h1 class="text-anders font-header text-center font-weight-bold mb-5 mt-100 font-3vw">All Products</h1>
+    <div class="row">
+        {% for product in object_list|slice:"3" %}
+        {% if forloop.counter < 4 %}
+        <div class="col-md-4 col-lg-3 col-6 mb-5 plr-2">
+            <div class="shape-4 shop mx-auto">
+                <a href="{% url 'cart:product_detail' product.id %}" class="mx-auto">
+                    <img class="product-image" src="{{product.photos.all.0.photo.url}}" alt="product"> 
+                </a>
+            </div>
+            <div class="product-title text-center mt-5">
+                <h4 class="font-1r">{{product.name}}</h4>
+                {% for cat in product.categories.all %}
+                <p>{{cat.title}}</p>
+                {% endfor %}
+                <a data-id="{{product.id}}" data-toggle="modal" type="button" data-target="#cart-modal" class="custom-btn effect01 text-center addToCart"><span>Buy Now Rs. {{product.price}}</span></a>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% for product in object_list %}
+    {% if forloop.counter == 4 %}
+    <div class="row mt-5">
+        <div class="col-md-7 mt-5">
+            <div class="shape-1 feature d-flex justify-content-center mx-auto"><img src="{{product.photos.all.0.photo.url}}" alt="product"> </div>
+        </div>
+        <div class="col-md-5 my-auto">
+            <div class="text-justify">
+                <h2 class="text-anders text-brown">{{product.name}}</h2>
+                {% for cat in product.categories.all %}
+                <p>{{cat.title}}</p>
+                {% endfor %}
+                <ul>
+                    <li>25g protein per serving</li>
+                    <li>Multi-sourced plant-based protein complex</li>
+                    <li>Made with sprouted ancient grains</li>
+                    <li>Gluten-free, non-GMO, 100% Vegan</li>
+                    <li>Made with 100% pure organic browns</li>
+                    <li>Not one trace of any banned substances</li>
+                </ul>
+                <a data-id="{{product.id}}" data-toggle="modal" type="button" data-target="#cart-modal" class="custom-btn effect01 text-center addToCart"><span>Buy Now {{product.price}}</span></a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    <div class="row mt-100">
+        {% for product in object_list|slice:"3:" %}
+        {% if forloop.counter > 4 %}
+        <div class="col-md-6 col-lg-4 mb-5 plr-2">
+            <div class="shape-4 shop mx-auto">
+                <a href="{% url 'cart:product_detail' product.id %}" class="mx-auto">
+                    <img class="product-image" src="{{product.photos.all.0.photo.url}}" alt="product"> 
+                </a>
+            </div>
+            <div class="product-title text-center mt-5">
+                <h4 class="text-anders text-brown">{{product.name}}</h4>
+                {% for cat in product.categories.all %}
+                <p>{{cat.title}}</p>
+                {% endfor %}
+                <a data-id="{{product.id}}" data-toggle="modal" type="button" data-target="#cart-modal" class="custom-btn effect01 text-center addToCart"><span>Buy Now Rs. {{product.price}}</span></a>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock js %}

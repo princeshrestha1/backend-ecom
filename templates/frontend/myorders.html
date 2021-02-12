@@ -1,0 +1,212 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles multiply %}
+
+{% block content%}
+  <div class="container mt-130">
+      <h2 class="fw-700 mb-0">Hello {{request.user.first_name}}!</h2>
+      <p>You can view your order history here</p>
+      <div class="row mt-30 sm-mt-10">
+        <div class="col-12 col-sm-12 col-md-2 col-lg-2 mt-25">
+          <div class="v-tab">
+            <ul class="tab__head">
+                  <li class="active" rel="tab1">Upcoming</li>
+                  <li rel="tab2">History</li>
+                  <li rel="tab3">Returned</li>
+                  <li rel="tab4">Cancelled</li>
+              </ul>
+          </div>
+
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 sm-mt-120">
+            <div class="v-tab">
+              <div class="tab__container">
+                  <div id="tab1" class="tab__content">
+                      <div class="card br-10">
+                  <div class="card-body">
+                      {% for order in object_list %}
+                      {% if order.condition_status.name == 'Order Placed' or  order.condition_status.name == 'Order Confirmed' or order.condition_status.name == 'Order Processed' or order.condition_status.name == 'Ready to Ship' %}
+                    <form class="mt-10">
+                      <div>
+                        <!-- <h6>Estimated delivery by January 16, 2021</h6> -->
+                        <p class="text-muted">Shipped on {{order.shipped_date|date}}</p>
+                        <table class="table" style="min-height: 40%;">
+                          <tbody>
+                            {% for product in order.products.all %}
+                            <tr>
+                                <td scope="col" width="20%" style="text-align: center;">
+                                    <img src="{{product.products.photos.all.0.photo.url}}" width="50" alt="cart" style="max-height: 100px;">
+                                </td>
+                                <td scope="col" width="60%">
+                                  <h6 class="color-brown text-uppercase fw-500 mb-0">
+                                        {{product.products.name}}
+                                  </h6>
+
+                                    <p class="mb-0 color-brown font-12">
+                                        {{product.products.category.all.0.name}}
+                                    </p>
+                                    <p class="mb-0 color-brown font-12">
+                                        Owner | {{product.products.owner}}
+                                    </p>
+                                    <p class="mb-10 mt-0 color-brown font-12">
+                                        Total Quantity | {{product.quantity}}
+                                    </p>
+                                </td>
+                                <td scope="col" class="text-brown font-22 text-center d-small-none d-800-none" width="20%">
+                                    <p class="font-22 mb-0" id="total">{{ product.products.grand_total|multiply_qty_price:product.quantity|floatformat:'2' }}</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                      </div>
+                  </form>
+                  {% endif %}
+                  {% endfor %}
+                  <hr>
+                  <div class="row pt-10">
+                    <div class="col-md-8">
+                      <h6>Shipping Address</h6>
+                        <p class="text-mute">
+                            {{request.user.user_shipping_addr.all.0.full_address}}
+                        </p>
+                    </div>
+                    <div class="col-md-4 mt-30 text-right">
+                      <a href="#" class="underlineHover text-danger">Change</a>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row pt-10">
+                    <div class="col-md-12">
+                      <h6>Payment Method</h6>
+                        <p class="text-mute">
+                          Cash On Delivery
+                        </p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="text-right">
+                    <a href="" type="button" class="custom-btn effect01 text-center">Save Changes</a>
+                  </div>
+                    
+                  </div>
+              </div>
+                  </div>
+                  <div id="tab2" class="tab__content">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    {% for order in object_list %}
+                    {% if order.condition_status.name == 'Delivered' %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <h6>Delivered on {{order.shipped_date|date}}</h6>
+                                    <p class="text-muted mb-0">{{order.products.all|length}} items |  Rs. {{order.total}}</p>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <table class="table" style="min-height: 40%;">
+                          <tbody>
+                            {% for product in order.products.all %}
+                            <tr>
+                                <td scope="col" width="20%" style="text-align: center;">
+                                    <img src="{{product.products.photos.all.0.photo.url}}" width="50" alt="cart" style="max-height: 100px;">
+                                </td>
+                                <td scope="col" width="60%">
+                                  <h6 class="color-brown text-uppercase fw-500 mb-0">
+                                        {{product.products.name}}
+                                  </h6>
+
+                                    <p class="mb-0 color-brown font-12">
+                                        {{product.products.category.all.0.name}}
+                                    </p>
+                                    <p class="mb-0 color-brown font-12">
+                                        Owner | {{product.products.owner}}
+                                    </p>
+                                    <p class="mb-10 mt-0 color-brown font-12">
+                                        Total Quantity | {{product.quantity}}
+                                    </p>
+                                </td>
+                                <td scope="col" class="text-brown font-22 text-center d-small-none d-800-none" width="20%">
+                                    <p class="font-22 mb-0" id="total">{{ product.products.grand_total|multiply_qty_price:product.quantity|floatformat:'2' }}</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                  </div>
+                  <div id="tab3" class="tab__content">
+                      <div class="card br-10">
+                  <div class="card-body">
+                    <h5 class="card-title">Vouchers</h5>
+                    <div class="text-center">
+                      <img src="https://image.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg" style="max-width: 300px;">
+                      <h6>Oops! No voucher found!</h6>
+                      <p>We are currently out of vouchers. We will notify you when we come up with it!</p>
+                    </div>
+                </div>
+              </div>
+                  </div>
+                  <div id="tab4" class="tab__content">
+                    <div class="card br-10">
+                <div class="card-body">
+                  <h5 class="card-title">Cancelled orders</h5>
+                  <div class="text-center">
+                    <img src="https://image.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg" style="max-width: 300px;">
+                    <h6>Oops! No cancelled orders found!</h6>
+                    <p>There are no cancelled orders yet !!!</p>
+                  </div>
+              </div>
+            </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 pt-20">
+          <div class="card br-10 pt-10">
+          <div class="card-body text-center">
+            <h6>Got Questions?<br/> Message Support</h6>
+            <p class="font-12 mt-30">Our friendly support team is here for questions about billing, shipping and account changes</p>
+            <p class="text-muted">24 hour response time</p>
+            <div class="text-center">
+              <a href="" type="button" class="custom-btn effect01 text-center">Message Support</a>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(".tab__content").hide();
+    $(".tab__content:first").show();
+    
+    $(".tab__head li").click(function() {
+        $(".tab__content").hide();
+        var activeTab = $(this).attr("rel"); 
+        $("#"+activeTab).fadeIn();    
+        $(".tab__head li").removeClass("active");
+        $(this).addClass("active");
+      
+    });
+</script>
+<script type="text/javascript">
+    function toggleIcon(e) {
+        $(e.target)
+            .prev('.panel-heading')
+            .find(".more-less")
+            .toggleClass('glyphicon-plus glyphicon-minus');
+    }
+    $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+    $('.panel-group').on('shown.bs.collapse', toggleIcon);
+</script>
+{% endblock %}

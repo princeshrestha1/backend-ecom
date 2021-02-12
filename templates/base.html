@@ -1,0 +1,211 @@
+{% load staticfiles %}
+
+{% include 'header.html' %}
+    <body>
+        <div class="app-container app-theme-white fixed-sidebar closed-sidebar">
+            <div class="app-header header-shadow">
+                <div class="app-header__logo pr-0 pl-0">
+                    <div class="logo-src">
+                    	<img src="{% static 'dashboard/images/logo.jpg' %}" style="margin-top: -13px">
+                    </div>
+                    <div class="header__pane ml-auto">
+                        <div>
+                            <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" data-class="closed-sidebar">
+                                <span class="hamburger-box">
+                                    <span class="hamburger-inner"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="app-header__mobile-menu">
+                    <div>
+                        <button type="button" class="hamburger hamburger--elastic mobile-toggle-nav">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="app-header__menu">
+                    <span>
+                        <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                            <span class="btn-icon-wrapper">
+                                <i class="fa fa-ellipsis-v fa-w-6"></i>
+                            </span>
+                        </button>
+                    </span>
+                </div>    
+                <div class="app-header__content">
+                    <div class="app-header-left">
+                        <div class="search-wrapper">
+                            <div class="input-holder">
+                                <input type="text" class="search-input" placeholder="Type to search">
+                                <button class="search-icon"><span></span></button>
+                            </div>
+                            <button class="close"></button>
+                        </div> 
+                    </div>
+                    <div class="app-header-right">
+                        <div class="header-btn-lg pr-0">
+                            <div class="widget-content p-0">
+                                <div class="widget-content-wrapper">
+                                    <div class="widget-content-left">
+                                        <div class="btn-group">
+                                            <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
+                                                <img width="42" class="rounded-circle" src="assets/images/avatars/1.jpg" alt="">
+                                                <i class="fa fa-angle-down ml-2 opacity-8"></i>
+                                            </a>
+                                            <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu dropdown-menu-right">
+                                                <button type="button" tabindex="0" class="dropdown-item">User Account</button>
+                                                <button type="button" tabindex="0" class="dropdown-item">Settings</button>
+                                                <div tabindex="-1" class="dropdown-divider"></div>
+                                                <button type="button" tabindex="0" class="dropdown-item">Logout</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="widget-content-left  ml-3 header-user-info">
+                                        <div class="widget-heading">
+                                            Celeste Shrestha
+                                        </div>
+                                        <div class="widget-subheading">
+                                            Admin
+                                        </div>
+                                    </div>
+                                    <div class="widget-content-right header-user-info ml-3">
+                                        <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example">
+                                            <i class="fa text-white fa-calendar pr-1 pl-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>        
+                    </div>
+                </div>
+            </div> 
+            <div style="background: none;">
+                <div class="app-header__logo pr-0 pl-0">
+                </div>
+            </div>   
+
+            <div class="app-main">
+                <div class="app-sidebar sidebar-shadow nano">
+                    <div class="scrollbar-sidebar ">
+                        <div class="app-sidebar__inner nano-content">
+                            <div>
+                                <a href="/gaava-admin/"><img class="logo-non-hover" src="{% static 'dashboard/images/logo-inverse.jpg' %}" style="max-width: 40px; margin-top: -80px;margin-left: 10px;"></a>                  
+                            </div>
+                            <ul class="vertical-nav-menu mt--20">
+                                <li class="app-sidebar__heading">Gaavaa Admin Menu</li>
+                                <li>
+                                    <a href="{% url 'cart:dashboard' %}" class="{% if url_name == 'dashboard' %}mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="dashboard">
+                                        <i class="metismenu-icon flaticon-home"></i>
+                                        <p>Dashboard</p>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'cart:categories' %}" class="{% if url_name == 'category' %}mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="category">
+                                        <i class="metismenu-icon flaticon-folder"></i>
+                                        Category
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                    <a href="{% url 'cart:products' %}" class="{% if url_name == 'product' %}mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="product">
+                                        <i class="metismenu-icon flaticon-shopping-bag"></i>
+                                        Product
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'cart:orders' %}" class="{% if url_name == 'orders' %}mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="orders">                                    
+                                        <i class="metismenu-icon flaticon-dashboard"></i>
+                                        Orders <span class="badge" style="background-color:#f00;"> {{orders_count}} </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'cart:sales' %}" class="{% if url_name == 'sales' %}
+                                    mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="sales">                                 
+                                    <i class="metismenu-icon flaticon-receipt"></i>
+                                    Sales <span class="badge" style="background-color:#f00;"> {{orders_count}} </span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'cart:users' %}" class="{% block users %}  {% endblock %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="customers">
+                                    <i class="metismenu-icon flaticon-user"></i>
+                                    Customers<span class="badge" style="background-color:#f00;"> {{users}} </span>                                </a>
+                                </li>
+
+                                {% comment %}
+                                <li>
+                                    <a href="{% url 'cart:reviews' %}" class="{% block reviews %}{% endblock %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="reviews">
+                                        <i class="metismenu-icon flaticon-comment"></i>
+                                        Reviews<span class="badge" style="background-color:#f00;"> {{reviews}} </span>
+                                    </a>
+                                </li>
+                                {% endcomment %}
+
+                                <li>
+                                    <a href="{% url 'cart:coupons' %}" class="{% if url_name == 'coupon' %}mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="coupons">
+                                        <i class="metismenu-icon flaticon-coupon"></i>
+                                        Coupons
+                                    </a>
+                                </li>
+
+
+                                {% if request.user.is_superuser %}
+                                <li>
+                                    <a href="{% url 'account:adminStaffList' %}" class="{% block staffs %}{% endblock %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="staff">
+                                        <i class="metismenu-icon flaticon-group"></i>
+                                        <span class="title">Staff</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                <li>
+                                    <a href="{% url 'cart:trackers' %}" class="{% if url_name == 'trackers' %}
+                                    mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="tracker">
+                                        <i class="metismenu-icon flaticon-tracking-1"></i>
+                                        Tracker
+                                    </a>
+                                </li>
+
+                            <!-- <li>
+                                <a href="{% url 'cart:status' %}" class="{% if url_name == 'status' %}mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light"
+                                    <i class="metismenu-icon lni lni-graph"></i>
+                                    Status
+                                </a>
+                            </li> -->
+
+                        <li>
+                            <a href="{% url 'cart:tags' %}" class="{% if url_name == 'tags' %}mm-active{% endif %}" data-toggle="tooltip" data-placement="top" data-custom-class="tooltip-light" title="tags">
+                                <i class="metismenu-icon flaticon-tag"></i>
+                                Tags
+                            </a>
+                        </li>
+
+                        <!-- <li>
+                            <a href="message.php">
+                                <i class="metismenu-icon lni lni-envelope"></i>
+                                Message
+                            </a>
+                        </li> -->
+
+
+                    </ul>
+                </div>
+            </div>
+        </div> 
+        <div class="app-main__outer mt--60">
+            {% block content %}
+            {% endblock content %}
+
+            {% include 'footer.html' %}
+
+            {% block js %}
+            {% endblock js %}
+
+    </body>
+</html>
+

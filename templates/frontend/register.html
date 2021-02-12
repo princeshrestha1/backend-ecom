@@ -1,0 +1,58 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles %}
+
+{% block styles %}
+<style type="text/css">
+    .ftco-section-parallax{
+        display: none;
+    }
+    .footer{
+        display: none;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="" data-aos="fade-down" data-aos-duration="2500">
+    <div class="row w-100 justify-content-center">
+        <div class="col-sm-4 col-11 pr-sm-2 pr-0">
+            <form action="" method="post"  enctype="multipart/form-data" class="mr-sm-0 mr-2">
+                <div id="formContent" class="user__login mr-sm-0 mr-2 w-100 px-sm-5 px-3" style="max-width: inherit;">
+                    <!-- register -->
+                    <div class="mb-4 mt-5 pt-5">
+                        <h1 class="text-anders text-brown font-weight-bold">Register</h1>
+                        <p class="px-sm-5 px-1 mb-0">Please fill the below form to create your account.</p>
+                    </div>
+                    {% if error %}
+                    <h3 style="color: #dc3545;">{{ error }}</h3>
+                   {% endif %} 
+
+                    <!--  Sign Up form -->
+                    {% csrf_token %}
+                    {{form.first_name}}
+                    {{form.last_name}}
+                    {{form.email}}
+                    {{form.password1}}
+                    {{form.password2}}
+                    <!-- <input type="text" id="firstname" name="firstname" placeholder="first name">
+                    <input type="text" id="secondname" name="secondname" placeholder="second name">
+                    <input type="text" id="email" name="email" placeholder="email">
+                    <input type="text" id="password" name="login" placeholder="password"> -->
+                    
+                    <input type="submit" class="m-auto user-submit" value="Register">
+
+                    <!-- Remind Passowrd -->
+                    <div id="formFooter" class="d-block">
+                        <p class="text-muted mb-1">Already have an account?</p>
+                        <a class="underlineHover" href="{% url 'account:client_login' %}"><i class="lni lni-key"></i>&nbsp;Back to login</a>
+                    </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+

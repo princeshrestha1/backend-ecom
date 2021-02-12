@@ -1,0 +1,323 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles %}
+
+{% block content%}
+<style type="text/css">
+  input[type="checkbox"] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  .toggle-btn {
+    top: 20px !important;
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 40px;
+    height: 21px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+  }
+
+  .toggle-btn:after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+
+  input:checked + .toggle-btn {
+    background: #82E0AA;
+  }
+
+  input:checked + .toggle-btn:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+
+  .toggle-btn:active:after {
+    width: 130px;
+  }
+</style>
+<div class="container mt-130">
+  <h2 class="fw-700 mb-0">Hello Ronesh</h2>
+  <p>Change your profile and account settings</p>
+  <div class="row mt-30 sm-mt-10">
+    <div class="col-md-3 mt-25">
+      <div class="v-tab">
+        <ul class="tab__head">
+          <li class="active" rel="tab1">Account</li>
+          <li rel="tab2">Address Book</li>
+          <li rel="tab3">Vouchers</li>
+          <li rel="tab4">Password</li>
+          <li rel="tab5">Notification</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-9 sm-mt-180">
+      <div class="v-tab">
+        <div class="tab__container">
+          <div id="tab1" class="tab__content">
+            <div class="card br-10">
+              <div class="card-body">
+                <h5 class="card-title">Account</h5>
+                <form class="mt-30" action="{% url 'account:profile-edit' request.user.pk %}" method="post">
+                  {% csrf_token %}
+                  <div>
+                    <h6>Contact Information</h6>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="{{profile_form.label_for_first_name}}">First Name</label>
+                          {{profile_form.first_name}}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="{{profile_form.label_for_last_name}}">Last Name</label>
+                          {{profile_form.last_name}}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="{{profile_form.label_for_email}}">Email</label>
+                          {{profile_form.email}}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="{{profile_form.label_for_mobile_number}}">Mobile Number</label>
+                          {{profile_form.mobile_number}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row pt-10">
+                    <div class="col-md-8">
+                      <h6>Delete Account</h6>
+                      <p class="text-mute">
+                        By deleting your account you will loose all your data
+                      </p>
+                    </div>
+                    <div class="col-md-4 mt-30 text-right">
+                      <a href="#" class="color-red">Delete Account</a>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="text-right">
+                    <button type="submit" class="custom-btn effect01 text-center">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div id="tab2" class="tab__content">
+            <div class="card br-10">
+              <div class="card-body">
+                <h5 class="card-title">Shipping Information</h5>
+                <form class="mt-30" action="{% url 'account:update_shipping_addr' %}" method="POST">
+                  {% csrf_token %}
+                  <div>
+                    <h6>Address Book</h6>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="form-group">
+                          <label for="{{shipping_from.label_for_street_name}}">Street Name</label>
+                          {{shipping_from.street_name}}
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="{{shipping_from.label_for_city}}">City</label>
+                          {{shipping_from.city}}
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="{{shipping_from.label_for_country}}">Country</label>
+                          {{shipping_from.country}}
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="{{shipping_from.label_for_contact_number}}">Contact Number</label>
+                          {{shipping_from.contact_number}}
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="{{shipping_from.label_for_postal_code}}">Postal Code</label>
+                          {{shipping_from.postal_code}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row pt-10">
+                    <div class="col-md-8">
+                      <h6>New Address</h6>
+                      <p class="text-mute">
+                        You can add at most 2 shipping address to your currnt acoount
+                      </p>
+                    </div>
+                    <div class="col-md-4 mt-30 text-right">
+                      <a href="#" class="color-red">New Address</a>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="text-right">
+                    <button type="submit" class="custom-btn effect01 text-center">Save Changes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div id="tab3" class="tab__content">
+            <div class="card br-10">
+              <div class="card-body">
+                <h5 class="card-title">Vouchers</h5>
+                <div class="text-center">
+                  <img src="https://image.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg" style="max-width: 300px;">
+                  <h6>Oops! No voucher found!</h6>
+                  <p>We are currently out of vouchers. We will notify you when we come up with it!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tab4" class="tab__content">
+            <div class="card br-10">
+              <div class="card-body">
+                <h5 class="card-title">Password Settings</h5>
+                <form class="mt-30" action="{% url 'account:change_password' %}" method="POST">{% csrf_token %}
+                  <div>
+                    <h6>Update Password</h6>
+                    <div id="divCheckPasswordMatch" style="color:#ff0000">
+                    </div>
+                    <input type="hidden" value="{{ request.user }}" name="user">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="{{changepasswordForm.current_password.id_for_label}}">Current Password</label>
+                          {{changepasswordForm.current_password}}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="{{changepasswordForm.password.id_for_label}}">New Password</label>
+                          {{changepasswordForm.password}}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="{{changepasswordForm.confirm_password.id_for_label}}">Confirm Password</label>
+                          {{changepasswordForm.confirm_password}}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                      </div>
+                      
+                    </div>
+                  </div>
+                  <hr>
+                <div class="row pt-10">
+                  <div class="col-md-8">
+                    <h6>Password Update</h6>
+                    <p class="text-mute">
+                      By updating your password you will be logged out of all sessions except this device
+                    </p>
+                  </div>
+                  <div class="col-md-4 mt-30 text-right">
+                  </div>
+                </div>
+                <hr>
+                <div class="text-right">
+                  <button type="submit" class="custom-btn effect01 text-center">Save Changes</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+          <div id="tab5" class="tab__content">
+            <div class="card br-10">
+              <div class="card-body">
+                <h5 class="card-title">Notifications Settings</h5>
+                <div class="row mt-30">
+                  <div class="col-9 col-sm-9 col-md-10">
+                    <h6 class="mb-0">Email Notifications</h6>
+                    <p>Let me know about the products in my email</p>
+                  </div>
+                  <div class="col-3 col-sm-3 col-md-2">
+                    <input type="checkbox" id="switch1" /><label class="toggle-btn" for="switch1">Toggle</label>
+                  </div>
+
+                  <div class="col-9 col-sm-9 col-md-10">
+                    <h6 class="mb-0">Newsletter Subscriptions</h6>
+                    <p>Subscribe me to the weekly newsletter</p>
+                  </div>
+                  <div class="col-3 col-sm-3 col-md-2">
+                    <input type="checkbox" id="switch2" /><label class="toggle-btn" for="switch2">Toggle</label>
+                  </div>
+
+                  <div class="col-9 col-sm-9 col-md-10">
+                    <h6 class="mb-0">Show my profile</h6>
+                    <p>Let other users see my profile</p>
+                  </div>
+                  <div class="col-3 col-sm-3 col-md-2">
+                    <input type="checkbox" id="switch3" /><label class="toggle-btn" for="switch3">Toggle</label>
+                  </div>
+
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(".tab__content").hide();
+    $(".tab__content:first").show();
+    
+    $(".tab__head li").click(function() {
+        $(".tab__content").hide();
+        var activeTab = $(this).attr("rel"); 
+        $("#"+activeTab).fadeIn();    
+        $(".tab__head li").removeClass("active");
+        $(this).addClass("active");
+      
+    });
+</script>
+
+<script type="text/javascript">
+  function Validate() {
+    alert('hehehe')
+      var password = $("#pass").val();
+      var confirmPassword = $("#confirmpass").val();
+
+      if (password != confirmPassword) {
+        alert('unmatched');
+          $("#divCheckPasswordMatch").html("Passwords do not match!");
+          return false;
+      }else{
+          return true;
+      }
+  };
+</script>
+{% endblock %}

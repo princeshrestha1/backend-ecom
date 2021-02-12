@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block reviews %} active {% endblock %}
+{% block title %}
+    {{ block.super }} | Review List
+{% endblock %}
+
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/DataTables/jquery.dataTables.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/DataTables/extensions/dataTables.colVis.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/DataTables/extensions/dataTables.tableTools.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Status List &emsp;| &emsp;</h5>
+                    </div>
+                </div>
+                <div class="d-inline-block">
+                    <a class="mb-2 mr-2 btn btn-light" href="{% url 'cart:status_create' %}">
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        Add New
+                    </a>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <form method="GET" action="{% url 'cart:status_delete_multiple' %}">
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-md-3">
+                        <div class="form-inline">
+                            <span>Options:&nbsp;&nbsp;&nbsp;</span>{{ quick_form.as_table }}
+                            <button type="submit" class="btn btn-success" style="margin-left: 5px;" >Proceed</button>            
+                        </div>
+                    </div>
+                </div>
+                <table id="datatable1" class="table table-striped table-hover" style="margin-bottom:20px">
+                    <thead>
+                        <tr>
+                            <th class="bt-0" scope="col" width="5%">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" name="selectall" class="custom-control-input select_all" id="customCheck1" />
+                                    <label class="custom-control-label" for="customCheck1"></label>
+                                </div>
+                            </th>                            <th class="sort-numeric">S.N</th>                                              
+                            <th class="sort-alpha">Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for status in object_list %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="selecting" name="selecting" value="{{ review.id }}"/>
+                            </td>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ status.name }}</td>
+                            <td>
+                                <div class="dropdown dropleft d-inline-block">
+                                    <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-outline-light">Action</button>
+                                    <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+                                        <button type="button" tabindex="0" class="dropdown-item">
+                                            <a href="{% url 'cart:status_update' status.id %}" >
+                                                <i class="fas fa-edit" style="color: #5DADE2;"></i>&nbsp;
+                                            Edit </a>
+                                        </button>
+                                        <button type="button" tabindex="0" class="dropdown-item">
+                                            <a href="{% url 'cart:status_delete' status.id %}" >
+                                                <i class="fas fa-trash" style="color: #EC7063;"></i>&nbsp;
+                                             Delete </a>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js%}
+    <script type="text/javascript">
+        $('#tag').addClass('active')
+    </script>
+    <script src="{% static 'dashboard/js/DataTables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/DataTables/extensions/ColVis/js/dataTables.colVis.min.js' %}"></script>
+    <script src="{% static 'dashboard/js/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js' %}"></script>
+    <script type='text/javascript'>
+        $('#datatable1').dataTable();
+        </script>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends 'frontend/base.html' %}
+{% load static mathfilters get_title_photo multiply %}
+
+{% block head_title %}My Order{% endblock %}
+
+{% block content %}
+	<div class="main-container container">
+		<ul class="breadcrumb">
+			<li><a href="#"><i class="fa fa-home"></i></a></li>
+			<li><a href="#">Order Infomation</a></li>
+		</ul>
+	<section>
+        <div class="messages">
+            {% if messages %}
+             <div class="message">
+                {% for message in messages %}
+                <h3 style="font-weight: bolder; color:rgb(242,150,48);">{{ message }}</h3>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </section>
+		<div class="row">
+			<!--Middle Part Start-->
+			<div id="content" class="col-sm-9">
+				<h2 class="title">Order Information</h2>
+
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td colspan="2" class="text-left">Order Details</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="width: 50%;" class="text-left"> <b>Order ID:</b> {{ object.id }}
+								<br>
+								<b>Date Added:</b> {{ object.created_at }}</td>
+							<td style="width: 50%;" class="text-left"> <b>Payment Method:</b> Cash On Delivery
+								<br>
+								<b>Tracking Code:</b> {{ object.code }} </td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td style="width: 100%; vertical-align: top;" class="text-left">Shipping Address</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-left">{{ object.user.street_name }}, {{ object.user.city }}, {{ object.user.province }} {{ object.user.country }} {{ object.user.postal_code }} </td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<td class="text-left">Product Name</td>
+								
+								<td class="text-left">Quantity</td>
+					            {% if totalrefund == 0.0  %} 
+                    
+                                {% else %}
+                                <td> Refunded Quantity</td>
+								{% endif %}
+								{% comment %}
+								<td class="text-right">Price</td>
+								<td class="text-right">Vat</td>
+								<td class="text-right">Discount</td>
+								<td class="text-right">Total</td>
+								{% endcomment %}
+								<!-- <td style="width: 20px;"></td> -->
+							</tr>
+						</thead>
+						<tbody>
+							{% for product in order.products.all %}
+							<tr>
+								<td class="text-left">{{ product.products.name }} </td>
+								<td class="text-left">{{ product.quantity }}</td>
+								{% if totalrefund == 0.0 %}{% else %}<td class="text-left">{% for p in  product.productrefund_set.all %}{{ p.quantity }}{% endfor %}</td>{% endif %}
+								{% comment %}
+								<td class="text-right">{{ product.products.grand_total|floatformat:'2' }}</td>
+								<td class="text-right">{{ product.products.vat }}</td>
+								<td class="text-right">{% if product.products.discount_percent %}{{ product.products.discount_percent }} {% elif product.products.discount_amount %} {{ product.products.discount_amount }}{% else %}{% endif %}</td>
+								<td class="text-right">{{  product.products.grand_total|multiply_qty_price:product.quantity|floatformat:'2' }}</td>
+								{% endcomment %}
+								<!-- <td style="white-space: nowrap;" class="text-right"> <a class="btn btn-primary" title="" data-toggle="tooltip" href="#" data-original-title="Reorder"><i class="fa fa-shopping-cart"></i></a>
+									<a class="btn btn-danger" title="" data-toggle="tooltip" href="return.html" data-original-title="Return"><i class="fa fa-reply"></i></a>
+								</td> -->
+							</tr>
+							{% endfor %}
+
+
+						</tbody>
+						{% comment %}
+						<tfoot>
+				           {% if totalrefund == 0.0 %} 
+				           {% else %}
+				             <tr>
+                                <td class="text-right" colspan="6"><b>Refunded Total Price</b></td>
+                                <td class="text-right"> {{ totalrefund|floatformat:2 }}</td>
+                            </tr>
+                            {% endif %}
+							<tr>
+								{% if totalrefund == 0.0 %}
+									<td class="text-right" colspan="5"><b>Grand Total{% if discount_amount %}(Including Discount with Coupon){% endif %}</b>
+									</td>
+								{% else %}
+									<td class="text-right" colspan="6"><b>Grand Total{% if discount_amount %}(Including Discount with Coupon){% endif %}</b>
+									</td>
+								{% endif %}
+								<td class="text-right">{{ total|floatformat:'2' }}</td>
+								
+							</tr>
+						</tfoot>
+						{% endcomment %}
+					</table>
+				</div>
+				{% if object.tracker_set.all %}
+			   
+				<h3>Order History</h3>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+
+							<td class="text-left">Estimated Date</td>
+							<td class="text-left">Status</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							{% for tracker in object.tracker_set.all %}
+							<td>{% if tracker.estimated_date %}{{ tracker.estimated_date}}{% else %} Not Estimated Yet{% endif %}</td>
+							<td class="text-left">{% for t in tracker.status.all %}<span class="badge"> {{t.name}} </span> {% endfor %}</td>
+							{% endfor %}
+						</tr>
+					
+					
+					</tbody>
+				</table>
+				
+				{% endif %}
+			
+
+
+
+			</div>
+			<!--Middle Part End-->
+			<!--Right Part Start -->
+			<aside class="col-sm-3 hidden-xs" id="column-right">
+				<h2 class="subtitle"></h2>
+<div class="list-group">
+	<ul class="list-item">
+		<li><a href="{% url 'account:profile-edit' request.user.id %}">My Profile</a>
+		</li>
+		<li><a href="{% url 'cart:my_orders' %}">My Orders</a>
+		</li>
+	</ul>
+</div>			</aside>
+			<!--Right Part End -->
+		</div>
+	</div>
+{% endblock %}

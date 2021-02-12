@@ -1,0 +1,236 @@
+<div class="theme-settings__options-wrapper p-20">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="mb-3 card text-white card-body bg-success card-fa">
+                <i class="lni lni-cart"></i>
+            </div>
+        </div>
+        <div class="col-md-8 mt--10">
+            <p class="text-muted mb-0">Posted on: {{product.created_at|date}}</p>
+            <h5 class="bold">Product Name({{product.name}})</h5>
+        </div>
+        <div class="col-md-2">
+            <a class="btn-open-options" href="javascript:void(0);">
+                <i class="lni lni-close"></i>
+                <!-- <i class="fas fa-times font-22"></i> -->
+            </a>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between">
+        <p class="d-inline text-muted">Reference Code: {{product.reference_code}}</p>
+
+        <p class="d-inline">
+            <span>Posted By: </span>&emsp;<img width="42" class="rounded-circle" src="/static/dashboard/images/logo-inverse.jpg">
+            
+        </p>
+    </div>
+
+    <div class="d-flex justify-content-start">
+        <a href="{% url 'cart:product_update' product.pk %}" class="pr-2"><span class="text-success"><i class="fas fa-edit"></i>&nbsp;Edit</span></a>
+        <a href="#" class=""><span class="text-danger"><i class="lni lni-trash"></i>&nbsp;Delete</span></a>
+    </div>
+
+    <hr>
+
+    <!-- if the product is available in Live Site -->
+        <div class="alert alert-light alert-dismissible fade show" role="alert">
+          <strong><i class="lni lni-spiner-solid"></i>&nbsp;Product Availability</strong>
+          <p class="mb-0">Available to push to live site.</p>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+    <div>
+        <h6 class="bold pt-10 font-12"><i class="lni lni-image"></i>&nbsp;Product Image</h6>
+        <div class="row">
+            {% for photo in product.photos.all %}
+            <div class="col-4">
+                <a class="venobox" data-gall="gallery01" href="{{photo.photo.url}}">
+                    <img src="{{photo.photo.url}}" title="image-top" alt="image-top">
+                    <!-- <p class="text-center small font-weight-bold">Image Top</p> -->
+                </a>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <h6 class="bold pt-10 font-12"><i class="lni lni-flag-alt"></i>&nbsp;Summary</h6>
+        <p class="text-justify">
+            {{product.summary|safe}}
+        </p>
+
+        <h6 class="bold pt-10 font-12"><i class="lni lni-notepad"></i>&nbsp;Description</h6>
+        <p class="text-justify">
+            {{product.description|safe}}
+        </p>
+
+        <h6 class="bold pt-10 font-12"><i class="lni lni-rupee"></i>&nbsp;Price Details</h6>
+
+        <div class="row">
+            <div class="col-6">
+                <ul>
+                   <li>
+                        <p class="text-xs-center">Pricing: Rs. {{product.price}}</p>
+                   </li>
+                   <li>
+                        <p class="text-xs-center">Compare at Price: Rs. {{product.old_price}}</p>
+                   </li>
+                   <li>
+                        <p class="text-xs-center">Discount Percent: {{product.discount_percent}}%</p>
+                   </li>
+               </ul>
+            </div>
+            <div class="col-6">
+                <ul>
+                   <li>
+                        <p class="text-xs-center">Discount amount: Rs. {{product.discount_amount}}</p>
+                   </li>
+                   <li>
+                        <p class="text-xs-center">VAT: {{product.vat}}%</p>
+                   </li>
+                   <li>
+                    <p class="text-xs-center">VAT Amount: Rs. {{product.vat_amount}}</p>
+               </li>
+                   <li>
+                        <p class="text-xs-center">Tax Included: 
+                            {% if product.vat_included %}
+                            <span class="text-success"><i class="lni lni-checkmark-circle"></i></span>
+                            {% else %}
+                            <span class="text-danger"><i class="lni lni-cross-circle"></i></span>
+                            {% endif %}
+                        </p>
+                   </li>
+                </ul>
+            </div>
+        </div>                        
+
+        <h6 class="bold pt-10 font-12"><i class="lni lni-cart-full"></i>&nbsp;Inventory Details</h6>
+         <div class="row">
+            <div class="col-6">
+                <ul>
+                   <li>
+                        <p class="text-xs-center">SKU(Stock Keeping Unit): 200</p>
+                   </li>
+                   <li>
+                        <p class="text-xs-center">Barcode (ISBN, UPC, GTIN, etc): {{product.barcode}}</p>
+                   </li>
+               </ul>
+            </div>
+            <div class="col-6">
+                <ul>
+                   <li>
+                        <p class="text-xs-center">Inventory Policy: 
+                            <span class="text-success"><i class="lni lni-checkmark-circle"></i>Track</span>&nbsp;&nbsp;<span class="text-danger"><i class="lni lni-cross-circle"></i>Don't track</span>
+                        </p>
+                   </li>
+                   <li>
+                        <p class="text-xs-center">Quantity: {{product.quantity}}</p>
+                   </li>
+                </ul>
+            </div>
+        </div>    
+
+        <h6 class="bold pt-10 font-12"><i class="lni lni-invention"></i>&nbsp;Product Meta</h6>
+        <div class="row">
+            <div class="col-6">
+                <ul>                                   
+                   <li>
+                        <p class="text-xs-center">Owner: {{product.owner}}</p>
+                   </li>
+               </ul>
+            </div>
+            <div class="col-6">
+                <ul>                                   
+                   <li>
+                        <p class="text-xs-center">Expiry Date: <span class="badge badge-danger mr-2 mb-2">{{product.expire_on|date:"Y-m-d"}}</span></p>
+                   </li>
+                </ul>
+            </div>
+
+            <div class="col-12">
+                <ul>
+                    <li>
+                        <p class="text-xs-center">Categories:
+                            {% for cat in product.categories.all %}
+                             <span class="badge badge-success mr-2 mb-2">{{cat.title}}</span>
+                             {% endfor %}
+                   </li>
+                    <li>
+                        <p class="text-xs-center">Tags:
+                            {% for tag in product.tags.all %}
+                             <span class="badge badge-success mr-2 mb-2">{{tag.title}}</span>
+                            {% endfor %}
+                   </li>
+                   <li>
+                        <p class="text-xs-center">Variants:
+                            {% for variant in product.variant.all %}
+                             <span class="badge badge-success mr-2 mb-2">{{variant.name}}</span>
+                            {% endfor %}
+                   </li>
+
+                </ul>
+            </div>
+        </div>
+
+
+        <h6 class="bold pt-10 font-12"><i class="lni lni-information"></i>&nbsp;Warning</h6>
+        <p class="text-justify">
+            {{product.warning}}
+        </p>
+
+        <h6 class="bold pt-10 font-12"><i class="lni lni-delivery"></i>&nbsp;Shipping Details</h6>
+        <div class="row">
+            <div class="col-6">
+                <ul>
+                   <li>
+                        <p class="text-xs-center">Weight(gm): 200</p>
+                   </li>
+                   <li>
+                        <p class="text-xs-center">International Customs:<small>HS Tariffs Code: </small>123434</p>
+                   </li>
+
+               </ul>
+            </div>
+            <div class="col-6">
+                <ul>
+                   <li>
+                        <p class="text-xs-center"><span class="text-success"><i class="lni lni-checkmark-circle"></i></span>&nbsp;This is a physical product</p>
+                   </li>
+                </ul>
+            </div>
+
+        </div>
+
+        
+
+        <!-- <div id="accordion-journal" class="accordion-journal-wrapper mb-3">
+            <div class="card">
+                <div id="headingOne" class="card-header" style="height: 40px;">
+                    <button type="button" data-toggle="collapse" data-target="#medication-list" aria-expanded="false" aria-controls="collapseOne" class="text-left m-0 p-0 btn btn-link btn-block collapsed">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="mb-3 card text-white card-body bg-success card-list">
+                                    <i class="fas fa-file-alt falist"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <p class="med-list-title">Medication List</p>
+                            </div>
+                            
+                        </div>
+                    </button>
+                </div>
+                <div data-parent="#accordion-journal" id="medication-list" aria-labelledby="headingOne" class="collapse" style="">
+                    <div class="card-body">1. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
+                        nesciunt
+                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt
+                        sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable
+                        VHS.
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+</div>

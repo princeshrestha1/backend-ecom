@@ -1,0 +1,49 @@
+{% load staticfiles %}
+<form class="mt-30" action="{% url 'account:profile-edit' request.user.pk %}" method="post">
+    {% csrf_token %}
+    <div>
+      <h6>Contact Information</h6>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="{{form.label_for_first_name}}">First Name</label>
+            {{form.first_name}}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="{{form.label_for_last_name}}">Last Name</label>
+            {{form.last_name}}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="{{form.label_for_email}}">Email</label>
+            {{form.email}}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="{{form.label_for_mobile_number}}">Mobile Number</label>
+            {{form.mobile_number}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row pt-10">
+      <div class="col-md-8">
+        <h6>Delete Account</h6>
+        <p class="text-mute">
+          By deleting your account you will loose all your data
+        </p>
+      </div>
+      <div class="col-md-4 mt-30 text-right">
+        <a href="#" class="color-red">Delete Account</a>
+      </div>
+    </div>
+    <hr>
+    <div class="text-right">
+      <button type="submit" class="custom-btn effect01 text-center">Save Changes</button>
+    </div>
+  </form>

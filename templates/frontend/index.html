@@ -1,0 +1,287 @@
+{% extends 'frontend/base.html' %}
+{% load mathfilters get_title_photo multiply rating_count %}
+{% load staticfiles thumbnail %}
+
+
+{% block content %}
+<div class="landing-section mt-100 " data-aos="fade-down" data-aos-duration="2000">
+    <div class="container">
+        <div class="row ">
+            <div class="col-lg-8 col-sm-6">
+                <div class="landing-div d-flex justify-content-center align-items-center">
+                    <img class="landing-image " src="{% static 'frontend/img/index/index.png' %}" alt="Featured Product Image " style="filter:invert(1)">
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 d-flex font-redish">
+                <div class="align-self-center mx-auto text-left sm-text-center">
+                    <h1 class="text-anders font-header text-uppercase">Red Wild Honey</h1>
+                    <h3 class="text-capitalize font-1r">Savouring taste, invigorating properties.</h3>
+                    <p class="font-redish mb-5 small-mb-20">100% cliff natural honey with aphrodisiac and medicinal value</p>
+                    <a href="{% url 'cart:shop' %}" type="button" class="custom-btn effect01 text-center"><span>shop now</span></a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-small-none">
+    <section class="section-text d-small-none">
+    	<div class="container">
+    		<div class="special-offer special-offer--style-1 aos-init aos-animate" data-aos="zoom-in" data-aos-duration="600" data-aos-offset="70">
+    			<h2 class="text text-center lazy" data-src="'../../static/frontend/img/special_offer_text_bg.jpg" data-was-processed="true" style="background-image: url('../../static/frontend/img/special_offer_text_bg.jpg');font-family: baro-strip;">Special products for most people</h2>
+    		</div>
+    	</div>
+    </section>
+
+    <section class="section-about">
+    	<div class="d-none d-lg-block d-1200-none">
+    		<img id="bg-img-1" class="img-fluid lazy loaded" src="{% static 'frontend/img/agro.png' %}" alt="demo" data-was-processed="true">
+    	</div>
+
+    	<div class="container">
+    		<div class="row align-items-center">
+    			<div class="col-12 col-lg-4">
+    				<div data-aos="fade-left" data-aos-delay="400" data-aos-duration="500" ddata-aos-offset="100" class="aos-init aos-animate">
+    					<div class="section-heading">
+    						<h2 class="__title">ABOUT GAAVAA <br/> <span>AGRO COMPANY</span></h2>
+    					</div>
+    				</div>
+    			</div>
+
+    			<div class="col-12 my-3 d-lg-none"></div>
+
+    			<div class="col-12 col-lg-4 text-center">
+    				<div data-aos="fade-up" ddata-aos-duration="600" data-aos-offset="100" class="aos-init aos-animate">
+    					<img class="img-fluid lazy loaded" src="{% static 'frontend/img/img_1.png' %}" alt="demo" data-was-processed="true">
+    				</div>
+    			</div>
+
+    			<div class="col-12 my-3 d-lg-none"></div>
+
+    			<div class="col-12 col-lg-4">
+    				<div data-aos="fade-right" data-aos-delay="400" data-aos-duration="500" ddata-aos-offset="100" class="aos-init aos-animate">
+    					<p class="font-redish">
+    						Although we are building the initiatives for meeting our goals in the near future, our journey started years even before we've begun this venture.</p>
+
+    					<p class="font-redish">
+    						We grew up in farming communities facing and realizing those callenges in everyday basis. And thus this enlightment to create an impact directly for local farming communities in Nepal, so we've begun.
+    					</p>
+
+    					<p class="d-sm-none">
+    						<a class="custom-btn custom-btn--medium custom-btn--style-1" href="#">More about</a>
+    					</p>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </section>
+</div>
+
+<div class="mt-90" data-aos="fade-up" data-aos-duration="3000">
+    <div class="container local-title">
+        <h1 class="mt-180 fw-700">For local heroes with big hearts <br/> and growing champions with global ambitions.</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="makin-section" id="banner">
+                    <section class="gaava aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-offset="400">
+                        <div class="gaava__Wrapper p-5" style="background-color: #ecf4ec;border-radius: 20px;">
+                            <h6 class="text-uppercase" style="font-size: 14px;">Local Heroes</h6>
+                            <h3 class="gaava__Heading">Are you one of them?</h3>
+                            <div class="gaava__Description">
+                                <p></p>
+                                <p>Our heroes are those who grow foods for others. And the value we give to them is just a gesture of their efforts to grow healthy foods with nutritional value. Hence we brig encouragement to local farmers.</p>
+                                <p></p>
+                            </div>
+
+                            <a href="/shop/" type="button" class="custom-btn effect01 text-center"><span>Learn More</span></a>
+
+                            <div class="gaava-leaf">
+                                <img alt="" class="" data-src="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1x1.png?v=1601553040" data-srcset="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_360x.png?v=1601553040 360w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_540x.png?v=1601553040 540w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_720x.png?v=1601553040 720w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_900x.png?v=1601553040 900w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1080x.png?v=1601553040 1080w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1296x.png?v=1601553040 1296w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1512x.png?v=1601553040 1512w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1728x.png?v=1601553040 1728w" sizes="12.292887029288702px" src="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1x1.png?v=1601553040" srcset="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_360x.png?v=1601553040 360w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_540x.png?v=1601553040 540w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_720x.png?v=1601553040 720w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_900x.png?v=1601553040 900w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1080x.png?v=1601553040 1080w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1296x.png?v=1601553040 1296w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1512x.png?v=1601553040 1512w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1728x.png?v=1601553040 1728w">
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="makin-section" id="banner">
+                    <section class="gaava aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-offset="400">
+                        <div class="gaava__Wrapper p-5" style="background-color: #E6F1FA;border-radius: 20px;">
+                            <h6 class="text-uppercase" style="font-size: 14px;">Consumers - You</h6>
+                            <h3 class="gaava__Heading">What you eat is what you get.</h3>
+                            <div class="gaava__Description">
+                                <p></p>
+                                <p>To those who are seeking foods with higher nutritional values with pure and organic touch, you've reached here and we dont boast about our wuality being good we assure.</p>
+                                <p></p>
+                            </div>
+
+                            <a href="/shop/" type="button" class="custom-btn effect01 text-center"><span>Learn More</span></a>
+
+                            <div class="gaava-leaf2"><img alt="" class="" data-src="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1x1.png?v=1601553040" data-srcset="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_360x.png?v=1601553040 360w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_540x.png?v=1601553040 540w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_720x.png?v=1601553040 720w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_900x.png?v=1601553040 900w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1080x.png?v=1601553040 1080w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1296x.png?v=1601553040 1296w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1512x.png?v=1601553040 1512w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1728x.png?v=1601553040 1728w" sizes="12.292887029288702px" src="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1x1.png?v=1601553040" srcset="//cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_360x.png?v=1601553040 360w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_540x.png?v=1601553040 540w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_720x.png?v=1601553040 720w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_900x.png?v=1601553040 900w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1080x.png?v=1601553040 1080w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1296x.png?v=1601553040 1296w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1512x.png?v=1601553040 1512w, //cdn.shopify.com/s/files/1/0246/4674/6196/files/leaves_2x_1_1728x.png?v=1601553040 1728w"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="mt-90" data-aos="fade-up" data-aos-duration="3000">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 d-flex">
+                <div class="align-self-center mx-auto text-right desk-right-70">
+                    <h1 class=" text-anders font-header text-uppercase">A new Approach</h1>
+                    <p class="font-redish">Natreve is a fresh, modern approach to premium wellness. Our mission is to provide wellness inside and out to everyone. We are super passionate about creating the most effective, most innovative, and most FUN wellness products while cultivating a community that believes in diversity, equality, and acceptance.</p>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="arrow-shape text-center"><img class="img-fluid mh-600" src="https://cdn.shopify.com/s/files/1/0246/4674/6196/files/bitmap_900x.png?v=1598534853" alt="protein "></div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="products-section" data-aos="fade-up" data-aos-duration="2000">
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-12">
+    			<div class="text-box mx-auto text-center">
+		            <div class="text-box">
+		                <h3>The happiest hour of the year</h3>
+		            </div>
+		        </div>
+    		</div>
+    	</div>        
+    </div>
+    
+    <div class="product-container">
+        <div class="product-slider">
+            {% for product in products %}
+            <div class="plr-2">
+                <div class="shape-4 shop mx-auto">
+                <a href="{% url 'cart:product_detail' product.id %}" class="mx-auto">
+                    {% if product|cover_photo %}
+                        {% with product|cover_photo as prod %}
+                            <img class="product-image" src="{{ prod.url }}" alt="{{ product.name }}"/>
+                        {% endwith %}
+
+                    {% elif product.photos.all.first.photo %}
+                        <img class="product-image" src="{{ product.photos.all.first.photo.url }}" alt="{{ fproduct.name }}" />
+                    {% else %}
+                        <img class="product-image" src="{% static 'frontend/img/product-1.png' %}" alt="{{product.name}}" />
+                    {% endif %}
+	                </a>
+	            </div>
+	            <div class="product-title text-center mt-5">
+                    <h4 class="font-1r">{{product.name}}</h4>
+                    {% for cat in product.categories.all %}
+                    <p>{{cat.title}}</p>
+                    {% endfor %}
+	                <a data-id="{{product.id}}" data-toggle="modal" type="button" data-target="#cart-modal" class="custom-btn effect01 text-center addToCart"><span>Buy Now Rs. {{product.price}}</span></a>
+	            </div>
+            </div>
+            {% endfor %}
+                    
+        </div>
+    </div>
+</div>
+
+<div class="products-section">
+    <div class="container">
+        <div class="text-box mx-auto">
+            <div class="text-box">
+                <h3 class="mt-100">Gallery</h3>
+            </div>
+        </div>
+    </div>
+    <div class="product-container">
+        <div class="smooth-slider">
+            {% comment %}
+            {% for image in sliders %}
+            <div class="social-slide" style="margin:40px;">
+                <img class="social-image" style="margin:30px; max-height: 300px;" src="{{image.photos.url}}" alt="{{slider.slider_title}} ">
+                <img class="social-image" style="margin:20px;" src="{{image.photos.url}}" alt="{{slider.slider_title}} ">
+            </div>
+            {% endfor %}
+            {% endcomment %}
+
+            <div class="social-slide " style="margin:40px;">
+                <img class="social-image" style="margin:60px;" src="https://source.unsplash.com/I7hcFnxAJgg/800x600" alt="protein ">
+                <img class="social-image" style="margin:25px; max-height: 300px;" src="https://source.unsplash.com/a1d-DBJ-bpw/600x800" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:10px;">
+                <img class="social-image" style="margin:15px;" src="https://source.unsplash.com/mTNVvQvmoKs/800x600" alt="protein ">
+                <img class="social-image" style="margin:40px;" src="https://source.unsplash.com/XNtwi0xmZr8/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:50px;">
+                <img class="social-image" style="margin:30px;" src="https://source.unsplash.com/q98J_eiecHA/800x600" alt="protein ">
+                <img class="social-image" style="margin:20px; max-height: 300px;" src="https://source.unsplash.com/8ze5W46EXGk/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:20px;">
+                <img class="social-image" style="margin:50px;" src="https://source.unsplash.com/yHPGi--o3Fc/800x600" alt="protein ">
+                <img class="social-image" style="margin:40px;max-height: 300px;" src="https://source.unsplash.com/yl2d0CKW130/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:55px;">
+                <img class="social-image" style="margin:20px;" src="https://source.unsplash.com/G_xYDS6UuXo/800x600" alt="protein ">
+                <img class="social-image" style="margin:23px;max-height: 300px;" src="https://source.unsplash.com/7M-BISgvUrs/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:45px;">
+                <img class="social-image" style="margin:46px;max-height: 300px;" src="https://source.unsplash.com/thQVDGQFvDw/800x600" alt="protein ">
+                <img class="social-image" style="margin:26px;" src="https://source.unsplash.com/lNjD7h3yXIg/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:30px;">
+                <img class="social-image" style="margin:24px;max-height: 300px;" src="https://source.unsplash.com/xZ5aUGcI-F0/800x600" alt="protein ">
+                <img class="social-image" style="margin:46px;" src="https://source.unsplash.com/fOkB4RASklI/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:33px;">
+                <img class="social-image" style="margin:20px;" src="https://source.unsplash.com/s58GuIVFaaM/800x600" alt="protein ">
+                <img class="social-image" style="margin:40px;" src="https://source.unsplash.com/XlTEP0u29L4/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:44px;">
+                <img class="social-image" style="margin:40px;" src="https://source.unsplash.com/8_WZU5xKFKk/800x600" alt="protein ">
+                <img class="social-image" style="margin:40px;" src="https://source.unsplash.com/bELvIg_KZGU/800x600" alt="protein ">
+            </div>
+            <div class="social-slide" style="margin:45px;">
+                <img class="social-image" style="margin:40px;" src="https://source.unsplash.com/30ONKKpThbc/800x600" alt="protein ">
+                <img class="social-image" style="margin:40px;" src="https://source.unsplash.com/Jog9OCCTydk/800x600" alt="protein ">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container mt-60">
+    <div class="container">
+        <div class="text-box mx-auto">
+            <div class="text-box">
+                <h3 class="mb-5">Our Major Clients</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4 col-sm-4 col-md-4 col-lg-2 tablet-view">
+            <figure class="partners-logo"><img src="{% static 'frontend/img/clients/client-1.png' %}" alt=""></figure>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-lg-2 tablet-view">
+            <figure class="partners-logo"><img src="{% static 'frontend/img/clients/client-5.png' %}" alt=""></figure>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-lg-2 tablet-view">
+            <figure class="partners-logo"><img src="{% static 'frontend/img/clients/client-3.png' %}" alt=""></figure>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-lg-2">
+            <figure class="partners-logo"><img src="{% static 'frontend/img/clients/client-7.png' %}" alt=""></figure>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-lg-2">
+            <figure class="partners-logo"><img src="{% static 'frontend/img/clients/client-2.png' %}" alt=""></figure>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-lg-2">
+            <figure class="partners-logo"><img src="{% static 'frontend/img/clients/client-6.png' %}" alt=""></figure>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+

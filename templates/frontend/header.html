@@ -1,0 +1,24 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Ayata Incorporation" />
+    <title>Gaava</title>
+    <link rel="icon" href="{% static 'frontend/img/icons/icon-32x32.png' %}" />
+    <link href="{% static 'frontend/vendor/bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
+    <link href="{% static 'frontend/vendor/icons/WebFont/font-css/LineIcons.css' %}" rel="stylesheet" />
+    <link href="{% static 'frontend/vendor/aos-master/dist/aos.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/vendor/slick/slick/slick.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/vendor/slick/slick/slick-theme.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/css/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/css/main.css' %}" />
+    <script src="{% static 'frontend/vendor/jQuery/jquery.min.js' %}"></script>
+
+    {% block styles %}
+    {% endblock %}
+</head>

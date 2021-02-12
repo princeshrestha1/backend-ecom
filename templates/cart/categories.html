@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="app-main__inner">
+        <div class="app-page-title pt-18">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="card-body p-0">
+                        <div class="mr-2 btn-group">
+                            <h5 class="fs-normal fw-700 pb-1">Category List</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-title-actions">
+                    <div class="d-inline-block">
+                        <a class="mb-2 mr-2 btn btn-primary color-white font-12" href="{% url 'cart:category_create' %}">
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            New Category
+                        </a>
+                    </div>
+                </div>    
+            </div>
+        </div>
+
+        <div class="main-card mb-3 card">
+            <div class="card-body">
+
+                <form method="GET" action="{% url 'cart:category_delete_multiple' %}">
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label>Options:&nbsp;&nbsp;&nbsp;</label>{{ quick_form.as_table }}
+                            <button type="submit" class="ml-30 d-block-inline btn btn-success">Proceed</button>            
+                        </div>
+                    </div>
+
+                    <table id="category-list" class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th class="bt-0" scope="col" width="5%">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" name="select_all" class="select_all"/>
+                                    <!-- <label class="custom-control-label" for="customCheck1"></label> -->
+                                </div>
+                            </th>
+                            <th class="bt-0" scope="col">S.N.</th>
+                            <th class="bt-0" scope="col">Title</th>
+                            <th class="bt-0" scope="col">Created At</th>
+                            <th class="bt-0" scope="col">Action</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in category_list %}
+                            <tr>
+                                <td>
+                                  <div class="custom-control custom-checkbox">
+                                      <input type="checkbox" class="selecting" name="selecting" value={{category.id}}>
+                                      <!-- <label class="custom-control-label" for="customCheck1"></label> -->
+                                  </div>
+                                </td>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{category.title}}</td>
+                                <td>{{category.created_at|date}}</td>
+                                <td>
+                                    <a href="{% url 'cart:category_update' category.id %}" >
+                                        <i class="fas fa-edit" style="color: #5DADE2;"></i>&nbsp;
+                                        Edit </a>
+                                
+                                    <a href="#" data-id="{{category.id}}" class="js-toggle-cart">
+                                        <i class="fas fa-trash" style="color: #EC7063;"></i>&nbsp;
+                                        Delete </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    <aside class="cart js-cart">
+        <div class="cart__header">
+            <h1 class="cart__title font-18 fw-700">Delete Category</h1>
+            <p class="cart__text">
+                <a class="button button--light js-toggle-cart" href="#" title="Close cart">
+                    <i class="fas fa-times" style="font-size: 22px;"></i>
+                </a>
+            </p>
+        </div>
+        <div class="modal-content pt-80">
+            <div class="modal-body">
+                <form class="form" id="deleteForm" action="" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        Are you sure you want to delete this category?
+                    </div>
+                    <div class="text-right">
+                        <input type="submit" id="submit" class="btn btn-success" value="Proceed">
+                        <a href="" class="btn btn-primary">Cancel</a>
+
+                        <!-- <a href="{% url 'cart:categories' %}" class="btn btn-primary">Cancel</a> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </aside>
+    
+    <div class="lightbox js-lightbox js-toggle-cart"></div>
+{% endblock content %}
+
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#category-list').DataTable();
+        } );
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.select_all').click(function() {
+                if ($(this).is(':checked')) {
+                    $('.selecting').attr('checked', true);
+                } else {
+                    $('.selecting').attr('checked', false);
+                }
+            });
+        });
+</script>
+
+<script type="text/javascript">
+    var cartOpen = false;
+
+    $('body').on('click', '.js-toggle-cart', toggleCart);
+
+    function toggleCart(e) {
+        var id = $(this).attr('data-id');
+      e.preventDefault();
+        $('#deleteForm').attr('action', "/shop/category/"+id+"/delete/");
+      if(cartOpen) {
+        closeCart();
+        return;
+      }
+      openCart();
+    }
+
+    function openCart() {
+      cartOpen = true;
+      $('body').addClass('open');
+    }
+
+    function closeCart() {
+      cartOpen = false;
+      $('body').removeClass('open');
+    }
+</script>
+{% endblock js %}
+
+        

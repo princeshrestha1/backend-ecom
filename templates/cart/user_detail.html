@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ block.super }} | User List
+{% endblock %}
+
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">User Details &emsp;| &emsp;</h5>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12 pr-0">
+                    <div class="row">
+                        <div class="col-md-4 pr-05">
+                            <div class="main-card mb-3 card">
+                                <div class="card-body text-center pb-16">
+                                    <img width="80" class="rounded-circle" src="assets/images/avatars/9.jpg" alt="">
+                                    <div class="card-body pb-0 pl-0 pr-0">
+                                        <h5 class="card-title mb-0">{{object.first_name}} {{object.last_name}}</h5>
+                                        <p class="text-mute">{{object.email}}</p>
+                                        <table class="mb-0 table table-borderless">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="50%" style="border-right: 2px solid #E5E8E8;">
+                                                        <h5 class="bold">15</h5>
+                                                        <p class="text-mute font-small mt--10 mb-0">Past</p>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <h5 class="bold">2</h5>
+                                                        <p class="text-mute font-small mt--10 mb-0">Upcoming</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <a class="btn-transition btn btn-outline-light btn-lg btn-block" style="margin-top: 20px;">
+                                            More Detail
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 pl-0">
+                            <div class="main-card mb-3 card">
+                                <div class="card-body">
+                                    <h5 class="card-title">User Details</h5>
+                                    <table class="mb-0 table table-borderless">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <p class="bold">Gender</p>
+                                                <p class="text-mute font-12 mt--10">{{object.get_gender_display}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="bold">D.O.B.</p>
+                                                <p class="text-mute font-12 mt--10">{{object.birthdate|date}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="bold">Phone</p>
+                                                <p class="text-mute font-12 mt--10">{{object.contact_no1}}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="bold">Permanent Address</p>
+                                                <p class="text-mute font-12 mt--10">{{object.address_line1}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="bold">Current Address</p>
+                                                <p class="text-mute font-12 mt--10">{{object.address_line2}}, {{object.landmark}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="bold">City</p>
+                                                <p class="text-mute font-12 mt--10">{{object.city}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="bold">District</p>
+                                                <p class="text-mute font-12 mt--10">{{object.district}}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="bold">Billing Address</p>
+                                                <p class="text-mute font-12 mt--10">{{object.billing_addr}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="bold">Shipping Address</p>
+                                                <p class="text-mute font-12 mt--10">{{object.shipping_addr}}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="bold">Member Status</p>
+                                                <p class="text-mute font-12 mt--10">{% if object.is_active %}Active{% else %}Inactive{% endif %}</p>
+                                            </td>
+                                            <td>
+                                                <p class="bold">Registered Date</p>
+                                                <p class="text-mute font-12 mt--10">{{object.joined_date|date}}</p>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                        
+{% endblock %}
+

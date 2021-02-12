@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load staticfiles mathfilters multiply %}
+
+{% block title %}
+{{block.super}} | Ship Orders
+{% endblock %}
+
+{% block extra_head %}
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/DataTables/jquery.dataTables.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/DataTables/extensions/dataTables.colVis.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/DataTables/extensions/dataTables.tableTools.css' %}" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+
+<style type="text/css">
+	.required .control-labels:after{
+		content: '* ';
+		color: #F00;
+		font-weight: bold;
+	}
+	 div .control-label:after{
+		content: '* ';
+		color: #F00;
+		font-weight: bold;
+	}
+	.refund-form{
+		margin-bottom: 20px;
+	}
+	.select2-container{
+		width:100% !important;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Order Details</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="page-title-actions">
+                <div class="d-inline-block">
+                    <a class="mb-2 mr-2 btn btn-light" href="{% url 'cart:orders' %}">
+                            <span class="btn-icon-wrapper pr-2 opacity-7">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        Back to orders
+                    </a>
+                </div>
+            </div>  
+        </div>
+    
+
+        <!-- BEGIN BASIC ELEMENTS -->
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <form class="form" name="orderStatusForm" role="form" action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+						<div style="margin-bottom: 60px; ">
+					</div>
+                    <table id="datatable1" class="table table-hover" style="margin-bottom:20px">
+                        <thead>
+                            <tr>
+                                <th class="bt-0" scope="col">S.N</th>
+                                <th class="bt-0" scope="col">Products</th>                                  
+                                <th class="bt-0" scope="col">Quantity</th>
+                                <th class="bt-0" scope="col">Price(In Rupees)</th>
+                                <th class="bt-0" scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in object.products.all %}                                
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <td> {{ product.products.name }} </td>
+                                <td>{{ product.quantity }}</td>
+                                <td>{{ product.products.price|floatformat:'2' }}</td>
+                                <td>{{ product.products.price|multiply_qty_price:product.quantity|floatformat:'2' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="text-left" colspan="1" style="font-weight:bolder;">Total Amount</td>
+                                <td class="text-left"> Rs. {{ total|floatformat:'2' }} </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="text-left" colspan="1" style="font-weight:bolder;">Discount Amount</td>
+                                <td class="text-left"> Rs. {{ discount|floatformat:'2' }} </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="text-left" colspan="1" style="font-weight:bolder;">VAT Amount</td>
+                                <td class="text-left"> Rs. {{ vat|floatformat:'2' }} </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="text-left" colspan="1" style="font-weight:bolder;">Grand Total</td>
+                                <td class="text-left"> Rs. {{ grand_total|floatformat:'2' }} </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+						<!--  --><!--end .col -->
+					</div><!--end .card-body -->
+				</div><!--end .card -->
+            </form>
+        </div><!--end .col -->
+    </div><!--end .row -->
+		
+</div><!--end .section-body -->
+
+<div class="modal fade" id="orderupdateModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Product Lists </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table id="datatable2" class="table table-striped table-hover" style="margin-bottom:20px">
+                    <thead>
+                        <tr>  
+                            <th class="sort-alpha">Product</th>
+                            <th class="sort-alpha">Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                    {% for prod in products %}
+                    
+                    <tr>
+                    <td>{{ prod.name }}</td>
+                    <td>{{ prod.quantity }}</td>
+                    <td>
+                    <form class="form" action="{% url 'cart:orders_product' pk2=object.id pk1=prod.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" id="submit" class="btn btn-primary" value="Add">
+                    </form>
+                    </td>
+                    </tr>
+                   
+                    {% endfor %}
+                </tbody>
+            </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <aside class="cart js-cart">
+        <div class="cart__header">
+            <h1 class="cart__title font-18 fw-700">Delete Category</h1>
+            <p class="cart__text">
+                <a class="button button--light js-toggle-cart" href="#" title="Close cart">
+                    <i class="fas fa-times" style="font-size: 22px;"></i>
+                </a>
+            </p>
+        </div>
+        <div class="modal-content pt-80">
+            <div class="modal-body">
+                <form class="form" id="deleteForm" action="" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        Are you sure you want to delete this product?
+                    </div>
+                    <div class="text-right">
+                        <input type="submit" id="submit" class="btn btn-success" value="Proceed">
+                        <a href="" class="btn btn-primary">Cancel</a>
+
+                        <!-- <a href="{% url 'cart:categories' %}" class="btn btn-primary">Cancel</a> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </aside>
+   
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="{% static 'dashboard/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+
+
+<script type="text/javascript">
+        $(document).ready( function () {
+            $('#datatable1').DataTable();
+        } );
+
+	$(document).ready(function(){
+		$('#select-list').select2();
+		$('.product-select2').select2();
+		$(function () {
+			$('.datetimepicker').datetimepicker({
+				locale: 'en',
+				sideBySide: true,
+				format:'YYYY-MM-DD HH:mm',
+			});
+		});
+	});
+
+</script>
+
+<script type="text/javascript">
+    var cartOpen = false;
+
+    $('body').on('click', '.js-toggle-cart', toggleCart);
+
+    function toggleCart(e) {
+        var id = $(this).attr('data-id');
+        var prod_id = $(this).attr('data-product-id');
+      e.preventDefault();
+        $('#deleteForm').attr('action', "/product/"+prod_id+"/order/"+id+"/delete/");
+      if(cartOpen) {
+        closeCart();
+        return;
+      }
+      openCart();
+    }
+
+    function openCart() {
+      cartOpen = true;
+      $('body').addClass('open');
+    }
+
+    function closeCart() {
+      cartOpen = false;
+      $('body').removeClass('open');
+    }
+</script>
+
+  <script>
+        $(document).ready(function(){
+            // Add Class
+            $('.edit').click(function(){
+            $(this).addClass('editMode');
+            });
+             // Save data
+            $(".edit").focusout(function(){
+                $(this).removeClass("editMode");
+            });
+            
+            $('.edit').focusout(function() {
+                saveTable(this);
+               
+
+            });
+
+            $('.edit').keydown(function(event) {
+               
+                if(event.keyCode == 13){
+                    event.preventDefault();
+                    saveTable(this);
+                }
+            });
+
+
+            function saveTable(element){
+                var value = parseFloat($(element).text())
+                var $product_id = $(element).data('id');
+
+                var rate_value = parseFloat($('#rate'+$product_id).text());
+                var qty_value = parseFloat($('#qty'+$product_id).text());
+                var order_id = `{{ object.pk }}`
+             
+
+                var product_value = parseFloat($product_id);
+               	var total = $('#total'+$product_id).text((qty_value * rate_value).toFixed(2));
+
+                if ($(element).data('field') == 'qty'){
+                    editProductQty($product_id,value, order_id);
+                    
+                }; 
+               
+            };
+
+        });
+
+         function editProductQty(pk,qty,order_id){
+            console.log(order_id, "order_id")
+            $.ajax({
+                type:'GET',
+                async:true,
+                url:"{% url 'cart:order_product_update_quantity' %}?product_pk="+pk+"&qty="+qty+"&order_id="+order_id,
+                success:function(data){
+                    $('#grandtotal').text('Rs. ' +((data.total).toFixed(2)));
+                }
+            });
+        
+        }
+
+     </script>
+     <script type='text/javascript'>
+        $('#datatable1').dataTable();
+        </script>
+<script src="{% static 'dashboard/js/DataTables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'dashboard/js/DataTables/extensions/ColVis/js/dataTables.colVis.min.js' %}"></script>
+<script src="{% static 'dashboard/js/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js' %}"></script>
+{% endblock %}

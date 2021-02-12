@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+{{block.super}} | Coupon {% if object %}Update{% else %}Create{% endif %}
+{% endblock %}
+
+
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css' %}" />
+<style type="text/css">
+.required .control-label:after{
+  content: '* ';
+  color: #F00;
+  font-weight: bold;
+
+  }
+  .control-label{
+    opacity: 1!important;
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Coupon {% if object %}Update{% else %}Create{% endif %} &emsp;| &emsp;</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <form class="form" name="couponForm" role="form" action="{% if object %}{% url 'cart:coupon_update' object.id %}{% else %}{% url 'cart:coupon_create' %}{% endif %}" method="POST">{% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 mb-3">
+                        <label for="{{ form.title.id_for_label }}"><span class="control-label">Coupon Title</span></label>
+                        {{form.title}}
+                    </div>
+                    <div class="col-md-12 col-sm-12 mb-3">
+                        <div class="row">
+                            <div class="col-md-10 col-sm-10">
+                                <label for="{{ form.code.id_for_label }}"><span class="control-label">Coupon Code</span></label>
+                                    {{ form.code }}
+                            </div>
+                            <div class="col-md-2 col-sm-2"  style="padding-top:20px;padding-left:75px;">
+                                <input type="button" class="btn ink-reaction btn-primary btn-raised" value="Generate" onClick="generate();">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 mb-3">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 mb-3">
+                                <label for="{{ form.valid_from.id_for_label }}"><span class="control-label">Valid From</span></label>
+                                {{form.valid_from}}
+                            </div>
+                            <div class="col-md-6 col-sm-6 mb-3">
+                                <label for="{{ form.valid_to.id_for_label }}"><span class="control-label">Valid To</span></label>
+                                {{form.valid_to}}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12 col-sm-12 mb-3">
+                        <label for="{{ form.validity_count.id_for_label }}"><span class="control-label">Valid Count</span></label>
+                        {{form.validity_count}}
+                    </div>
+                    <div class="col-md-12 col-sm-12 mb-3">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 mb-3">
+                                <label for="{{ form.discount_type.id_for_label }}"><span class="control-label">Discount Type</span></label>
+                                {{form.discount_type}}
+                            </div>
+                            <div class="col-md-4 col-sm-6 mb-3">
+                                <label for="{{ form.discount_amount.id_for_label }}"><span class="control-label">Discount Amount</span></label>
+                                {{form.discount_amount}}
+                            </div>
+                            <div class="col-md-4 col-sm-6 mb-3">
+                                <label for="{{ form.discount_percent.id_for_label }}"><span class="control-label">Discount Percent</span></label>
+                                {{form.discount_percent}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 text-right">
+                        <button class="btn ink-reaction btn-primary btn-raised" type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+                        <a href="/shop/coupons/" class="btn btn-danger">Cancel</a>    
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'dashboard/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+
+<script type="text/javascript">
+    $('#productForm').addClass('active')
+    function randomPassword(length) {
+        var chars = "ABCDEFGHIJKLMNOP1234567890";
+        var pass = "";
+        for (var x = 0; x < length; x++) {
+            var i = Math.floor(Math.random() * chars.length);
+            pass += chars.charAt(i).toLowerCase();
+        }
+        return pass;
+    }
+
+    function generate() {
+        couponForm.code.value = randomPassword(6);
+        console.log( randomPassword(6));
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(function () {
+            $('.datetimepicker').datetimepicker({
+                locale: 'en',
+                sideBySide: true,
+                format:'YYYY-MM-DD HH:mm',
+            });
+        });
+    });
+</script>
+{% endblock %}

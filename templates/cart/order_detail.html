@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load staticfiles multiply %}
+{% block title %}
+    {{block.super}} | Order List
+{% endblock %}
+
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Order Details &emsp;| &emsp;</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                    
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="">
+                        <h2>Orders by: {{ object.user.username }} </h2>
+                        <p class="text-right sort-alpha">Ordered at : {{ object.created_at }} </p>
+                        <div class="row">
+                            <div class=" col-md-6">
+                                <h3>Personal Information</h3>
+                                <hr>
+                                <table class="table table-striped table-hover" style="margin-bottom:20px">
+                                    <tr>
+                                        <td>First Name</td>
+                                        <td>{{ object.user.first_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Name</td>
+                                        <td>{{ object.user.last_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td>{{ object.user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gender</td>
+                                        <td>{{ object.user.get_gender_display }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact</td>
+                                        <td>{{ object.user.mobile_number }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class=" col-md-6">
+                                <h3>Address</h3>
+                                <hr>
+                                <table class="table table-striped table-hover" style="margin-bottom:20px">
+                                    <tr>
+                                        <td>Country</td>
+                                        <td>{{ object.user.user_shipping_addr.all.0.country }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>City</td>
+                                        <td>{{ object.user.user_shipping_addr.all.0.city }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Street Name</td>
+                                        <td>{{ object.user.user_shipping_addr.all.0.street_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Postal Code</td>
+                                        <td>{{ object.user.user_shipping_addr.all.0.postal_code }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Primary Contact</td>
+                                        <td>{{ object.user.mobile_number }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Secondary Contact</td>
+                                        <td>{{ object.user.user_shipping_addr.all.0.contact_number }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                            
+                        <table class="table table-striped table-hover" style="margin-bottom:20px">
+                            <div>
+                                <thead>
+                                    <tr>
+                                        <th class="sort-alpha">Products</th>
+                                        {% if totalrefund == 0.00 %}
+                                        <th></th>
+                                        {% else %}
+                                        <th> Refunded Quantity </th>
+                                        {% endif %}
+                                        <th>Quantity</th>
+                                        <th width="300px">Price in Rupees <br> (VAT and DISCOUNT INCLUSIVE)</th>
+                                        <th>Total (In Rupees)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for prods in order.products.all %}
+                                    <tr>
+                                        <td>
+                                        
+                                            {{ prods.products.name }}
+                                            
+                                        </td>
+                                        <td>
+                                        {% if ordered_products %}
+                                            {% for p in prods.productrefund_set.all %}
+                                                {% if p.quantity == 0 %}
+                                        
+                                                {% else %}
+                                                    {{ p.quantity }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        </td>
+                                        <td>{{ prods.quantity }}</td>
+                                        <td>{{  prods.products.grand_total|floatformat:'2' }}</td>
+                                        <td>{{ prods.products.grand_total|multiply_qty_price:prods.quantity|floatformat:'2' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% if totalrefund == 0.00 %} 
+                                    <tr></tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="4"><h5>Refunded Total Price</h5></td>
+                                        <td> {{ totalrefund|floatformat:'2' }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td colspan="4"><h5>Grand Total{% if discount_amount %}(Including Discount with Coupon){% endif %}</h5></td>
+                                        <td>{{ total|floatformat:'2' }}</td>
+                                    </tr>
+                                </tbody>
+                            </div>
+                        </table>
+
+                        {% if order.condition_status.name == "Shipped" or order.condition_status.name == "Delivered" %}
+                            <p class="text-right sort-alpha">Shipped at: {{order.shipped_date}} </p>
+                        {% endif %}
+                    </div><!--end .table-responsive -->
+                </div><!--end .col -->
+            </div><!--end .row -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $('#coupon').addClass('active')
+    </script>
+{% endblock %}

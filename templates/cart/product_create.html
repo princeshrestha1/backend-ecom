@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+{{block.super}} | Products
+{% endblock %}
+
+{% block styles %}
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.css'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <style type="text/css">
+        #dropzone {
+            background: white;
+            border-radius: 5px;
+            border: 2px dashed rgb(0, 135, 247);
+            border-image: none;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            min-height: 200px;
+        }
+        .pt-140{
+            padding-top: 80px;
+        }
+
+        .selector,
+        .select-tags{
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+	<div class="app-main__inner">
+        <div class="app-page-title pt-18">
+            <div class="page-title-wrapper">
+                <div class="page-title-heading">
+                    <div class="card-body p-0">
+                        <div class="mr-2 btn-group">
+                            <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Add New Product</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-title-actions">
+                    <div class="d-inline-block">
+                        <a class="mb-2 mr-2 btn btn-light" href="{% url 'cart:products' %}">
+                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                            Back to Products
+                        </a>
+                    </div>
+                </div>  
+            </div>
+        </div>
+
+        <form class="form" role="form" action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-8 px-0">
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Product Details</h5>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    {% if form.errors.name %}
+                                    <span style="color: red;">{{ form.errors.name }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.name.id_for_label }}"><span class="control-labels">Product Name</span></label>
+                                    {{ form.name }}
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    {% if form.errors.reference_code %}
+                                    <span style="color: red;">{{ form.errors.reference_code }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.reference_code.id_for_label }}"><span class="control-labels">Reference code</span></label>
+                                    {{ form.reference_code }}
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 pt-3">
+                                    <label for="{{ form.summary.id_for_label }}"><span class="control-label">Summary</span></label>            
+                                    <div class="w-100">{{ form.summary }}</div>
+                                </div>
+                        
+                                <div class="col-md-12 col-sm-12 py-3">
+                                    <label for="{{ form.description.id_for_label }}">Description</label>
+                                    <div class="w-100">{{ form.description }}</div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label>Product Images</label>
+                                    {{photo_form.photo}}
+                                    {% if product.photos.all %}
+                                        {% for photo in product.photos.all %}
+                                        <img src="{{photo.photo.url}}" height="50px" height="50px" />
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Pricing Details</h5>
+                            <div class="row">
+                                <div class="col-md-6 position-relative form-group">
+                                    {% if form.price.errors %}
+                                    <span style="color: red;">{{ form.price.errors }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.price.id_for_label }}">Pricing</label>
+                                    {{ form.price }}
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    {% if form.old_price.errors %}
+                                    <span style="color: red;">{{ form.old_price.errors }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.old_price.id_for_label }}">Compare at Price</label>
+                                    {{ form.old_price }}
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    {% if form.discount_percent.errors %}
+                                    <span style="color: red;">{{ form.discount_percent.errors }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.discount_percent.id_for_label }}">Discount Percent</label>
+                                    {{ form.discount_percent }}
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    {% if form.discount_amount.errors %}
+                                    <span style="color: red;">{{ form.discount_amount.errors }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.discount_amount.id_for_label }}">Discount amount</label>
+                                    {{ form.discount_amount }}
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    {% if form.vat.errors %}
+                                    <span style="color: red;">{{ form.vat.errors }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.vat.id_for_label }}">VAT</label>
+                                    {{ form.vat }}
+                                </div>
+                                <div class="col-md-6 position-relative form-group pl-35">
+                                    <label class="form-check-label pt-4" for="{{ form.vat_included.id_for_label }}">
+                                        {{form.vat_included}} Charge taxes on this product
+                                    </label>
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    {% if form.unit.errors %}
+                                    <span style="color: red;">{{ form.unit.errors }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.unit.id_for_label }}">Product Unit</label>
+                                    {{ form.unit }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Inventory Details</h5>
+                            <div class="row">
+                                <div class="col-md-6 position-relative form-group">
+                                    <label for="product-sku" class="">SKU (Stock Keeping Unit)</label>
+                                    <input name="sku" id="product-sku" placeholder="20" type="text" class="form-control">
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    {% if form.barcode.errors %}
+                                    <span style="colrgb(235, 220, 220) red;">{{ form.barcode.errors }}</span>
+                                    {% endif %}
+                                    <label for="{{ form.barcode.id_for_label }}">Barcode (ISBN, UPC, GTIN, etc)</label>
+                                    {{ form.barcode }}
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    <label for="product-inventory" class="">Inventory Policy</label>
+                                    <select name="product-inventory" id="product-inventory" class="form-control">
+                                        <option>Don't track inventory</option>
+                                        <option>Tracks this product's inventory</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 position-relative form-group">
+                                    <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+                                    {{ form.quantity }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 px-2">
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Product Availability</h5>
+                            <div class="position-relative form-group">
+                                <p class="mb-0">Available to push to live site</p>
+                                <br/>
+                                <div>{{ form.visibility }}</div>
+                                <!-- <button type="button" class="btn btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                    <div class="handle"></div>
+                                </button>                                 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Product Meta</h5>
+                            <div class="position-relative form-group">
+                                <label for="{{ form.categories.id_for_label }}" class="">Categories</label>
+                                <div>{{ form.categories }}</div>
+                            </div>
+                            <div class="position-relative form-group">
+                                <label for="{{ form.owner.id_for_label }}" class="">Owner</label>
+                                <div>{{ form.owner }}</div>
+                            </div>
+                            <div class="position-relative form-group">
+                                <label for="{{ form.owner.id_for_label }}" class="">Address</label>
+                                <div>{{ form.product_address }}</div>
+                            </div>
+                            <div class="position-relative form-group">
+                                <label for="{{ form.tags.id_for_label }}"><span class="control-label">Tags</span></label>
+                                {{ form.tags }}
+                            </div>
+                            <div class="position-relative form-group">
+                                <label for="{{ form.variant.id_for_label }}"><span class="control-label">Variants</span></label>
+                                <div>{{ form.variant }}</div>
+                            </div>
+                            <div class="position-relative form-group">
+                                <label for="{{ form.expire_on.id_for_label }}">Expiry Date</label>
+                                {{ form.expire_on }}
+                            </div>
+                            <div class="position-relative form-group">
+                                <label for="{{ form.warning.id_for_label }}">Warning</label>
+                                    {{ form.warning }}
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="main-card mb-3 card">
+                        <div class="card-body">
+                            <h5 class="card-title">Shipping Details</h5>
+                            <div class="row">
+                                <div class="col-md-12 position-relative form-group pl-35">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input"> This is a physical product
+                                    </label>
+                                </div>
+                                <div class="col-md-12 position-relative form-group">
+                                    <label for="product-weight" class="">Weight</label>
+                                    <p>Used to calculate shipping ratess at checkout and label prices during fulfillment</p>
+                                    <input name="weight" id="product-weight" placeholder="20" type="number" class="form-control">
+                                </div>
+                                <div class="col-md-12 position-relative form-group">
+                                    <label for="product-tariffs" class="">International Customs</label>
+                                    <p>HS Tariffs Code</p>
+                                    <input name="product-tariffs" id="product-tariffs" placeholder="1" type="number" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-right mt--10">
+                        <div class="btn-block">
+                            <button class="mt-1 btn btn-success w-100" type="submit">SAVE AND NEXT</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </form>
+        {{form.media}}
+    </div>
+        
+{% endblock content %}
+
+{% block js %}
+<script src="{% static 'dashboard/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".select2").select2({
+        });
+        $('.select-tags').select2({
+            tags: true,
+        });
+    });
+</script>
+
+
+{% endblock %}

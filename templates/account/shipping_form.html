@@ -1,0 +1,59 @@
+{% load staticfiles %}
+
+{{form}}
+<form class="mt-30" action="{% url 'account:update_shipping_addr' request.user.pk %}" method="POST">
+    {% csrf_token %}
+    <div>
+      <h6>Address Book</h6>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="{{form.label_for_street_name}}">Street Name</label>
+            {{form.street_name}}
+            {{shipping_form.as_p}}
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="{{form.label_for_city}}">City</label>
+            {{form.city}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="{{form.label_for_country}}">Country</label>
+            {{form.country}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="{{form.label_for_contact_number}}">contact_number</label>
+            {{form.contact_number}}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="{{form.label_for_postal_code}}">Postal Code</label>
+            {{form.postal_code}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row pt-10">
+      <div class="col-md-8">
+        <h6>New Address</h6>
+        <p class="text-mute">
+          You can add at most 2 shipping address to your currnt acoount
+        </p>
+      </div>
+      <div class="col-md-4 mt-30 text-right">
+        <a href="#" class="color-red">New Address</a>
+      </div>
+    </div>
+    <hr>
+    <div class="text-right">
+      <button type="submit" class="custom-btn effect01 text-center">Save Changes</button>
+    </div>
+  </form>

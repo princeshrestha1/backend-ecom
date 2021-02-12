@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+{{ block.super }} | User {% if object %}Update{% else %}Create{% endif %}
+{% endblock %}
+
+{% block styles %}
+<style type="text/css">
+.required .control-label:after{
+  content: '* ';
+  color: #F00;
+  font-weight: bold;
+  }
+.form-group > label,
+.form-group .control-label {
+  font-size: 12px;
+  opacity: 1;
+  margin-bottom: 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">User {% if object %}Update{% else %}Create{% endif %} &emsp;</h5>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+
+    <form class="form" role="form" action="{% if object %}{% url 'cart:user_update' object.id %}{% else %}{% url 'cart:user_create' %}{% endif %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="main-card mb-3 card">
+                    <div class="card-body">
+                        <h5 class="card-title">User Details</h5>
+                        <div class="row">
+                            
+                            <div class="col-md-12 mb-3">
+                                    <label for="{{ form.email.id_for_label }}"><span class="control-label">Email</span></label>
+                                    {{ form.email }}
+                                    <span style="color: red;">{{form.email.errors}}</span>
+                            </div>
+                           
+                            <div class="col-md-12 mb-3">
+                                    <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                                    {{ form.first_name }}
+                            </div>
+                            
+                            <div class="col-md-12 mb-3">
+                                    <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                                    {{ form.last_name }}
+                            </div>
+                          
+                            <div class="col-md-12 mb-3">
+                                    <label for="{{ form.mobile_number.id_for_label }}">Contact</label>
+                                    {{ form.mobile_number }}
+                            </div>
+                        </div>
+                        <div class="col-sm-12 text-right">
+                            <div class="d-flex justify-content-center">
+                                <button class="btn ink-reaction btn-success btn-raised w-100 mr-1" type="submit">{% if object %}<i class="lni lni-plus"></i>&nbsp;Update{% else %}<i class="lni lni-plus"></i>&nbsp;Create{% endif %}</button>
+                                <a href="{% url 'cart:users' %}" class="btn btn-danger w-100 ml-1">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% comment %}
+            <div class="col-md-6">
+                <div class="main-card mb-3 card">
+                    <div class="card-body">
+                        <h5 class="card-title">Address Details</h5>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.address_line1.id_for_label }}">Shipping Area</label>
+                                        {{ form.address_line1 }}
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="{{ form.city.id_for_label }}">Shipping City and Postal</label>
+                                    {{ form.city }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.billing_addr.id_for_label }}"><span class="control-label">Billing Address </span></label>
+
+                                    {{ form.billing_addr }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.shipping_addr.id_for_label }}"><span class="control-label">Shipping Address </span></label>
+
+                                    {{ form.shipping_addr }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            {% endcomment %}
+                        
+            
+        </div>
+    </form>
+</div>
+{% endblock %}

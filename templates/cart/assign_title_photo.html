@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <div class="section-header">
+        <h3>Set Title Image of {{ object.name }}</h3>
+        <p>Select any image as cover image if you did not select any of these cover image of product {{ object.name }} will be first image by default</p>
+    </div>
+    <br><br>
+    <div class="section-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    {% for img in object.photos.all %}
+                        <input type="radio" id="{{ img.id }}" name="cover_selection" value="{{ img.id }}"/>
+                        <label for="{{ img.photo.url }}">
+                            <img src="{{ img.photo.url }}" width="100px;" height="100px;" />
+                        </label>
+                    {% endfor %}
+                </div>
+                <input type="button" name="submit" class="btn btn-default" value="Set" data-id="{{ object.id }}">
+                <a href="/shop/products" class="btn btn-default">Cancel</a>
+            </div>
+        </div>
+    </div>    
+    
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("input[type='button']").click(function(){
+                // $("input[name='cover_selection'").attr('checked',true);
+                var radioValue = $("input[name='cover_selection']:checked").val();
+                var obj = $(this).data('id');
+                var postUrl = '/cover/image/'+ obj + '/';
+                $.post(postUrl, { 'selected': radioValue, 'csrfmiddlewaretoken': '{{ csrf_token }}',}, function(data){
+                    window.location.href = '/shop/products';
+                })
+            });
+        });
+    </script>
+{% endblock extra_js %}

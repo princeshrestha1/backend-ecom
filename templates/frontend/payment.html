@@ -1,0 +1,383 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="Ayata Incorporation" />
+    <title>Gaava</title>
+    <link rel="icon" href="{% static 'frontend/img/icons/icon-32x32.png' %}" />
+    <link href="{% static 'frontend/vendor/bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" />
+    <link href="{% static 'frontend/vendor/icons/WebFont/font-css/LineIcons.css' %}" rel="stylesheet" />
+    <link href="{% static 'frontend/vendor/aos-master/dist/aos.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/vendor/slick/slick/slick.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/vendor/slick/slick/slick-theme.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/css/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'frontend/css/main.css' %}" />
+    <script src="{% static 'frontend/vendor/jQuery/jquery.min.js' %}"></script>
+    <style type="text/css">
+        .ftco-section-parallax {
+            display: none;
+        }
+
+        .footer {
+            display: none;
+        }
+
+        .navbar {
+            display: none;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /*payment page*/
+
+
+        #payment-panel .checkout-panel {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        #payment-panel .title {
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 40px;
+            color: #2e2e2e;
+        }
+
+        #payment-panel .progress-bar {
+            display: flex;
+            margin-bottom: 50px;
+            justify-content: space-between;
+        }
+
+        #payment-panel .payment-method {
+            display: flex;
+            margin-bottom: 60px;
+            justify-content: space-between;
+        }
+
+        #payment-panel .method {
+            display: flex;
+            flex-direction: column;
+            height: 110px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            background-color: rgb(249, 249, 249);
+            justify-content: center;
+            align-items: center;
+        }
+
+        /*.card-logos {
+            display: flex;
+            width: 150px;
+            justify-content: space-between;
+            align-items: center;
+        }*/
+
+        #payment-panel .radio-input {
+            margin-top: 20px;
+        }
+
+        #payment-panel input[type='radio'] {
+            display: inline-block;
+        }
+
+        #payment-panel .input-fields {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #payment-panel .input-fields label {
+            display: block;
+            margin-bottom: 10px;
+            color: #b4b4b4;
+        }
+
+        #payment-panel .info {
+                font-size: 12px;
+                font-weight: 500;
+                display: block;
+                margin-top: 24px;
+                color: #000924;
+                font-family: inherit;
+        }
+
+        #payment-panel #date {
+            background: url(img/icons_calendar_black.png) no-repeat 95%;
+        }
+
+        #payment-panel #cardholder {
+            background: url(img/icons_person_black.png) no-repeat 95%;
+        }
+
+        #payment-panel #cardnumber {
+            background: url(img/icons_card_black.png) no-repeat 95%;
+        }
+
+        #payment-panel #verification {
+            background: url(img/icons_lock_black.png) no-repeat 95%;
+        }
+
+        .small-inputs {
+            display: flex;
+            margin-top: 20px;
+            justify-content: space-between;
+        }
+
+        #payment-panel .small-inputs div {
+            width: 182px;
+        }
+
+        #payment-panel .panel-footer {
+            display: flex;
+            width: 100%;
+            height: 96px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #payment-panel .btn {
+            font-size: 16px;
+            width: 163px;
+            height: 48px;
+            cursor: pointer;
+            transition: all .2s ease-in-out;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 23px;
+        }
+
+        #payment-panel .back-btn {
+            color: #1abc9c;
+            background: #fff;
+        }
+
+        #payment-panel .next-btn {
+            color: #fff;
+            background: #1abc9c;
+        }
+
+        #payment-panel .btn:focus {
+            outline: none;
+        }
+
+        #payment-panel .btn:hover {
+            transform: scale(1.1);
+        }
+
+        #payment-panel .blue-border {
+            border: 1px solid #28a745;
+        }
+
+        #payment-panel .warning {
+            border-color: #1abc9c;
+        }
+    </style>
+</head>
+
+
+<body>
+<div class="container-fluid" id="payment-panel">
+    <div class="row">
+        <div class="col-md-7" style="background-color: #EBF5FB;">
+            <div class="dpad-60">
+                <div class="mb-30 ml--10">
+                    <img src="{% static 'frontend/img/logo.png' %}" style="max-width: 200px;">
+                </div>
+                <form class="form" action="{% if coupon %}{% url 'cart:confirm-order-with-coupon' coupon.id %}{% else %}    
+{% url 'cart:payment' %}{% endif %}" method="POST">{% csrf_token %}
+                <div class="checkout-panel">
+                  <div class="panel-body">
+                    <h6 class="mb-30">Please select your payment method to checkout with your orders.</h6>
+
+                    <div class="payment-method row justify-content-sm-center justify-content-start">
+                        <div class="col-sm-5 col-6">
+                          <label for="esewa" class="method card">
+                            <div class="card-logos">
+                              <img src="{% static 'frontend/img/esewa.png' %}" class="img-payment-gateway" />
+                            </div>
+                     
+                            <div class="radio-input">
+                              <input id="esewa" type="radio" name="payment">
+                              Pay with e-sewa
+                            </div>
+                          </label>
+                      </div>
+                    
+                        <div class="col-sm-5 col-6">
+                          <label for="khalti" class="method card paypal">
+                            <img src="{% static 'frontend/img/khalti.png' %}" class="img-payment-gateway" />
+                            <div class="radio-input">
+                              <input id="khalti" type="radio" name="payment">
+                              Pay with Khalti
+                            </div>
+                          </label>
+                        </div>
+
+                        <div class="col-sm-5 col-6">
+                            <label for="visa-card" class="method card">
+                                <div class="card-logos">
+                                  <img src="https://designmodo.com/demo/checkout-panel/img/visa_logo.png"/  class="img-payment-gateway" >
+                                  <img src="https://designmodo.com/demo/checkout-panel/img/mastercard_logo.png"/  class="img-payment-gateway" >
+                                </div>
+                         
+                                <div class="radio-input">
+                                  <input id="visa-card" type="radio" name="payment">
+                                  Pay with Visa/MC
+                                </div>
+                              </label>
+                        </div>
+
+                        <div class="col-sm-5 col-6">
+                            <label for="paypal" class="method card paypal">
+                                <img src="https://designmodo.com/demo/checkout-panel/img/paypal_logo.png"  class="img-payment-gateway" />
+                                <div class="radio-input">
+                                  <input id="paypal" type="radio" name="payment">
+                                  Pay with PayPal
+                                </div>
+                              </label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Name</label>
+                                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Card Number</label>
+                                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Valid Date</label>
+                                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">CVV</label>
+                                <input class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <span class="info">* CVV or CVC is the card security code, unique three digits number on the back of your card separate from its number.</span>
+                        </div>
+                    </div>
+                 
+                    
+                  </div>
+                 
+                  <div class="panel-footer">
+                    <button class="btn back-btn"><i class="lni lni-arrow-left"></i>&nbsp;Back</button>
+                    <button type="submit" class="btn next-btn">Complete&nbsp;<i class="lni lni-checkmark"></i></button>
+                  </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="plr-7 s-plr-0 mt-60">
+                <div class="text-center mb-30">
+                    <h3 class="text-green d-inline mx-auto font-weight-bold text-uppercase cart-title"><i class="lni lni-cart-full"></i>&nbsp;Your Cart</h3>
+                </div>
+                <div id="cart-items-page">
+                    {% include 'frontend/cart-items.html' %}                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static 'dashboard/scripts/main.js' %}"></script>  
+
+<script type="text/javascript">
+    $(document).ready(function() {
+ 
+      $('.method').on('click', function() {
+        $('.method').removeClass('blue-border');
+        $(this).addClass('blue-border');
+      });
+     
+    })
+    var $cardInput = $('.input-fields input');
+     
+    $('.next-btn').on('click', function(e) {
+     
+      $cardInput.removeClass('warning');
+     
+      $cardInput.each(function() {    
+         var $this = $(this);
+         if (!$this.val()) {
+           $this.addClass('warning');
+         }
+      })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.count').prop('disabled', true);
+        $('#checkout').hide(); 
+
+        $(document).on('click','.plus',function(){
+            var qty = $(this).parent().find('.count');
+            var prod_id = $(this).attr('id');
+            // var result_div = $(this).parent().parent().next().find('p').attr('id');;
+            qty.val(parseInt(qty.val()) + 1 );
+            var quantity = qty.val();
+            update_quantity(prod_id, quantity);
+        });
+
+        $(document).on('click','.minus',function(){
+            var qty = $(this).next('.count');
+            qty.val(parseInt(qty.val()) - 1 );
+                if (qty.val() == 0) {
+                    qty.val(1);
+                }
+            var prod_id = $(this).attr('id');
+            // var result_div = $(this).parent().parent().next().find('p').attr('id');
+            var quantity = qty.val();
+            update_quantity(prod_id, quantity);
+            });
+
+        $(document).on('focusout','.count',function(){
+            var qty = $(this).parent().find('.count');
+            var prod_id = $(this).attr('id');
+            // var result_div = $(this).parent().parent().next().find('p').attr('id');;
+            var quantity = qty.val();
+            update_quantity(prod_id, quantity);
+        });
+
+
+        function update_quantity(prod_id, quantity){
+            $.ajax({
+                url: "/update/quantity/"+prod_id+"/",
+                method: 'POST',
+                data: {
+                    csrfmiddlewaretoken: '{{csrf_token}}',
+                    'quantity': quantity,
+                },
+                success: function(response){
+                // $('#cart-items').html(response);
+                $('#cart-items-page').html(response);
+                }
+            });
+
+        }
+    });
+</script>
+</body>
+</html>
+

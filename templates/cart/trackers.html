@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{block.super}} | Tracker List
+{% endblock %}
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Tracker List</h5>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+            <div class="row" style="margin-bottom: 30px;">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table id="tracker-table" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="bt-0" scope="col" width="5%">S.N</th>
+                                    <th class="bt-0" scope="col" width="15%">User</th>
+                                    <th class="bt-0" scope="col" width="15%">Order</th>
+                                    <th class="bt-0" scope="col" width="15%">Order Status</th>
+                                    <th class="bt-0" scope="col" width="15%">Estimated Time</th>
+                                    <th class="bt-0" scope="col" width="15%">Tracking Code</th>
+                                    <th class="bt-0" scope="col" width="15%">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tracker in object_list %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ tracker.order.user }}</td>
+                                    <td>{% for prods in tracker.order.products.all %}
+                                            <span class="badge">{{ prods.products.name }}</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                    {% for status in tracker.status.all %}
+                                        <span class="badge"> {{ status.name }} </span>    
+                                    {% endfor %}
+                                    </td>
+                                    <td>{{ tracker.estimated_date }}</td>
+                                    <td>{{ tracker.order.code }}</td>
+                                    <td>
+                                        <div class="dropdown dropleft d-inline-block">
+                                            <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle btn btn-outline-light">Action</button>
+                                            <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
+                                                <button type="button" tabindex="0" class="dropdown-item">
+                                                    <a href="{% url 'cart:tracker_update' tracker.id %}" >
+                                                        <i class="fas fa-edit" style="color: #5DADE2;"></i>&nbsp;
+                                                    Edit </a>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $('#tag').addClass('active')
+</script>
+
+<script type='text/javascript'>
+    $('#tracker-table').dataTable();
+</script>
+{% endblock %}

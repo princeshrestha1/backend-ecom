@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load staticfiles get_title_photo %}
+
+{% block title %}
+{{ block.super }} | Create Order
+{% endblock %}
+
+{% block styles %}
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/select2/select2.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/multi-select/multi-select.css' %}" />
+<link type="text/css" rel="stylesheet" href="{% static 'dashboard/css/bootstrap-tagsinput/bootstrap-tagsinput.css' %}" />
+
+<style type="text/css">
+.required .control-label:after{
+  content: '* ';
+  color: #F00;
+  font-weight: bold;
+
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-main__inner">
+    <div class="app-page-title pt-18">
+        <div class="page-title-wrapper">
+            <div class="page-title-heading">
+                <div class="card-body p-0">
+                    <div class="mr-2 btn-group">
+                        <h5 style="font-size: 18px;font-weight: 700;padding-bottom: 10px;">Make Order &emsp;| &emsp;</h5>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+
+
+    <div class="main-card mb-3 card">
+        <div class="card-body">
+        <form class="form" role="form" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                        
+                    {% for product in products %}
+
+                        {% if product.products.photos.first.photo %}
+                            <img src="{{ product.products.photos.first.photo.url }}" height="200px" width="200px"/>
+                        {% else %}
+                            <img src="{% static 'frontend/image/breadfruit-psd.png' %}" height="200px" width="200px"/>
+                        {% endif %}
+                        <strong>{{ product.products.name }}</strong>
+                        <input type="hidden" name="product" id="{{ product.products.id }}" value="{{ product.id }}">
+                        <br>
+                        <div class="col-md-4 mb-3">
+                            <label>Quantity</label>
+                            <input type="number" class="form-control" name="quantity" id="{{ product.products.id }}_qty" value="1">
+                        </div>                          
+                      
+                      {% endfor %}
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.email.id_for_label }}"> Email</label>
+                                {{ form.email }}
+                        </div>  
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.contact_number.id_for_label }}"> Contact Number</label>
+                                {{ form.contact_number }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.shipped_date.id_for_label }}"> Shipped Date</label>
+                                {{ form.shipped_date }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.user.id_for_label }}"> User</label>
+                                {{ form.user }}
+                        </div>
+                    </div>                          
+
+                    <div class="col-xs-12 text-right">
+                        <button class="btn ink-reaction btn-primary btn-raised" type="submit">Ship</button>
+                    </div><!--end .col -->
+                    </div><!--end .card-body -->
+                </div><!--end .card -->
+
+            </div><!--end .col -->
+        </div><!--end .row -->
+        </form>
+    </div><!--end .section-body -->
+</section>
+
+{% endblock %}
+
+{% block extra_js%}
+
+<script src="{% static 'dashboard/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
+<script type="text/javascript">
+    $('#siteConfig').addClass('active')
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $('.select-tags').select2({
+               
+            });
+
+        $(function () {
+        $('.datetimepicker').datetimepicker({
+            locale: 'en',
+            sideBySide: true,
+            format:'YYYY-MM-DD HH:mm',
+          });
+        });
+    });
+</script>
+{% endblock %}
