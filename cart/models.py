@@ -85,11 +85,18 @@ class Keywords(Timestampable):
     def __str__(self):
         return self.title
 
+class SubCategory(Timestampable):
+    name = models.CharField("SubCategory Name", max_length=255)
 
+    def __str__(self):
+        return self.name
+
+        
 class Category(Timestampable):
     title = models.CharField("Category Title", max_length=255)
     slug = models.SlugField("Category Slug", unique=True)
     image = models.ImageField('category image', null=True, blank=True, upload_to='category/')
+    child = models.ManyToManyField(SubCategory)
     description = models.TextField(
         "Category Description", null=True, blank=True)
     seo_title = models.CharField("Category Name", max_length=255, null=True, blank=True)
@@ -97,12 +104,13 @@ class Category(Timestampable):
     seo_keywords = models.ManyToManyField(Keywords, blank=True)
 
     class Meta:
+        # unique_together = ('slug')    
+        verbose_name_plural = "categories"
         ordering = ["title"]
 
     def __str__(self):
         return self.title
-
-        
+    
     def imagename(self): 
         basename, extension = os.path.splitext(os.path.basename(self.image.name)) 
         return basename

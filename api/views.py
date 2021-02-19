@@ -292,6 +292,7 @@ class LogoutAPIView(APIView):
 
 class ProductList(APIView):
     def get(self, request, *args, **kwargs):
+        uri = socket.gethostbyname(socket.gethostname())
         products = Product.objects.filter(deleted_at = None).values('id', 'likes', 'name', 'product_address','slug', 'description', 'discount_percent', 'unit',
                                                 'summary','warning', 'visibility', 'quantity', 'old_price', 'price', 'categories')
         toret = []
@@ -313,7 +314,7 @@ class ProductList(APIView):
             likes = details['likes']
             dict['id'] = product_id
             dict['name'] = product_name
-            uri = 'http://142.93.221.85/media/'
+            uri = 'http://'+uri+':8000'+'/media/'
             images = Photo.objects.filter(product=product_id).values('photo')
             dict['product_image'] = []
             dict['product_likes'] = likes
@@ -335,14 +336,23 @@ class ProductList(APIView):
 
 class CategoryList(APIView):
     def get(self, request, *args, **kwargs):
+        uri = socket.gethostbyname(socket.gethostname())
         toret = []
-        categorys = Category.objects.all()
+        categorys = Category.objects.all().values('id','image','child','title')
         for category in categorys:
+            print(category)
             dict = {}
-            dict['id'] = category.id
-            dict['title'] = category.title
-            dict['image'] = 'http://142.93.221.85/media/'+str(category.image)
-            dict['is_selected'] = False
+            dict['id'] = category['id']
+            dict['title'] = category['title']
+            dict['image'] = 'http://'+uri+':8000'+'/media/'+str(category['image'])
+            sub_cat = SubCategory.objects.filter(id=category['child']).values('name')
+            dict['sub_category'] = []
+            for sub_name in sub_cat:
+                det = {}
+                print(sub_name['name'],'sub name')
+                det['sub_category'] = sub_name
+                dict['sub_category'].append(det['sub_category'])
+            print(sub_cat)
             toret.append(dict)
         return Response({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toret})
 
@@ -726,10 +736,10 @@ class HomeView(APIView):
    def get(self, request, *args, **kwargs):
         products = Product.objects.all().values('id','likes','name', 'slug', 'description','discount_percent','unit',
                                                 'summary', 'warning', 'visibility', 'quantity', 'old_price','product_address', 'price', 'categories')
-        print(products)
         toret = []
         for details in products:
             dict = {}
+            page = self.request.query_params.get('page', None)
             product_id = details['id']
             product_name = details['name']
             product_price = details['price']
@@ -741,7 +751,7 @@ class HomeView(APIView):
             product_discount = details['discount_percent']
             dict['id'] = product_id
             dict['name'] = product_name
-            uri = 'http://127.0.0.1:8001/media/'
+            uri = 'http://192.168.100.11:8001/media/'
             categories = Category.objects.filter(id=details['categories']).values('title','image')
             for category in categories:
                 cat ={}
@@ -772,9 +782,15 @@ class HomeView(APIView):
         prod_list[0]["product_for_you"] = toret
 
         sliders = []
-        slider= Product.objects.filter(is_on_sale=True).values()
+        print(type(page),'page page')
+        try:
+            slider = Product.objects.filter(is_on_sale=True)[:int(page)].values()
+        except TypeError:
+            slider = Product.objects.filter(is_on_sale=True).values()
+        # print(slider.id,'slider')
         for details in slider:
             for_slider={}
+            product_id=details['id']
             for_slider['id']=details['id']
             product_name = details['name']
             product_price = details['price']
@@ -786,15 +802,17 @@ class HomeView(APIView):
             product_discount = details['discount_percent']
             for_slider['id'] = product_id
             for_slider['name'] = product_name
-            uri = 'http://127.0.0.1:8001/media/'
-            categories = Category.objects.filter(id=details['categories']).values('title','image')
-            for category in categories:
-                cat ={}
-                name = Category.objects.filter(id=details['categories']).values('id','title','image')
-                for one in name:
-                    cat['category']=one['title']
-                    for_slider.update(cat)
+            # uri = 'http://127.0.0.1:8001/media/'
+            # categories = Category.objects.filter(id=details['categories']).values('title','image')
+            # print(categories)
+            # for category in categories:
+            #     cat ={}
+            #     name = Category.objects.filter(id=details['categories']).values('id','title','image')
+            #     for one in name:
+            #         cat['category']=one['title']
+            #         for_slider.update(cat)
             images = Photo.objects.filter(product=product_id).values('photo')
+            print(images,'image')
             for_slider['product_image'] = []
             for_slider['product_likes']=likes
             for image in images:
