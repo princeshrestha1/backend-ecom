@@ -23,12 +23,6 @@ class UserRegistrationSerializer(serializers.Serializer):
 				"address has already registered. Was it you?")
 		return email
 
-	# def validate_username(self, username):
-	# 	existing = User.objects.filter(username=username).first()
-	# 	if existing:
-	# 		raise serializers.ValidationError("Someone with that username "
-	# 			"has already registered. Was it you?")
-	# 	return username
 
 	def validate_mobile_number(self, mobile_number):
 		existing = User.objects.filter(mobile_number=mobile_number).first()

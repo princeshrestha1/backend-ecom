@@ -2,7 +2,6 @@
 .vscode/
 __pycache__/
 migrations
-settings.py
 stacticcdn
 .idea/
 db.sqlite3

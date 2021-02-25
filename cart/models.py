@@ -91,12 +91,12 @@ class SubCategory(Timestampable):
     def __str__(self):
         return self.name
 
+
         
 class Category(Timestampable):
     title = models.CharField("Category Title", max_length=255)
     slug = models.SlugField("Category Slug", unique=True)
     image = models.ImageField('category image', null=True, blank=True, upload_to='category/')
-    child = models.ManyToManyField(SubCategory)
     description = models.TextField(
         "Category Description", null=True, blank=True)
     seo_title = models.CharField("Category Name", max_length=255, null=True, blank=True)
@@ -133,6 +133,9 @@ class Category(Timestampable):
             return (','.join(str(item) for item in self.seo_keywords.all()))
         return self.title
 
+class SubCategoryMapping(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name = 'category_mapping')
+    sub_category = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, related_name = 'sub_category_mapping')
 
 class Tag(Timestampable):
     title = models.CharField("Tag Title", max_length=255, unique=True)
