@@ -33,7 +33,7 @@ from rest_framework.views import APIView
 from .serializers import *
 from account.tokens import account_activation_token
 from cart.models import (Cart, Category, FeaturedProduct, Order, Product,Story,File,
-                         ProductInTransaction, Rating, Tracker, Wishlist, Photo)
+                         ProductInTransaction, Rating, Tracker, Wishlist, Photo,SubCategory,SubCategoryMapping)
 from account.models import User,ShippingAddress
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
@@ -338,21 +338,20 @@ class CategoryList(APIView):
     def get(self, request, *args, **kwargs):
         uri = socket.gethostbyname(socket.gethostname())
         toret = []
-        categorys = Category.objects.all().values('id','image','child','title')
-        for category in categorys:
-            print(category)
+        sub_cat = SubCategoryMapping.objects.all().values()
+        for category in sub_cat:
+            sub_cat = Category.objects.filter(id=category['id']).values('id','image','title')
             dict = {}
-            dict['id'] = category['id']
-            dict['title'] = category['title']
-            dict['image'] = 'http://'+uri+':8000'+'/media/'+str(category['image'])
-            sub_cat = SubCategory.objects.filter(id=category['child']).values('name')
             dict['sub_category'] = []
-            for sub_name in sub_cat:
-                det = {}
-                print(sub_name['name'],'sub name')
-                det['sub_category'] = sub_name
-                dict['sub_category'].append(det['sub_category'])
-            print(sub_cat)
+            for sub_cats in sub_cat:
+                dict['id'] = sub_cats['id']
+                dict['title'] = sub_cats['title']
+                dict['image'] = 'http://'+uri+':8000'+'/media/'+str(sub_cats['image'])
+                sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
+                for sub_name in sub_cat:
+                    det = {}
+                    det['sub_category'] = sub_name
+                    dict['sub_category'].append(det['sub_category'])
             toret.append(dict)
         return Response({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toret})
 

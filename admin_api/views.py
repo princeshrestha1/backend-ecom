@@ -168,3 +168,58 @@ class AddProductsAPIView(APIView):
             except:pass
             return JsonResponse({"code": 200, "status": 'success', "message": "Product Added", "details": serializer.data})
         return JsonResponse({"code": 400, "status": 'failure', "message": "Empty Field", "details": serializer.errors})
+
+
+
+class GetProductAPIView(APIView):
+    def get(self, request):
+        try:
+            uid = CheckHttpAuthorization(auth_token=request.META['HTTP_AUTHORIZATION'])
+        except KeyError:
+            return JsonResponse({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
+        if uid.__class__.__name__ == 'JsonResponse':
+            return uid
+        else:
+            user_id = uid
+        toList = []
+        product_data = Product.objects.all()
+        for data in product_data:
+            toret = {}
+            toret['id'] = data.id
+            toret['name'] = data.name
+            toret['product_weight'] = data.product_weight
+            toret['slug'] = data.slug
+            toret['image'] = []
+            for image in data.photos.all():
+                dicti = {}
+                print(image)
+                dicti['image'] = str(image)
+                print(dicti)
+                toret['image'].append(dicti)
+            toret['description'] = data.description
+            toret['summary'] = data.summary
+            toret['warning'] = data.warning
+            toret['visibility'] = data.visibility
+            toret['reference_code'] = data.reference_code
+            toret['barcode'] = data.barcode
+            toret['quantity'] = data.quantity
+            toret['categories'] = data.categories
+            toret['owner'] = data.owner
+            toret['tags'] = data.tags
+            toret['unit'] = data.unit
+            toret['old_price'] = data.old_price
+            toret['price'] = data.price
+            toret['vat'] = data.vat
+            toret['vat_included'] = data.vat_included
+            toret['vat_amount'] = data.vat_amount
+            toret['discount_percent'] = data.discount_percent
+            toret['is_new'] = data.is_new
+            toret['is_on_sale'] = data.is_on_sale
+            toret['is_coming_soon'] = data.is_coming_soon
+            toret['order_count'] = data.order_count
+            toret['variant'] = data.variant
+            toret['likes'] = data.likes
+            toret['priority'] = data.priority
+            toret['product_address'] = data.product_address
+            toList.append(toret)
+        return JsonResponse({"code": 200, "status": 'success', "message": "Feteched Successfully", "details": toList})   
