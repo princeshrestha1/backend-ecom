@@ -150,7 +150,7 @@ class Product(Timestampable):
     name = models.CharField("Product Name", max_length=255)
     product_weight = models.CharField(max_length=100, null= True, blank=True)
     slug = models.SlugField("Product Slug", unique=True, max_length=255)
-    photos = models.ManyToManyField(Photo, blank=True)
+    photos = models.ManyToManyField(Photo, blank=True, null=True)
     description = models.TextField("Product Description", null=True, blank=True)
     summary = models.TextField("Product Summary", blank=True)
     warning = models.TextField("Product Warning", null=True, blank=True)

@@ -1,10 +1,11 @@
 from rest_framework import serializers
+from cart.models import Product
 
 class AddProductsSerializers(serializers.Serializer):
     product_name = serializers.CharField()
     product_weight = serializers.CharField()
     product_slug = serializers.CharField()
-    photos = serializers.ImageField()
+    # photos = serializers.ImageField()
     description = serializers.CharField()
     summary = serializers.CharField()
     warning = serializers.CharField()
@@ -33,3 +34,4 @@ class AddProductsSerializers(serializers.Serializer):
     variant = serializers.CharField(required=False)
     priority = serializers.CharField(required=False)
     category_description = serializers.CharField(required=False)
+

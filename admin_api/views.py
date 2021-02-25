@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from cart.models import *
 from account.models import *
 from rest_framework.authtoken.models import Token
-
+import uuid
 # Create your views here.
 
 
@@ -58,7 +58,9 @@ class AddProductsAPIView(APIView):
             product_name = serializer.data['product_name']
             product_weight = serializer.data['product_weight']
             product_slug = serializer.data['product_slug']
-            photos = serializer.data['photos']
+
+            product_photos = request.data['image']
+
             description = serializer.data['description']
             summary = serializer.data['summary']
             warning = serializer.data['warning']
@@ -83,7 +85,7 @@ class AddProductsAPIView(APIView):
                 category.save(category_description=category_description)
             except KeyError:
                 pass
-
+            product_slug = product_name.join('-')+ str(uuid.uuid4())
             products = Product.objects.create(
                 name = product_name, 
                 product_weight = product_weight, 
@@ -94,10 +96,14 @@ class AddProductsAPIView(APIView):
                 quantity = quantity,
                 owner = owner,
                 unit = unit,
+                slug=product_slug,
                 discount_percent = discount_percent,
                 )
-            print(products)
-            image = products.photos.set(photos)
+            print(product_photos,' image from serializer')
+            print(products.photos)
+            pic = Photo(photo=product_photos)
+            pic.save()
+            image = products.photos.add(pic)
             print(image,'image')
 
             try:
