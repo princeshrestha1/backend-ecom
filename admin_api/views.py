@@ -71,7 +71,6 @@ class AddProductsAPIView(APIView):
             price = serializer.data['price']
             discount_percent = serializer.data['discount_percent']
             child_category = SubCategory.objects.get_or_create(name = sub_categories)
-            print(type(child_category[0]),' this is fuckin child_category')
 
             category = Category.objects.get_or_create(
                 title = category_title, 
@@ -99,12 +98,12 @@ class AddProductsAPIView(APIView):
                 slug=product_slug,
                 discount_percent = discount_percent,
                 )
-            print(product_photos,' image from serializer')
-            print(products.photos)
+            # for images in products:
+            # print(images)
             pic = Photo(photo=product_photos)
             pic.save()
+            # for p in pic:
             image = products.photos.add(pic)
-            print(image,'image')
 
             try:
                 vat =  serializer.data['vat']
