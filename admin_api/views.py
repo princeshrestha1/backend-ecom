@@ -96,9 +96,10 @@ class AddProductsAPIView(APIView):
                 unit = unit,
                 discount_percent = discount_percent,
                 )
-            
-            image = products.photos.add(photos)
-            
+            print(products)
+            image = products.photos.set(photos)
+            print(image,'image')
+
             try:
                 vat =  serializer.data['vat']
                 products.save(vat=vat)
