@@ -739,7 +739,7 @@ class HomeView(APIView):
         toret = []
         for details in products:
             dict = {}
-            page = self.request.query_params.get('page', None)
+            # page = self.request.query_params.get('page', None)
             product_id = details['id']
             product_name = details['name']
             product_price = details['price']
@@ -782,9 +782,9 @@ class HomeView(APIView):
         prod_list[0]["product_for_you"] = toret
 
         sliders = []
-        print(type(page),'page page')
+        # print(type(page),'page page')
         try:
-            slider = Product.objects.filter(is_on_sale=True)[:int(page)].values()
+            slider = Product.objects.filter(is_on_sale=True).values()
         except TypeError:
             slider = Product.objects.filter(is_on_sale=True).values()
         # print(slider.id,'slider')
