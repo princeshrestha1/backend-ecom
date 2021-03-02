@@ -35,3 +35,5 @@ class AddProductsSerializers(serializers.Serializer):
     priority = serializers.CharField(required=False)
     category_description = serializers.CharField(required=False)
 
+class ProductIDSerializer(serializers.Serializer):
+    product_id = serializers.CharField()

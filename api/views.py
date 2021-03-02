@@ -812,8 +812,8 @@ class HomeView(APIView):
             #         for_slider.update(cat)
             images = Photo.objects.filter(product=product_id).values('photo')
             print(images,'image')
-            for_slider['product_image'] = []
             for_slider['product_likes']=likes
+            for_slider['product_image'] = []
             for image in images:
                 for_slider['image']=uri+image['photo']
                 for_slider['product_image'].append(uri+image['photo'])
