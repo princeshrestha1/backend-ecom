@@ -749,7 +749,7 @@ class HomeView(APIView):
             product_discount = details['discount_percent']
             dict['id'] = product_id
             dict['name'] = product_name
-            uri = 'http://192.168.100.11:8001/media/'
+            uri = 'http://localhost:8000/media/'
             categories = Category.objects.filter(id=details['categories']).values('title','image')
             for category in categories:
                 cat ={}
@@ -789,7 +789,7 @@ class HomeView(APIView):
             else:
                 for_slider['category_id'] = sliders1['category_id']
             for_slider['title']=sliders1['title']
-            for_slider['image']='http://142.93.221.85/media/'+sliders1['photos']
+            for_slider['image']='http://localhost:8000/media/'+sliders1['photos']
             for_slider['url']=sliders1['url']
             for_slider['slider_type']=sliders1['slider_type']
             sliders.append(for_slider)
