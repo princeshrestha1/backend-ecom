@@ -345,7 +345,7 @@ class CategoryList(APIView):
             for sub_cats in sub_cat:
                 dict['id'] = sub_cats['id']
                 dict['title'] = sub_cats['title']
-                dict['image'] = 'http://'+uri+':8000'+'/media/'+str(sub_cats['image'])
+                dict['image'] = 'http://'+uri+':8000'+str(sub_cats['image'])
                 sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
                 for sub_name in sub_cat:
                     dict['sub_category'] = []
