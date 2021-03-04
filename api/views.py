@@ -345,7 +345,7 @@ class CategoryList(APIView):
             for sub_cats in sub_cat:
                 dict['id'] = sub_cats['id']
                 dict['title'] = sub_cats['title']
-                dict['image'] = 'http://localhost:8000'+str(sub_cats['image'])
+                dict['image'] = 'http://localhost:8000/media/'+str(sub_cats['image'])
                 sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
                 for sub_name in sub_cat:
                     dict['sub_category'] = []
@@ -368,6 +368,8 @@ class CategoryList(APIView):
                     
                 for details in product:
                     dict = {}
+                    product_price = details.price
+                    product_discount = details.discount_percent
                     dict['id']=details.id
                     dict['name']=details.name
                     dict['description']=details.description
@@ -380,12 +382,15 @@ class CategoryList(APIView):
                     dict['image']=[]
                     image = details.photos.all()
                     for img in image:
-                        dict['image'].append('http://localhost:8000/media/'+str(img))
-                    dict['discount_percent']=details.discount_percent
-                    dict['price']=details.price
+                        dict['image'].append('http://localhost:8000'+str(img))
+                    dict['product_discount']=product_discount
+                    dict['old_price']=details.price
                     dict['unit']=details.unit
+                    new_price = (product_price/100.0)*product_discount
+                    total_price = product_price-new_price
                     dict['quantity']=details.quantity
                     dict['product_address']=details.product_address
+                    dict['product_price']=total_price
                     toret.append(dict)
             return Response({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toret})
         return Response({"code": HTTP_400_BAD_REQUEST, "status": 'failure', "message": "Empty Field", "details": serializer.errors})
