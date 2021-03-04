@@ -380,7 +380,6 @@ class CategoryList(APIView):
                     dict['image']=[]
                     image = details.photos.all()
                     for img in image:
-                        print(img)
                         dict['image'].append('http://142.93.221.85/media/'+str(img))
                     dict['discount_percent']=details.discount_percent
                     dict['price']=details.price
@@ -802,7 +801,6 @@ class HomeView(APIView):
             categoryList.append(newDict)
         prod_list[0]["category"] = categoryList
         return JsonResponse({"code": 200, "status": "success","message": "successfully feteched", "details":prod_list})
-
 
             
 
@@ -1378,7 +1376,56 @@ class OrderSummaryAPIView(APIView):
 
 
 class GetSimilarProductsAPIView(APIView):
-    def get(self, request):
-        category = Category.objects.filter(title = 'Adult')
-        queryset = Product.objects.select_related('categories')
-        print(queryset)
+    def post(self, request):
+        serializer = ProductIDSerializer(data=request.data)
+        if serializer.id_valid():
+            category_title = serializer.data['category_title']
+            category = Category.objects.filter(title = category_title)
+            queryset = Product.objects.filter(categories = category[0]).order_by('?')[:10]
+            toret = []
+            for details in queryset:
+                dict = {}
+                product_name = details.name
+                product_price = details.price
+                product_stock = details.quantity
+                product_oldPrice = details.old_price
+                product_category = details.categories
+                product_address = details.product_address
+                product_discount = details.discount_percent
+                likes = details.likes
+                dict['id'] = details.pk
+                dict['name'] = product_name
+                uri = 'http://142.93.221.85/media/'
+                dict['product_image']=[]
+                image = details.photos.all()
+                for img in image:
+                    dict['product_image'].append('http://142.93.221.85/media/'+str(img))
+                dict['likes'] = likes
+                dict['image']=uri+str(image[0])
+                dict['quantity'] = product_stock
+                dict['description'] = details.description
+                dict['product_discount'] = str(product_discount)+''+'%'
+                dict['old_price'] = product_oldPrice
+                dict['from'] = product_address
+                dict['product_price'] = product_price
+                new_price = (product_price/100.0)*product_discount
+                total_price = product_price-new_price
+                dict['total_price'] = new_price
+                toret.append(dict)
+            return JsonResponse({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toret})
+        return Response({"code": HTTP_400_BAD_REQUEST, "status": 'failure', "message": "Empty Fields", "details": serializer.errors})
+
+
+class GetADSAPIView(APIView):
+    def get(self,request):
+        uri = socket.gethostbyname(socket.gethostname())
+        ads = Advertisements.objects.all()
+        toList = []
+        for ads_data in ads:
+            toret = {}
+            toret['name'] = ads_data.name
+            toret['image'] = uri + ads_data.image.url
+            toret['logo'] = uri + ads_data.logo.url
+            toret['image_url'] = ads_data.image_url
+            toList.append(toret)
+        return JsonResponse({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toList})

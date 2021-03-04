@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^order-summary/$', OrderSummaryAPIView.as_view(), name='order_summary'),
 
     url(r'^get/similarproducts/$', GetSimilarProductsAPIView.as_view(), name='getSimilarProducts'),
+    url(r'^get/ads/$', GetADSAPIView.as_view(), name='GetADSAPIView'),
     ]
