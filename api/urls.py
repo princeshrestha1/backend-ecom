@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^recent-orders/$', GetPreviousOrderAPIView.as_view(), name='remove_count'),
     url(r'^confirm-checkout/$', ConfirmCheckoutAPIView.as_view(), name='remove_count'),
     url(r'^order-summary/$', OrderSummaryAPIView.as_view(), name='order_summary'),
+
+    url(r'^get/similarproducts/$', GetSimilarProductsAPIView.as_view(), name='getSimilarProducts'),
     ]

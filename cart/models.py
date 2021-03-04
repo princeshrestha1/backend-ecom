@@ -160,7 +160,7 @@ class Product(Timestampable):
     barcode = models.CharField(
         "Product Barcode", max_length=128, null=True, blank=True)
     quantity = models.CharField("Product Quantity",max_length=255, default=' ')
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, related_name='product_category')
     owner = models.CharField(max_length=255, null=True, blank=True)
     tags = models.ManyToManyField(Tag)
     unit = models.CharField('product unit',max_length=255,default=' ')
