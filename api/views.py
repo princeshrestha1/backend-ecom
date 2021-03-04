@@ -320,8 +320,8 @@ class ProductList(APIView):
             dict['product_likes'] = likes
             dict['from'] = product_address
             for image in images:
-                dict['image']=uri+image['photo']
-                dict['product_image'].append(uri+image['photo'])
+                dict['image']='http://localhost:8000/media/'+image['photo']
+                dict['product_image'].append('http://localhost:8000/media/'+image['photo'])
             dict['quantity'] = product_stock
             dict['description'] = details['description']
             dict['product_discount'] = str(product_discount)+''+'%'
@@ -345,7 +345,7 @@ class CategoryList(APIView):
             for sub_cats in sub_cat:
                 dict['id'] = sub_cats['id']
                 dict['title'] = sub_cats['title']
-                dict['image'] = 'http://'+uri+':8000'+str(sub_cats['image'])
+                dict['image'] = 'http://localhost:8000'+str(sub_cats['image'])
                 sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
                 for sub_name in sub_cat:
                     dict['sub_category'] = []
@@ -380,7 +380,7 @@ class CategoryList(APIView):
                     dict['image']=[]
                     image = details.photos.all()
                     for img in image:
-                        dict['image'].append('http://142.93.221.85/media/'+str(img))
+                        dict['image'].append('http://localhost:8000/media/'+str(img))
                     dict['discount_percent']=details.discount_percent
                     dict['price']=details.price
                     dict['unit']=details.unit
@@ -418,7 +418,7 @@ class SingleProductAPIView(APIView):
                 likes = details['likes']
                 dict['id'] = product_id
                 dict['name'] = product_name
-                uri = 'http://142.93.221.85/media/'
+                uri = 'http://localhost:8000/media/'
                 images = Photo.objects.filter(
                     product=product_id).values('photo')
                 dict['product_image'] = []
@@ -784,6 +784,10 @@ class HomeView(APIView):
         for sliders1 in slider:
             for_slider={}
             for_slider['id']=sliders1['id']
+            if sliders1['slider_type'] == 'product':
+                for_slider['product_id'] = sliders1['product_id']
+            else:
+                for_slider['category_id'] = sliders1['category_id']
             for_slider['title']=sliders1['title']
             for_slider['image']='http://142.93.221.85/media/'+sliders1['photos']
             for_slider['url']=sliders1['url']
