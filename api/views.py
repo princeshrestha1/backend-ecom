@@ -1433,8 +1433,14 @@ class GetADSAPIView(APIView):
         for ads_data in ads:
             toret = {}
             toret['name'] = ads_data.name
-            toret['image'] = uri + ads_data.image.url
-            toret['logo'] = uri + ads_data.logo.url
+            if ads_data.image:
+                toret['image'] = uri + ads_data.image.url
+            else:
+                toret['image'] = ''
+            if ads_data.logo:
+                toret['logo'] = uri + ads_data.logo.url
+            else:
+                toret['logo'] = ''
             toret['image_url'] = ads_data.image_url
             toList.append(toret)
         return JsonResponse({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toList})
