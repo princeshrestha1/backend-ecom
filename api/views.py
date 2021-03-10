@@ -799,15 +799,22 @@ class HomeView(APIView):
             for_slider['slider_type']=sliders1['slider_type']
             sliders.append(for_slider)
         prod_list[0]["sliders"] = sliders
-        dict2={}
-        category = Category.objects.all().values('title','image','id')
         categoryList = []
-        for products1 in category:
-            newDict = {}
-            newDict["id"] = products1['id']
-            newDict['title']=products1['title']
-            newDict['image']=uri+products1['image']
-            categoryList.append(newDict)
+        sub_cat = SubCategoryMapping.objects.all().values()
+        for category in sub_cat:
+            sub_cat = Category.objects.filter(id=category['id']).values('id','image','title')
+            dict = {}
+            for sub_cats in sub_cat:
+                dict['id'] = sub_cats['id']
+                dict['title'] = sub_cats['title']
+                dict['image'] = 'http://localhost:8000/media/'+str(sub_cats['image'])
+                sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
+                for sub_name in sub_cat:
+                    dict['sub_category'] = []
+                    det = {}
+                    det['sub_category'] = sub_name
+                    dict['sub_category'].append(det['sub_category'])
+            categoryList.append(dict)
         prod_list[0]["category"] = categoryList
         return JsonResponse({"code": 200, "status": "success","message": "successfully feteched", "details":prod_list})
 
