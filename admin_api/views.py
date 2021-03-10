@@ -269,7 +269,72 @@ class DeleteProductAPIView(APIView):
                 "details": serializer.errors
                 })
         return JsonResponse({
-            "code": 400,
+            "code": 401,
+            "status": 'failure',
+            'message':'unauthorized access',
+            "details": []
+            })
+
+
+class GetOrderListAPIView(APIView):
+    def get(self,request):
+        try:
+            uid = CheckHttpAuthorization(auth_token=request.META['HTTP_AUTHORIZATION'])
+        except KeyError:
+            return JsonResponse({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
+        if uid.__class__.__name__ == 'JsonResponse':
+            return uid
+        else:
+            user_id = uid
+        toList = []
+        user = User.objects.filter(id=user_id)
+        if user[0].is_staff==True:
+            get_orders = Order.objects.filter(is_confirmed=False)
+            toList = []
+            for order in get_orders:
+                toret = {}
+                toret['customer_name'] = order.user.get_full_name()
+                product_name = order.products.all()
+                print(product_name,'product name')
+                if not product_name:
+                    return JsonResponse({
+                        "code": 200,
+                        "status":"failure",
+                        'message':"Empty Data",
+                        "details": []
+                        })
+                for product in product_name:
+                    shipping_details = ShippingAddress.objects.filter(user_id=product.user.id)
+                    for address in shipping_details:
+                        toret['contact_number'] = address.contact_number
+                        toret['city'] = address.city
+                        toret['postal_code'] = address.postal_code
+                        toret['street_name'] = address.street_name
+                        toret['lat'] = address.lat
+                        toret['lng'] = address.lng
+                    product_price = product.products.price
+                    toret['product_name'] = product.products.name
+                    toret['product_price'] = product_price
+                    discount_percent = product.products.discount_percent
+                    toret['product_discount'] = str(discount_percent)+'%'
+                    quantity = product.quantity
+                    toret['product_quantity'] = quantity
+                    if discount_percent==0:
+                            toret['with_discount']= product_price*quantity
+                    else:
+                        total_price = product_price*quantity
+                        discount = (total_price/100)*discount_percent
+                        price1 = total_price-discount
+                        toret['with_discount'] = price1
+                toList.append(toret)
+            return JsonResponse({
+            "code": 401,
+            "status": 'failure',
+            'message':'unauthorized access',
+            "details": toList
+            })
+        return JsonResponse({
+            "code": 401,
             "status": 'failure',
             'message':'unauthorized access',
             "details": []

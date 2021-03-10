@@ -1394,7 +1394,7 @@ class OrderSummaryAPIView(APIView):
 class GetSimilarProductsAPIView(APIView):
     def post(self, request):
         serializer = ProductIDSerializer(data=request.data)
-        if serializer.id_valid():
+        if serializer.is_valid():
             category_title = serializer.data['category_title']
             category = Category.objects.filter(title = category_title)
             queryset = Product.objects.filter(categories = category[0]).order_by('?')[:10]
