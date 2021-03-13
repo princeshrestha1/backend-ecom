@@ -79,7 +79,7 @@ class UserRegisterAPIView(APIView):
                     mobile_number=new_data['mobile_number'])
             user.set_password(new_data['password'])
             user.is_active = False
-            token, create = Token.objects.get_or_create(user=user)
+            # token, create = Token.objects.get_or_create(user=user)
             user.otp_code = int(code)
             # sendSms.sendsms(self, code, new_data['mobile_number'])
             user.save()
@@ -103,25 +103,14 @@ class UserVerifyAPIView(APIView):
     # serializer_class = UserVerificationSerializers
 
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'failure', 'message': 'Invalid Credentials'})
-
-        user_id = usid.user_id
-
+        user_id = request.user.id
         serializer = UserVerificationSerializers(data=request.data)
         if serializer.is_valid():
             otp = serializer.data['otp']
-            if User.objects.filter(id=user_id, otp_code=serializer.data['otp']).exists():
+            req_usr = request.user
+            if req_usr.is_superuser  or req_usr.is_staff:
+                return Response({'code': 404, 'status': 'FAILURE', 'message': 'Failure', "details": 'Customer area only'})
+            if User.objects.filter(id=user_id, otp_code=otp).exists():
                 User.objects.filter(
                     id=user_id, otp_code=otp).update(is_active=True)
                 return Response({"code": 200, "status": 'success', "message": "Successfully Verified", "details": "user verified"})
@@ -148,10 +137,6 @@ class UserLoginAPIView(APIView):
             else:
                 user = authenticate(username=username,password=password)
             if user is not None:
-                token = Token.objects.filter(user_id=user.id).values('key')
-                dict = ['token']
-                for tkn in token:
-                    pass
                 if user.is_active:
                     login(request, user)
                     dict = {}
@@ -159,7 +144,6 @@ class UserLoginAPIView(APIView):
                     dict['username']=user.username
                     dict['email'] = user.email
                     dict['mobile_number'] = str(user.mobile_number)
-                    dict['token'] = tkn['key']
                     return Response({"code": 200, "status": "Success", "message": "Successfully Logged In", 'details': dict})
                 else:
                     return Response({"code": 400, "status": "Failure", "message": "Inactive User"})
@@ -173,20 +157,7 @@ class UserUpdateAPIView(APIView):
     serializer_class = UserUpdateSerializers
 
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'failure', 'message': 'Invalid Credentials'})
-
-        user_id = usid.user_id
+        user_id = request.user.id
         serializer = UserProfileUpdateSerializers(data=request.data)
         if serializer.is_valid():
             new_data = serializer.data
@@ -199,21 +170,9 @@ class UserUpdateAPIView(APIView):
 class UserUpdateBillingAddressAPIView(APIView):
     serializer_class = UpdateAddressSerializer
     model = User
-
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'failure', 'message': 'Invalid Credentials'})
-        user_id=usid.user_id
+        user_id = request.user.id
         serializer = UpdateAddressSerializer(data=request.data)
         if serializer.is_valid():
             new_data = serializer.data
@@ -250,20 +209,9 @@ class UserUpdateBillingAddressAPIView(APIView):
 
 
 class GetUserShippingAddress(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'failure', 'message': 'Invalid Credentials'})
-        user_id=usid.user_id
+        user_id = request.user.id
         if ShippingAddress.objects.filter(user_id=user_id).first():
             data = ShippingAddress.objects.filter(user_id=user_id).values()
             toret=[]
@@ -285,6 +233,7 @@ class GetUserShippingAddress(APIView):
 
 
 class LogoutAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request):
         logout(request)
         return Response({"code": HTTP_200_OK, "status": "success", "message": "Successfully Logged Out", "details": "successfully logout"})
@@ -446,22 +395,11 @@ class SingleProductAPIView(APIView):
 
 
 class CartListAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
         global grand_total
         grand_total = 0
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         toret = []
         if Cart.objects.filter(user_id=user_id).first():
             cart_item = Cart.objects.filter(user_id=user_id).values('products_id','is_ordered','is_taken','is_cancelled','is_completed')
@@ -566,21 +504,10 @@ class HomeAPIView(ProductMixin, APIView):
 
 
 class IncreaseProductInTransaction(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
+        user_id = request.user.id
         serializer = SingleProductSerializer(data=request.data)
-        user_id = token.user_id
         if serializer.is_valid():
             prod = get_object_or_404(Product, id=serializer.data['product_id'])
             prod_in_tran, created = ProductInTransaction.objects.get_or_create(
@@ -595,20 +522,9 @@ class IncreaseProductInTransaction(APIView):
 
 
 class AddToCartAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         serializer = AddToCartSerializers(data=request.data,many=isinstance(request.data,list))
         if serializer.is_valid():
             for data in serializer.data:
@@ -623,20 +539,9 @@ class AddToCartAPIView(APIView):
 
 
 class CancelListAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         if Cart.objects.filter(user=user_id,is_cancelled=True).exists():
             data=Cart.objects.filter(user=user_id,is_cancelled=True).values()
             return Response({"code": 200, "status": "success","message": "Successfully Feteched", "details": data})
@@ -644,20 +549,9 @@ class CancelListAPIView(APIView):
 
 
 class OnProgressListAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         if Cart.objects.filter(user=user_id,is_ordered=True).exists():
             data=Cart.objects.filter(user=user_id,is_ordered=True).values()
             return Response({"code": 200, "status": "success","message": "Successfully Feteched", "details": data})
@@ -665,20 +559,9 @@ class OnProgressListAPIView(APIView):
 
 
 class RecentProductAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         if Cart.objects.filter(user=user_id,is_completed=True).first():
             data=Cart.objects.filter(user=user_id,is_completed=True).values()
             return Response({"code": 200, "status": "success","message": "Successfully Feteched", "details": data})
@@ -686,22 +569,10 @@ class RecentProductAPIView(APIView):
 
 
 class AddToCart(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         serializer = AddToCartSerializers(data=request.data,many=isinstance(request.data,list))
         if serializer.is_valid():
             for data in serializer.data:
@@ -800,20 +671,18 @@ class HomeView(APIView):
             sliders.append(for_slider)
         prod_list[0]["sliders"] = sliders
         categoryList = []
-        sub_cat = SubCategoryMapping.objects.all().values()
-        for category in sub_cat:
-            sub_cat = Category.objects.filter(id=category['id']).values('id','image','title')
+        sub_cat = Category.objects.all().values('id','image','title')
+        for sub_cats in sub_cat:
             dict = {}
-            for sub_cats in sub_cat:
-                dict['id'] = sub_cats['id']
-                dict['title'] = sub_cats['title']
-                dict['image'] = 'http://localhost:8000/media/'+str(sub_cats['image'])
-                sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
-                for sub_name in sub_cat:
-                    dict['sub_category'] = []
-                    det = {}
-                    det['sub_category'] = sub_name
-                    dict['sub_category'].append(det['sub_category'])
+            dict['id'] = sub_cats['id']
+            dict['title'] = sub_cats['title']
+            dict['image'] = 'http://localhost:8000/media/'+str(sub_cats['image'])
+            sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
+            for sub_name in sub_cat:
+                dict['sub_category'] = []
+                det = {}
+                det['sub_category'] = sub_name
+                dict['sub_category'].append(det['sub_category'])
             categoryList.append(dict)
         prod_list[0]["category"] = categoryList
         return JsonResponse({"code": 200, "status": "success","message": "successfully feteched", "details":prod_list})
@@ -821,22 +690,10 @@ class HomeView(APIView):
             
 
 class AddProducttoCart(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         serializer = SingleProductSerializer(data=request.data)
         if serializer.is_valid():
             product_id=serializer.data['product_id']
@@ -857,20 +714,9 @@ class AddProducttoCart(APIView):
 
 
 class CheckoutAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            token = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = token.user_id
+        user_id = request.user.id
         serializer = CheckoutSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.data
@@ -897,21 +743,9 @@ class CheckoutAPIView(APIView):
 
 
 class AddProductCountAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-
-        user_id = usid.user_id
+        user_id = request.user.id
         serializer = CartADDSerializer(data=request.data)
         if serializer.is_valid():
             if ProductInTransaction.objects.filter(user_id=user_id,products_id=serializer.data['products_id'],is_completed=False).exists():
@@ -976,21 +810,9 @@ class AddProductCountAPIView(APIView):
 
 
 class  RemoveProductCountAPIView(APIView):
-
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = usid.user_id
+        user_id = request.user.id
         serializer = CartADDSerializer(data=request.data)
         if serializer.is_valid():
             if ProductInTransaction.objects.filter(user_id=user_id,products_id=serializer.data['products_id'],is_completed=False).exists():
@@ -1098,20 +920,9 @@ class  RemoveProductCountAPIView(APIView):
 
 
 class ConfirmCheckoutAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = usid.user_id
+        user_id = request.user.id
 
         serializer = ConfirmCheckoutSerializer(data=request.data)
         if serializer.is_valid():
@@ -1172,22 +983,11 @@ class ConfirmCheckoutAPIView(APIView):
 
 
 class GetPreviousOrderAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
         global grand_total
         grand_total = 0
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'FAILURE', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'FAILURE', 'message': 'Invalid Credentials'})
-        user_id = usid.user_id
+        user_id = request.user.id
         if Order.objects.filter(user_id=user_id).first():
             wrapper = []
             oid=Order.objects.filter(user_id=user_id).values('products','code','created_at','condition_status__name','payment_type')
@@ -1251,23 +1051,12 @@ class GetPreviousOrderAPIView(APIView):
 
 
 class UpdateBillingAddressAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = UpdateAddressSerializer
     model = User
 
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'failure', 'message': 'Invalid Credentials'})
-        user_id=usid.user_id
+        user_id = request.user.id
         serializer = UpdateBillingAddressSerializer(data=request.data)
         if serializer.is_valid():
             new_data = serializer.data
@@ -1314,20 +1103,9 @@ class UpdateBillingAddressAPIView(APIView):
 
 
 class CancelOrderAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'failure', 'message': 'Invalid Credentials'})
-        user_id=usid.user_id
+        user_id = request.user.id
         serializer = CancelSerializer(data=request.data)
         if serializer.is_valid():
             if Order.objects.filter(user_id=user_id,code=serializer.data['order_id']).first():
@@ -1339,21 +1117,9 @@ class CancelOrderAPIView(APIView):
 
 
 class OrderSummaryAPIView(APIView):
-
+    permission_classes = (IsAuthenticated,)
     def get(self, request, *args, **kwargs):
-        try:
-            token = request.META['HTTP_AUTHORIZATION']
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        try:
-            token = (token.split("er")[1])
-        except:
-            return Response({'code': 400, 'status': 'failure', 'message': 'No Token Keyword Provided'})
-        try:
-            usid = Token.objects.get(key=token)
-        except:
-            return Response({'code': 404, 'status': 'failure', 'message': 'Invalid Credentials'})
-        user_id=usid.user_id
+        user_id = request.user.id
         order_id = self.request.query_params.get('order_id')
         gateway = self.request.query_params.get('gateway')
         address_id = self.request.query_params.get('address_id')

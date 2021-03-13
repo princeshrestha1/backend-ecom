@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from rest_framework_swagger.views import get_swagger_view
 from api.views import *
+from rest_framework_simplejwt import views as jwt_views
 
 schema_view = get_swagger_view(title='gaavaa API')
 urlpatterns = [
@@ -33,4 +34,8 @@ urlpatterns = [
 
     url(r'^get/similarproducts/$', GetSimilarProductsAPIView.as_view(), name='getSimilarProducts'),
     url(r'^get/ads/$', GetADSAPIView.as_view(), name='GetADSAPIView'),
+    
+    
+    url('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    url('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     ]

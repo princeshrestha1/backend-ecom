@@ -45,8 +45,15 @@ class UserRegistrationSerializer(serializers.Serializer):
 class UserLoginSerializer(serializers.ModelSerializer):
 	email = serializers.CharField(allow_blank=True, required=True)
 	password = serializers.CharField(style={'input_type': 'password'})
-	token = serializers.CharField(read_only=True)
 
+	def validate_email(self, email):
+		user = User.objects.filter(email=email).first()
+		if user:
+			if user.is_superuser or user.is_staff:
+				raise serializers.ValidationError("Only Customers can access this")
+			return email
+		return serializers.ValidationError("Invalid Credentials")
+ 
 	class Meta:
 		model = User
 		fields = ['password','email', 'token']

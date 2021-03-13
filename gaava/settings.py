@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
+import datetime
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'ckeditor_uploader',
     'corsheaders',
+    'django_seed',
     
 ]
 SITE_ID=1
@@ -148,7 +149,8 @@ REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 		# 'rest_framework.authentication.BasicAuthentication',
 		# 'rest_framework.authentication.SessionAuthentication',
-		'rest_framework.authentication.TokenAuthentication',
+		# 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
 	),
 
 	'DEFAULT_PERMISSION_CLASSES': (
@@ -215,3 +217,12 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 
 CORS_ORIGIN_WHITELIST = ['http://192.168.100.16:8080']
 CORS_ORIGIN_ALLOW_ALL=True
+
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=10),
+
+    'JWT_ALLOW_REFRESH': True,
+
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=10),
+}
