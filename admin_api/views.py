@@ -4,46 +4,17 @@ from .serializers import *
 from rest_framework.views import APIView
 from cart.models import *
 from account.models import *
-from rest_framework.authtoken.models import Token
 import uuid
 import socket
 import datetime
-# Create your views here.
-
-
-def CheckHttpAuthorization(auth_token):
-    token = auth_token
-    if not auth_token:
-        return JsonResponse({'code': 400, 'status': 'FAILURE', 'message': 'user not provided'})
-
-    try:
-        token = (token.split("arer ")[1])
-        try:
-            usid = Token.objects.get(key=token)
-        except Token.DoesNotExist:
-            return JsonResponse({'code': 404, 'status': 'FAILURE', 'message': 'provided credentials not found'})
-    except:
-        return JsonResponse({'code': 400, 'status': 'FAILURE', 'message': 'no token keyword provided'})
-
-    user_id = usid.user.id
-    return user_id
-
+from rest_framework.permissions import IsAuthenticated
 
 
 class AddProductsAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request):
-        
-        try:
-            uid = CheckHttpAuthorization(auth_token=request.META['HTTP_AUTHORIZATION'])
-        except KeyError:
-            return JsonResponse({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        if uid.__class__.__name__ == 'JsonResponse':
-            return uid
-        else:
-            user_id = uid
-
+        user_id = request.user.id
         serializer = AddProductsSerializers(data=request.data)
-
         if serializer.is_valid():
             user = User.objects.get(id=user_id)
             if not user.is_staff:
@@ -171,16 +142,10 @@ class AddProductsAPIView(APIView):
 
 
 class GetProductAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     uri = 'http://'+socket.gethostbyname(socket.gethostname())+'/media/'
     def get(self, request):
-        try:
-            uid = CheckHttpAuthorization(auth_token=request.META['HTTP_AUTHORIZATION'])
-        except KeyError:
-            return JsonResponse({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        if uid.__class__.__name__ == 'JsonResponse':
-            return uid
-        else:
-            user_id = uid
+        user_id = request.user.id
         toList = []
         user = User.objects.filter(id=user_id)
         if user[0].is_staff:
@@ -234,15 +199,9 @@ class GetProductAPIView(APIView):
 
 
 class DeleteProductAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self, request):
-        try:
-            uid = CheckHttpAuthorization(auth_token=request.META['HTTP_AUTHORIZATION'])
-        except KeyError:
-            return JsonResponse({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        if uid.__class__.__name__ == 'JsonResponse':
-            return uid
-        else:
-            user_id = uid
+        user_id = request.user.id
         toList = []
         user = User.objects.filter(id=user_id)
         if user[0].is_staff:
@@ -277,15 +236,9 @@ class DeleteProductAPIView(APIView):
 
 
 class GetOrderListAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self,request):
-        try:
-            uid = CheckHttpAuthorization(auth_token=request.META['HTTP_AUTHORIZATION'])
-        except KeyError:
-            return JsonResponse({'code': 400, 'status': 'failure', 'message': 'User Token Not Provided'})
-        if uid.__class__.__name__ == 'JsonResponse':
-            return uid
-        else:
-            user_id = uid
+        user_id = request.user.id
         toList = []
         user = User.objects.filter(id=user_id)
         if user[0].is_staff==True:

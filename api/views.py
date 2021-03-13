@@ -100,7 +100,6 @@ class UserRegisterAPIView(APIView):
 
 class UserVerifyAPIView(APIView):
     permission_classes = [AllowAny]
-    # serializer_class = UserVerificationSerializers
 
     def post(self, request, *args, **kwargs):
         user_id = request.user.id

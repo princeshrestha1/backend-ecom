@@ -44,7 +44,6 @@ INSTALLED_APPS = [
 	'django.contrib.humanize',
 
     'rest_framework',
-    'rest_framework.authtoken',
     'rest_auth',
 
     'xhtml2pdf',
