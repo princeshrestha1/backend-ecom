@@ -67,7 +67,6 @@ class UserVerificationSerializers(serializers.Serializer):
 
 class UserProfileUpdateSerializers(serializers.Serializer):
 	username = serializers.CharField(max_length=255)
-	# last_name = serializers.CharField(max_length=255)
 	mobile_number = serializers.CharField(max_length=255, required=True)
 	email = serializers.EmailField()
 
