@@ -141,7 +141,7 @@ class UserLoginAPIView(APIView):
                 else:
                     return Response({"code": 400, "status": "Failure", "message": "Inactive User"})
             else:
-                return Response({"code": HTTP_400_BAD_REQUEST, "status": "failure", "message": "Invalid Credentials"})
+                return Response({"code": 401, "status": "failure", "message": "Invalid Credentials"})
         return Response({"code": HTTP_400_BAD_REQUEST, "status": "failure", 'message': 'Empty field', "details": serializer.errors})
 
 
