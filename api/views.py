@@ -318,7 +318,7 @@ class CategoryList(APIView):
             toret = []
             for all_id in category:                
                 catid = all_id['id']
-                product = Product.objects.filter(categories=all_id['id'],deleted_at=None)
+                product = Product.objects.filter(categories=catid,deleted_at=None)
                     
                 for details in product:
                     dict = {}
@@ -333,10 +333,13 @@ class CategoryList(APIView):
                     dict['likes']=details.likes
                     dict['from']=details.product_address
                     dict['slug']=details.slug
-                    dict['image']=[]
                     image = details.photos.all()
-                    for img in image:
-                        dict['image'].append('http://localhost:8000'+str(img))
+                    dict['product_image'] = []
+                    uri = 'http://localhost:8000/media/'
+                    images = Photo.objects.filter(product=details.id).values('photo')
+                    for image in images:
+                        dict['image']=uri+image['photo']
+                        dict['product_image'].append(uri+images[0]['photo'])
                     dict['product_discount']=product_discount
                     dict['old_price']=details.price
                     dict['unit']=details.unit
@@ -383,7 +386,7 @@ class SingleProductAPIView(APIView):
                 dict['product_image'] = []
                 for image in images:
                     dict['image']=uri+image['photo']
-                dict['product_image'].append(uri+images[0]['photo'])
+                    dict['product_image'].append(uri+images[0]['photo'])
                 dict['quantity'] = product_stock
                 dict['description'] = details['description']
                 dict['product_discount'] = str(product_discount)+''+'%'
