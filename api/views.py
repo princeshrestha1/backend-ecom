@@ -294,12 +294,18 @@ class CategoryList(APIView):
                 dict['id'] = sub_cats['id']
                 dict['title'] = sub_cats['title']
                 dict['image'] = 'http://localhost:8000/media/'+str(sub_cats['image'])
-                sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
+                sub_cat = SubCategory.objects.filter(id=sub_cats['id'])
                 for sub_name in sub_cat:
                     dict['sub_category'] = []
                     det = {}
-                    det['sub_category'] = sub_name
-                    dict['sub_category'].append(det['sub_category'])
+                    det['name'] = sub_name.name
+                    dict['sub_category'].append(det)
+                    tags = sub_name.tags.all()
+                    dict['tags'] = []
+                    for tag_title in tags:
+                        dicti = {}
+                        dicti['tags'] = tag_title.title
+                        dict['tags'].append(str(dicti['tags']))
             toret.append(dict)
         return Response({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toret})
 
@@ -676,12 +682,18 @@ class HomeView(APIView):
             dict['id'] = sub_cats['id']
             dict['title'] = sub_cats['title']
             dict['image'] = 'http://localhost:8000/media/'+str(sub_cats['image'])
-            sub_cat = SubCategory.objects.filter(id=sub_cats['id']).values('name')
+            sub_cat = SubCategory.objects.filter(id=sub_cats['id'])
             for sub_name in sub_cat:
                 dict['sub_category'] = []
                 det = {}
-                det['sub_category'] = sub_name
-                dict['sub_category'].append(det['sub_category'])
+                det['name'] = sub_name.name
+                dict['sub_category'].append(det)
+                dict['tags'] = []
+                tags = sub_name.tags.all()
+                for tag_title in tags:
+                    dicti = {}
+                    dicti['tags'] = tag_title.title
+                    dict['tags'].append(str(dicti['tags']))
             categoryList.append(dict)
         prod_list[0]["category"] = categoryList
         return JsonResponse({"code": 200, "status": "success","message": "successfully feteched", "details":prod_list})

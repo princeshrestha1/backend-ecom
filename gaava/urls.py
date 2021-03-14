@@ -26,22 +26,22 @@ from django.views.generic import RedirectView
 # handler404 = handler404
 
 urlpatterns = [
-    path('', include('account.urls'), name='account'),
-    path('', include('cart.urls'), name='cart'),
+    # path('', include('account.urls'), name='account'),
+    # path('', include('cart.urls'), name='cart'),
     path('super/admin/', admin.site.urls),
     # path('messages/', include('messaging.urls')),
-    path('reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
-        CustomerPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done/', CustomerPasswordResetCompleteView.as_view(),
-        name='password_reset_complete'),
+    # path('reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
+    #     CustomerPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    # path('reset/done/', CustomerPasswordResetCompleteView.as_view(),
+    #     name='password_reset_complete'),
     
-    path('oauth/', include('social_django.urls'), name='social'),
-    path('inbox/notifications/', include('notifications.urls'), name='notifications'), 
-    path('apis/', include('shop_api.urls')),
+    # path('oauth/', include('social_django.urls'), name='social'),
+    # path('inbox/notifications/', include('notifications.urls'), name='notifications'), 
+    # path('apis/', include('shop_api.urls')),
     path('api/v1/', include('api.urls')),
-    path('rest-auth/', include('rest_auth.urls'), name='rest_auth'),
+    # path('rest-auth/', include('rest_auth.urls'), name='rest_auth'),
 
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    # path('ckeditor/', include('ckeditor_uploader.urls')),
     
     path('admin/', include('admin_api.urls')),
 ]

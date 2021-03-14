@@ -75,6 +75,14 @@ class Photo(Timestampable):
         basename, extension = os.path.splitext(os.path.basename(self.photo.name)) 
         return basename
 
+class Tag(Timestampable):
+    title = models.CharField("Tag Title", max_length=255, unique=True)
+    description = models.TextField(
+        "Tag Description", null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+
 
 class Keywords(Timestampable):
     title = models.CharField("Title", max_length=255)
@@ -87,7 +95,7 @@ class Keywords(Timestampable):
 
 class SubCategory(Timestampable):
     name = models.CharField("SubCategory Name", max_length=255)
-
+    tags = models.ManyToManyField(Tag, blank=True)
     def __str__(self):
         return self.name
 
@@ -137,20 +145,14 @@ class SubCategoryMapping(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name = 'category_mapping')
     sub_category = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, related_name = 'sub_category_mapping')
 
-class Tag(Timestampable):
-    title = models.CharField("Tag Title", max_length=255, unique=True)
-    description = models.TextField(
-        "Tag Description", null=True, blank=True)
 
-    def __str__(self):
-        return self.title
 
 
 class Product(Timestampable):
     name = models.CharField("Product Name", max_length=255)
     product_weight = models.CharField(max_length=100, null= True, blank=True)
     slug = models.SlugField("Product Slug", unique=True, max_length=255)
-    photos = models.ManyToManyField(Photo, blank=True, null=True)
+    photos = models.ManyToManyField(Photo, blank=True)
     description = models.TextField("Product Description", null=True, blank=True)
     summary = models.TextField("Product Summary", blank=True)
     warning = models.TextField("Product Warning", null=True, blank=True)

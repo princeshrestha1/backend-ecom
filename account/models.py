@@ -49,7 +49,7 @@ class User(AbstractUser):
     # street_name = models.CharField("Street Name",max_length=255,null=True,blank=True,default=' ')
     # country = models.CharField("Country",max_length=255,null=True,blank=True,default=' ')
     is_read = models.BooleanField(default=False)
-    otp_code = models.PositiveIntegerField(max_length=10, default=0)
+    otp_code = models.PositiveIntegerField(default=0)
     # USERNAME_FIELDS=['mobile_number','username']
     # REQUIRED_FIELDS = ['email']
     def __str__(self):
