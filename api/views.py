@@ -378,13 +378,12 @@ class SingleProductAPIView(APIView):
                 dict['id'] = product_id
                 dict['name'] = product_name
                 uri = 'http://localhost:8000/media/'
-                images = Photo.objects.filter(
-                    product=product_id).values('photo')
-                dict['product_image'] = []
                 dict['likes'] = likes
+                images = Photo.objects.filter(product=product_id).values('photo')
+                dict['product_image'] = []
                 for image in images:
-                    dict['product_image'].append(uri+image['photo'])
-                dict['image']=uri+image['photo']
+                    dict['image']=uri+image['photo']
+                dict['product_image'].append(uri+images[0]['photo'])
                 dict['quantity'] = product_stock
                 dict['description'] = details['description']
                 dict['product_discount'] = str(product_discount)+''+'%'
@@ -638,9 +637,9 @@ class HomeView(APIView):
                 for one in name:
                     cat['category']=one['title']
                     dict.update(cat)
-            images = Photo.objects.filter(product=product_id).values('photo')
             dict['product_image'] = []
             dict['product_likes']=likes
+            images = Photo.objects.filter(product=product_id).values('photo')
             for image in images:
                 dict['image']=uri+image['photo']
                 dict['product_image'].append(uri+image['photo'])
