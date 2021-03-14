@@ -79,7 +79,6 @@ class UserRegisterAPIView(APIView):
                     mobile_number=new_data['mobile_number'])
             user.set_password(new_data['password'])
             user.is_active = False
-            # token, create = Token.objects.get_or_create(user=user)
             user.otp_code = int(code)
             # sendSms.sendsms(self, code, new_data['mobile_number'])
             user.save()
@@ -88,12 +87,8 @@ class UserRegisterAPIView(APIView):
             valid_from = datetime.datetime.today()
             valid_to = datetime.datetime.today() + datetime.timedelta(days=60)
             dict = {}
-            dict['email'] = new_data['email']
             dict['id'] = user.pk
-            dict['username'] = username
-            dict['mobile_number'] = new_data['mobile_number']
-            dict['token'] = token.key
-            dict['otp_code'] = code
+            dict['is_staff'] = user.is_staff
             return Response({"code": 200, "status": "success", "message": "User Account Created", "details": dict})
         return Response({"code": 400, "status": "failure", "message": "Empty Field", "details": serializer.errors})
 
@@ -140,8 +135,7 @@ class UserLoginAPIView(APIView):
                     login(request, user)
                     dict = {}
                     dict['id'] = user.id
-                    dict['username']=user.username
-                    dict['email'] = user.email
+                    dict['is_staff'] = user.is_staff
                     dict['mobile_number'] = str(user.mobile_number)
                     return Response({"code": 200, "status": "Success", "message": "Successfully Logged In", 'details': dict})
                 else:
