@@ -136,7 +136,6 @@ class UserLoginAPIView(APIView):
                     dict = {}
                     dict['id'] = user.id
                     dict['is_staff'] = user.is_staff
-                    dict['mobile_number'] = str(user.mobile_number)
                     return Response({"code": 200, "status": "Success", "message": "Successfully Logged In", 'details': dict})
                 else:
                     return Response({"code": 400, "status": "Failure", "message": "Inactive User"})
