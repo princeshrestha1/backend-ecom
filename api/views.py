@@ -89,7 +89,7 @@ class UserRegisterAPIView(APIView):
             dict = {}
             dict['id'] = user.pk
             dict['is_staff'] = user.is_staff
-            dict['username'] = modified_username
+            dict['username'] = user.username
             return Response({"code": 200, "status": "success", "message": "User Account Created", "details": dict})
         return Response({"code": 400, "status": "failure", "message": "Empty Field", "details": serializer.errors})
 
@@ -122,9 +122,9 @@ class UserLoginAPIView(APIView):
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
             new_data = serializer.data
-            username = new_data['email']
+            username = new_data['username']
             password = new_data['password']
-            
+            print(username, ' ',password)
             # using phone number
             if not re.findall("[A-Za-z]",username):
                 user = authenticate(

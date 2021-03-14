@@ -42,17 +42,17 @@ class UserRegistrationSerializer(serializers.Serializer):
 			raise serializers.ValidationError("Those passwords don't match.")
 		return data
 
-class UserLoginSerializer(serializers.ModelSerializer):
-	email = serializers.CharField(allow_blank=True, required=True)
+class UserLoginSerializer(serializers.Serializer):
+	username = serializers.CharField(allow_blank=True, required=True)
 	password = serializers.CharField(style={'input_type': 'password'})
 
-	def validate_email(self, email):
-		user = User.objects.filter(email=email).first()
-		if user:
-			if user.is_superuser or user.is_staff:
-				raise serializers.ValidationError("Only Customers can access this")
-			return email
-		return serializers.ValidationError("Invalid Credentials")
+	# def validate_email(self, email):
+	# 	user = User.objects.filter(email=email).first()
+	# 	if user:
+	# 		if user.is_superuser or user.is_staff:
+	# 			raise serializers.ValidationError("Only Customers can access this")
+	# 		return email
+	# 	return serializers.ValidationError("Invalid Credentials")
  
 	class Meta:
 		model = User

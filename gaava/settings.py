@@ -199,6 +199,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticdn")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
+AUTHENTICATION_BACKENDS = (
+        'account.authentication.UsernameOrEmailorPhoneNoBackend',
+        'django.contrib.auth.backends.ModelBackend',
+    )
+
 
 
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend' #use console for terminal
