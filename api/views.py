@@ -89,6 +89,7 @@ class UserRegisterAPIView(APIView):
             dict = {}
             dict['id'] = user.pk
             dict['is_staff'] = user.is_staff
+            dict['username'] = modified_username
             return Response({"code": 200, "status": "success", "message": "User Account Created", "details": dict})
         return Response({"code": 400, "status": "failure", "message": "Empty Field", "details": serializer.errors})
 
@@ -136,6 +137,7 @@ class UserLoginAPIView(APIView):
                     dict = {}
                     dict['id'] = user.id
                     dict['is_staff'] = user.is_staff
+                    dict['username'] = user.username
                     return Response({"code": 200, "status": "Success", "message": "Successfully Logged In", 'details': dict})
                 else:
                     return Response({"code": 400, "status": "Failure", "message": "Inactive User"})

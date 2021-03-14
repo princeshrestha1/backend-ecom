@@ -32,26 +32,12 @@ CUSTOMER_CHOICES = (
 
 
 class User(AbstractUser):
-    # username = models.CharField(max_length=255,unique=False,default=' ')
     gender = models.CharField("Gender", max_length=15, choices=GENDER_CHOICES, default="Male")
     birthdate = models.DateField("Birthday", null=True, blank=True)
     customer_type = models.CharField(max_length=15, choices=CUSTOMER_CHOICES, default="Registered")
-    # address_line1 = models.CharField("Address Line", max_length=255, null=True, blank=True)
     mobile_number = models.BigIntegerField("Mobile Number",null=True,unique=True)
-    # address_line2 = models.CharField("Optional Address", max_length=255, null=True, blank=True)
-    # contact_no1 = models.BigIntegerField("Contact Line", null=True, blank=True)
-    # contact_no2 = models.BigIntegerField("Optional Contact", null=True, blank=True)
-    # city = models.CharField("City", max_length=255, null=True, blank=True)
-    # province = models.CharField("Province", max_length=255, null=True, blank=True)
-    # postal_code = models.CharField("Postal Code",max_length=255,null=True,blank=True,default=' ')
-    # lat = models.CharField("Latitude",max_length=255,null=True,blank=True,default=' ')
-    # lng = models.CharField("Longitude",max_length=255,null=True,blank=True,default=' ')
-    # street_name = models.CharField("Street Name",max_length=255,null=True,blank=True,default=' ')
-    # country = models.CharField("Country",max_length=255,null=True,blank=True,default=' ')
     is_read = models.BooleanField(default=False)
     otp_code = models.PositiveIntegerField(default=0)
-    # USERNAME_FIELDS=['mobile_number','username']
-    # REQUIRED_FIELDS = ['email']
     def __str__(self):
         return self.username
 
