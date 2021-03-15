@@ -33,7 +33,7 @@ from rest_framework.views import APIView
 from .serializers import *
 from account.tokens import account_activation_token
 from cart.models import (Cart, Category, FeaturedProduct, Order, Product,Story,File,
-                         ProductInTransaction, Rating, Tracker, Wishlist, Photo,SubCategory,SubCategoryMapping)
+                         ProductInTransaction, Rating, Tracker, Wishlist, Photo,SubCategory)
 from account.models import User,ShippingAddress
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
@@ -281,22 +281,22 @@ class CategoryList(APIView):
     def get(self, request, *args, **kwargs):
         uri = socket.gethostbyname(socket.gethostname())
         toret = []
-        sub_cat = SubCategoryMapping.objects.all().values()
+        sub_cat = Category.objects.filter().values('id','image','title')
         for category in sub_cat:
-            sub_cat = Category.objects.filter(id=category['id']).values('id','image','title')
             dict = {}
-            for sub_cats in sub_cat:
-                dict['id'] = sub_cats['id']
-                dict['title'] = sub_cats['title']
-                dict['image'] = 'http://localhost:8000/media/'+str(sub_cats['image'])
-                sub_cat = SubCategory.objects.filter(id=sub_cats['id'])
-                for sub_name in sub_cat:
-                    dict['sub_category'] = []
-                    det = {}
-                    det['name'] = sub_name.name
-                    dict['sub_category'].append(det)
-                    tags = sub_name.tags.all()
-                    dict['tags'] = []
+            dict['id'] = category['id']
+            dict['title'] = category['title']
+            dict['image'] = 'http://localhost:8000/media/'+str(category['image'])
+            sub_cat = SubCategory.objects.filter(id=category['id'])
+            for sub_name in sub_cat:
+                dict['sub_category'] = []
+                det = {}
+                det['name'] = sub_name.name
+                dict['sub_category'].append(det)
+                product = Product.objects.filter(categories=category['id'])
+                dict['tags'] = []
+                for product_info in product:
+                    tags = product_info.tags.filter()
                     for tag_title in tags:
                         dicti = {}
                         dicti['tags'] = tag_title.title
@@ -685,12 +685,14 @@ class HomeView(APIView):
                 det = {}
                 det['name'] = sub_name.name
                 dict['sub_category'].append(det)
+                product = Product.objects.filter(categories=sub_cats['id'])
                 dict['tags'] = []
-                tags = sub_name.tags.all()
-                for tag_title in tags:
-                    dicti = {}
-                    dicti['tags'] = tag_title.title
-                    dict['tags'].append(str(dicti['tags']))
+                for product_info in product:
+                    tags = product_info.tags.filter()
+                    for tag_title in tags:
+                        dicti = {}
+                        dicti['tags'] = tag_title.title
+                        dict['tags'].append(str(dicti['tags']))
             categoryList.append(dict)
         prod_list[0]["category"] = categoryList
         return JsonResponse({"code": 200, "status": "success","message": "successfully feteched", "details":prod_list})

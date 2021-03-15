@@ -95,9 +95,9 @@ class Keywords(Timestampable):
 
 class SubCategory(Timestampable):
     name = models.CharField("SubCategory Name", max_length=255)
-    tags = models.ManyToManyField(Tag, blank=True)
-    def __str__(self):
-        return self.name
+    # tags = models.ManyToManyField(Tag, blank=True)
+    # def __str__(self):
+    #     return self.name
 
 
         
@@ -140,11 +140,6 @@ class Category(Timestampable):
         if self.seo_keywords.exists():
             return (','.join(str(item) for item in self.seo_keywords.all()))
         return self.title
-
-class SubCategoryMapping(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name = 'category_mapping')
-    sub_category = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, related_name = 'sub_category_mapping')
-
 
 
 
