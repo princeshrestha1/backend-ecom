@@ -1169,41 +1169,46 @@ class OrderSummaryAPIView(APIView):
 
 class GetSimilarProductsAPIView(APIView):
     def post(self, request):
-        serializer = ProductIDSerializer(data=request.data)
+        serializer = SingleProductSerializer(data=request.data)
         if serializer.is_valid():
-            category_title = serializer.data['category_title']
-            category = Category.objects.filter(title = category_title)
-            queryset = Product.objects.filter(categories = category[0]).order_by('?')[:10]
+            product_id = serializer.data['product_id']
+            similar_product = Product.objects.filter(id = product_id)
             toret = []
-            for details in queryset:
-                dict = {}
-                product_name = details.name
-                product_price = details.price
-                product_stock = details.quantity
-                product_oldPrice = details.old_price
-                product_category = details.categories
-                product_address = details.product_address
-                product_discount = details.discount_percent
-                likes = details.likes
-                dict['id'] = details.pk
-                dict['name'] = product_name
-                uri = 'http://142.93.221.85/media/'
-                dict['product_image']=[]
-                image = details.photos.all()
-                for img in image:
-                    dict['product_image'].append('http://142.93.221.85/media/'+str(img))
-                dict['likes'] = likes
-                dict['image']=uri+str(image[0])
-                dict['quantity'] = product_stock
-                dict['description'] = details.description
-                dict['product_discount'] = str(product_discount)+''+'%'
-                dict['old_price'] = product_oldPrice
-                dict['from'] = product_address
-                dict['product_price'] = product_price
-                new_price = (product_price/100.0)*product_discount
-                total_price = product_price-new_price
-                dict['total_price'] = new_price
-                toret.append(dict)
+            for cat in similar_product[0].categories.all():
+                queryset = Product.objects.filter(categories = cat).order_by('?')[:10]
+                print(queryset)
+                for details in queryset:
+                    dict = {}
+                    product_name = details.name
+                    product_price = details.price
+                    product_stock = details.quantity
+                    product_oldPrice = details.old_price
+                    product_category = details.categories
+                    product_address = details.product_address
+                    product_discount = details.discount_percent
+                    likes = details.likes
+                    dict['id'] = details.pk
+                    dict['name'] = product_name
+                    uri = 'http://142.93.221.85/media/'
+                    dict['product_image']=[]
+                    image = details.photos.all()
+                    print(image,'image')
+                    imge = ''
+                    for img in image:
+                        dict['product_image'].append('http://142.93.221.85/media/'+str(img))
+                        imge = img
+                    dict['likes'] = likes
+                    dict['image']=uri+str(imge)
+                    dict['quantity'] = product_stock
+                    dict['description'] = details.description
+                    dict['product_discount'] = str(product_discount)+''+'%'
+                    dict['old_price'] = product_oldPrice
+                    dict['from'] = product_address
+                    dict['product_price'] = product_price
+                    new_price = (product_price/100.0)*product_discount
+                    total_price = product_price-new_price
+                    dict['total_price'] = new_price
+                    toret.append(dict)
             return JsonResponse({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toret})
         return Response({"code": HTTP_400_BAD_REQUEST, "status": 'failure', "message": "Empty Fields", "details": serializer.errors})
 
