@@ -146,3 +146,7 @@ class ConfirmCheckoutSerializer(serializers.Serializer):
 
 class CancelSerializer(serializers.Serializer):
 	order_id = serializers.CharField()
+
+
+class TagsSerializer(serializers.Serializer):
+    tags = serializers.CharField()

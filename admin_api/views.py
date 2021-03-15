@@ -246,9 +246,10 @@ class GetOrderListAPIView(APIView):
             toList = []
             for order in get_orders:
                 toret = {}
+                toret['id'] = order.id
                 toret['customer_name'] = order.user.get_full_name()
+                toret['order_code'] = order.code
                 product_name = order.products.all()
-                print(product_name,'product name')
                 if not product_name:
                     return JsonResponse({
                         "code": 200,

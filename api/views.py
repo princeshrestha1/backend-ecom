@@ -1227,3 +1227,53 @@ class GetADSAPIView(APIView):
             toret['image_url'] = ads_data.image_url
             toList.append(toret)
         return JsonResponse({"code": 200, "status": "success", "message": "Successfully Feteched", "details": toList})
+
+
+class GetProductByTags(APIView):
+    permission_classes = (AllowAny,)
+    def post(self, request):
+        serializer = TagsSerializer(data=request.data)
+        if serializer.is_valid():
+            tags = serializer.data['tags']
+            products = Product.objects.filter(tags__title = tags).values('id','likes','name', 'slug', 'description','discount_percent','unit',
+                                                'summary', 'warning', 'visibility', 'quantity', 'old_price','product_address', 'price', 'categories').order_by('name').distinct('name')
+            toret = []
+            for details in products:
+                dict = {}
+                product_id = details['id']
+                product_name = details['name']
+                product_price = details['price']
+                product_unit= details['unit']
+                likes=details['likes']
+                P_addr = details['product_address']
+                product_stock = details['quantity']
+                product_oldPrice = details['old_price']
+                product_discount = details['discount_percent']
+                dict['id'] = product_id
+                dict['name'] = product_name
+                uri = 'http://localhost:8000/media/'
+                categories = Category.objects.filter(id=details['categories']).values('title','image')
+                for category in categories:
+                    cat ={}
+                    name = Category.objects.filter(id=details['categories']).values('id','title','image')
+                    for one in name:
+                        cat['category']=one['title']
+                        dict.update(cat)
+                dict['product_image'] = []
+                dict['product_likes']=likes
+                images = Photo.objects.filter(product=product_id).values('photo')
+                for image in images:
+                    dict['image']=uri+image['photo']
+                    dict['product_image'].append(uri+image['photo'])
+                dict['quantity'] = product_stock
+                dict['from']=P_addr
+                dict['description'] = details['description']
+                dict['product_discount'] = str(product_discount)+''+'%'
+                dict['old_price'] = product_price
+                dict['unit']=product_unit
+                new_price = (product_price/100.0)*product_discount
+                total_price = product_price-new_price
+                dict['product_price']=total_price
+                toret.append(dict)
+            return JsonResponse({"code": 200, "status": "success","message": "successfully feteched", "details":toret})
+        return Response({'message': "Empty Fields", "status": "failure", 'code': '400', 'details': serializer.errors})
