@@ -690,9 +690,8 @@ class HomeView(APIView):
                 for product_info in product:
                     tags = product_info.tags.filter()
                     for tag_title in tags:
-                        dicti = {}
-                        dicti['tags'] = tag_title.title
-                        dict['tags'].append(str(dicti['tags']))
+                        det['tags'] = tag_title.title
+                        dict['sub_category'].append(str(det))
             categoryList.append(dict)
         prod_list[0]["category"] = categoryList
         return JsonResponse({"code": 200, "status": "success","message": "successfully feteched", "details":prod_list})
@@ -1176,7 +1175,6 @@ class GetSimilarProductsAPIView(APIView):
             toret = []
             for cat in similar_product[0].categories.all():
                 queryset = Product.objects.filter(categories = cat).order_by('?')[:10]
-                print(queryset)
                 for details in queryset:
                     dict = {}
                     product_name = details.name
@@ -1192,7 +1190,6 @@ class GetSimilarProductsAPIView(APIView):
                     uri = 'http://142.93.221.85/media/'
                     dict['product_image']=[]
                     image = details.photos.all()
-                    print(image,'image')
                     imge = ''
                     for img in image:
                         dict['product_image'].append('http://142.93.221.85/media/'+str(img))
