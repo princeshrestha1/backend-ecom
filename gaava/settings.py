@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 	'django.contrib.humanize',
 
     'rest_framework',
-    'rest_auth',
+    # 'rest_auth',
 
     'xhtml2pdf',
     'mathfilters',
@@ -54,7 +54,6 @@ INSTALLED_APPS = [
 	'account',
     'cart',
     # 'messaging',
-    'shop_api',
 	'rest_framework_swagger',
     'ckeditor',
     'django.contrib.sites',
@@ -146,9 +145,6 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
 
 	'DEFAULT_AUTHENTICATION_CLASSES': (
-		# 'rest_framework.authentication.BasicAuthentication',
-		# 'rest_framework.authentication.SessionAuthentication',
-		# 'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
 	),
 
@@ -161,14 +157,8 @@ REST_FRAMEWORK = {
 		'rest_framework.parsers.FormParser',
 		'rest_framework.parsers.MultiPartParser',
 	),
-    'DEFAULT_PAGINATION_CLASS': 'proxy_pagination.ProxyPagination',
 }
 
-PROXY_PAGINATION_PARAM = 'pager'
-PROXY_PAGINATION_DEFAULT = 'rest_framework.pagination.LimitOffsetPagination'
-PROXY_PAGINATION_MAPPING = {
-    'cursor': 'rest_framework.pagination.CursorPagination',
-}
 
 
 # Internationalization
@@ -223,30 +213,30 @@ CORS_ORIGIN_WHITELIST = ['http://192.168.100.16:8080']
 CORS_ORIGIN_ALLOW_ALL=True
 
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
+#     'ROTATE_REFRESH_TOKENS': False,
+#     'BLACKLIST_AFTER_ROTATION': True,
 
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
+#     'ALGORITHM': 'HS256',
+#     'SIGNING_KEY': SECRET_KEY,
+#     'VERIFYING_KEY': None,
+#     'AUDIENCE': None,
+#     'ISSUER': None,
 
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+#     'USER_ID_FIELD': 'id',
+#     'USER_ID_CLAIM': 'user_id',
 
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
+#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#     'TOKEN_TYPE_CLAIM': 'token_type',
 
-    'JTI_CLAIM': 'jti',
-    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+#     'JTI_CLAIM': 'jti',
+#     'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
 
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=1),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(minutes=2),
-}
+#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=1),
+#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(minutes=2),
+# }
 

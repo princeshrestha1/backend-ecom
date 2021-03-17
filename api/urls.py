@@ -2,12 +2,7 @@ from django.conf.urls import url
 from rest_framework_swagger.views import get_swagger_view
 from api.views import *
 # from rest_framework_simplejwt import views as jwt_views
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
-    
+
 schema_view = get_swagger_view(title='gaavaa API')
 urlpatterns = [
     url(r'^$', schema_view),
@@ -40,9 +35,4 @@ urlpatterns = [
     url(r'^get/similarproducts/$', GetSimilarProductsAPIView.as_view(), name='getSimilarProducts'),
     url(r'^get/productsbytags/$', GetProductByTags.as_view(), name='getSimilarProducts'),
     url(r'^get/ads/$', GetADSAPIView.as_view(), name='GetADSAPIView'),
-    
-    
-    url('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    url('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    url('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     ]

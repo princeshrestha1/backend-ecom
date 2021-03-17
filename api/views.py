@@ -37,7 +37,7 @@ from cart.models import (Cart, Category, FeaturedProduct, Order, Product,Story,F
 from account.models import User,ShippingAddress
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
-from .authentications import CustomTokenAuth
+# from .authentications import CustomTokenAuth
 from gaava import settings
 from .sms_send import sendSms
 
@@ -497,7 +497,7 @@ class ProductMixin(object):
             
 class HomeAPIView(ProductMixin, APIView):
     permissions_classes = (IsAuthenticated,)
-    authentication_classes = (CustomTokenAuth,)
+    # authentication_classes = (CustomTokenAuth,)
 
     def get(self, request, *args, **kwargs):
         queryset = Product.objects.filter()

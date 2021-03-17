@@ -17,10 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from account.views import (
-    CustomerPasswordResetConfirmView, CustomerPasswordResetCompleteView)
+# from account.views import (
+#     CustomerPasswordResetConfirmView, CustomerPasswordResetCompleteView)
 from django.views.generic import RedirectView
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 
 # handler404 = handler404
@@ -44,6 +48,10 @@ urlpatterns = [
     # path('ckeditor/', include('ckeditor_uploader.urls')),
     
     path('admin/', include('admin_api.urls')),
+    
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
 
 
